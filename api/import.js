@@ -2,7 +2,7 @@
 // Fetches and parses build data from D4Builds, Maxroll, and Mobalytics
 // Mobalytics uses __NEXT_DATA__ extraction (no headless browser needed)
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS headers so the frontend can call this
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
