@@ -23,4 +23,3 @@ module.exports = async function handler(req, res) {
     scriptTags: (html.match(/<script[^>]*>/g) || []).slice(0, 10)
   });
 };
-```
