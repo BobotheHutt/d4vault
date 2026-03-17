@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D4 Vault — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --border: rgba(180,140,80,0.2);
+  --border2: rgba(180,140,80,0.4);
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --text: #d4cfc0;
+  --text2: #8a8070;
+  --text3: #5a5040;
+  --red2: #e74c3c;
+  --font-head: 'Cinzel', serif;
+  --font-body: 'Rajdhani', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(120,60,20,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 20% 100%, rgba(80,40,120,0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+.login-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 380px;
+  padding: 0 24px;
+}
+.logo-block {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.logo {
+  font-family: var(--font-head);
+  font-size: 32px;
+  letter-spacing: 0.18em;
+  color: var(--gold2);
+  display: block;
+  margin-bottom: 8px;
+}
+.logo-sub {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.login-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 32px;
+}
+.login-card h2 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.field {
+  margin-bottom: 16px;
+}
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus { border-color: var(--border2); }
+.field input::placeholder { color: var(--text3); }
+.error-msg {
+  display: none;
+  font-size: 12px;
+  color: var(--red2);
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.25);
+  border-radius: 3px;
+}
+.error-msg.show { display: block; }
+.login-btn {
+  width: 100%;
+  background: rgba(180,140,80,0.15);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--gold2);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.login-btn:hover { background: rgba(180,140,80,0.25); }
+.login-btn:active { transform: scale(0.99); }
+.hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 20px;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="logo-block">
+    <span class="logo">D4 VAULT</span>
+    <span class="logo-sub">Diablo IV Build Tracker</span>
+  </div>
+  <div class="login-card">
+    <h2>Sign In</h2>
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter your username" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('password').focus()"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')signIn()"/>
+    </div>
+    <div class="error-msg" id="errorMsg">Incorrect username or password.</div>
+    <button class="login-btn" onclick="signIn()">Enter the Vault</button>
+    <div class="hint">Your builds are stored locally in this browser.<br>Same device = same data.</div>
+  </div>
+</div>
+<script>
+// Simple local auth — credentials stored in localStorage
+// On first load with no account, any login creates the account
+function signIn() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value;
+  const err  = document.getElementById('errorMsg');
+  if (!user || !pass) { err.textContent = 'Please enter a username and password.'; err.classList.add('show'); return; }
+  const stored = JSON.parse(localStorage.getItem('d4vault_auth') || 'null');
+  if (!stored) {
+    // First time — create account
+    localStorage.setItem('d4vault_auth', JSON.stringify({ username: user, password: pass }));
+    localStorage.setItem('d4vault_session', JSON.stringify({ username: user, expires: Date.now() + 7*24*60*60*1000 }));
+    window.location.href = 'app.html';
+    return;
+  }
+  if (stored.username === user && stored.password === pass) {
+    localStorage.setItem('d4vault_session', JSON.stringify({ username: user, expires: Date.now() + 7*24*60*60*1000 }));
+    window.location.href = 'app.html';
+  } else {
+    err.textContent = 'Incorrect username or password.';
+    err.classList.add('show');
+  }
+}
+// Auto-redirect if already logged in
+const session = JSON.parse(localStorage.getItem('d4vault_session') || 'null');
+if (session && session.expires > Date.now()) window.location.href = 'app.html';
+</script>
+</body>
+</html>
