@@ -24,7 +24,3 @@ module.exports = async function handler(req, res) {
   });
 };
 ```
-
-Commit that, wait for Vercel to deploy, then hit:
-```
-https://d4vault-pg415hzq0-bobothehutts-projects.vercel.app/api/debug?url=https://mobalytics.gg/diablo-4/builds/auradin-holy-light-aura-paladin
