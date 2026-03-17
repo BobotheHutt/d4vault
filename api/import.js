@@ -50,8 +50,8 @@ async function fetchWithBrowser(url) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       url,
-      waitFor: 3000,
-      options: { waitUntil: 'networkidle2' }
+      waitUntil: 'networkidle2',
+      timeout: 30000
     })
   });
 
