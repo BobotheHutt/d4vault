@@ -12,8 +12,7 @@ module.exports = async function handler(req, res) {
   });
 
   const html = await response.text();
-  
-  // Return the first 3000 chars so we can see what structure they're using
+
   return res.status(200).json({
     status: response.status,
     hasNextData: html.includes('__NEXT_DATA__'),
