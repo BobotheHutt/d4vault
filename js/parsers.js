@@ -1,12 +1,27 @@
 // parsers.js — URL parsers for D4Builds, Maxroll, Mobalytics
-// These run client-side and extract what they can from the URL structure.
-// In production a backend proxy handles the actual page fetches.
+// Calls the Vercel backend API to do the actual fetching and parsing.
+// Falls back to client-side URL extraction if the API call fails.
 
-function parseBuildUrl(url, site, name, cls) {
-  if (site === 'd4builds')    return parseD4Builds(url, name, cls);
-  if (site === 'maxroll')     return parseMaxroll(url, name, cls);
-  if (site === 'mobalytics')  return parseMobalytics(url, name, cls);
-  return makeEmptyBuild(name, cls);
+async function parseBuildUrl(url, site, name, cls) {
+  try {
+    // Call our Vercel serverless function
+    const apiUrl = `/api/import?url=${encodeURIComponent(url)}`;
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error(`API returned ${res.status}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    // Override name/class with user's input if they filled it in
+    if (name) data.name = name;
+    if (cls)  data.cls  = cls;
+    return data;
+  } catch(err) {
+    console.warn('Backend import failed, falling back to client-side parse:', err.message);
+    // Fallback — URL-only extraction
+    if (site === 'd4builds')    return parseD4Builds(url, name, cls);
+    if (site === 'maxroll')     return parseMaxroll(url, name, cls);
+    if (site === 'mobalytics')  return parseMobalytics(url, name, cls);
+    return makeEmptyBuild(name, cls);
+  }
 }
 
 // ── D4BUILDS ───────────────────────────────────────────────────────────────
