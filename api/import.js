@@ -45,14 +45,10 @@ async function fetchWithBrowser(url) {
   const key = process.env.BROWSERLESS_KEY;
   if (!key) throw new Error('BROWSERLESS_KEY environment variable not set');
 
-  const res = await fetch(`https://chrome.browserless.io/content?token=${key}`, {
+  const res = await fetch(`https://chrome.browserless.io/content?token=${key}&waitUntil=networkidle2&timeout=30000`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      url,
-      waitUntil: 'networkidle2',
-      timeout: 30000
-    })
+    body: JSON.stringify({ url })
   });
 
   if (!res.ok) {
