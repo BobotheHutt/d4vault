@@ -182,21 +182,33 @@ function renderBuildDetail() {
 
   // Header
   document.getElementById('buildName').textContent = build.name;
+  // Source icon button — replaces both the tag and the URL text
+  const sourceIcons = {
+    d4builds:   { label: 'D4Builds',   color: '#2ecc71', bg: 'rgba(46,204,113,0.12)', border: 'rgba(46,204,113,0.35)' },
+    maxroll:    { label: 'Maxroll',    color: '#5dade2', bg: 'rgba(93,173,226,0.12)', border: 'rgba(93,173,226,0.35)' },
+    mobalytics: { label: 'Mobalytics', color: '#9b59b6', bg: 'rgba(155,89,182,0.12)', border: 'rgba(155,89,182,0.35)' },
+    manual:     { label: 'Manual',     color: '#8a8070', bg: 'rgba(100,90,70,0.12)',  border: 'rgba(100,90,70,0.35)'  },
+  };
+  const si = sourceIcons[build.source] || sourceIcons.manual;
+  const srcBtnHtml = build.sourceUrl
+    ? `<a href="${build.sourceUrl}" target="_blank" rel="noopener" class="source-icon-btn"
+        style="color:${si.color};background:${si.bg};border:1px solid ${si.border};">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="margin-right:4px;flex-shrink:0;">
+          <path d="M1 10L10 1M10 1H4M10 1V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ${si.label}
+      </a>`
+    : `<span class="tag tag-${build.source}">${si.label}</span>`;
+
   document.getElementById('buildMeta').innerHTML = `
     <span class="tag tag-class">${build.cls}</span>
     <span class="tag tag-season">${build.season}</span>
-    <span class="tag tag-${build.source}">${SOURCE_LABELS[build.source] || build.source}</span>
+    ${srcBtnHtml}
     ${(build.contentTypes || []).map(t => `<span class="tag tag-content">${t}</span>`).join('')}
   `;
+  // Hide the old URL text link
   const srcLink = document.getElementById('buildSourceLink');
-  if (build.sourceUrl) {
-    srcLink.href = build.sourceUrl;
-    srcLink.textContent = build.sourceUrl.length > 70
-      ? build.sourceUrl.slice(0, 70) + '…' : build.sourceUrl;
-    srcLink.style.display = 'inline';
-  } else {
-    srcLink.style.display = 'none';
-  }
+  if (srcLink) srcLink.style.display = 'none';
 
   // Build bar
   renderVariantBar(build);
