@@ -33,15 +33,18 @@ function renderBuilds() {
 function selectBuild(id) {
   state.activeBuildId = id;
   state.activeVariant = 0;
+  state.trackingVariant = 0;
   state.activeBoard = 0;
   renderBuilds();
   renderBuildDetail();
   syncSkillTreeFrames(id, 0);
-  // Set initial variant label
+  // Init progress iframe and tracking selector
   const data = getData();
   const build = data.builds.find(b => b.id === id);
-  const label = document.getElementById('progressVariantLabel');
-  if (label && build) label.textContent = (build.variants?.[0]?.name || 'Variant 1').toUpperCase();
+  if (build) {
+    populateTrackingSelect(build);
+    setTrackingVariant(0);
+  }
 }
 
 // ── ADD BUILD MODAL ────────────────────────────────────────────────────────
@@ -187,6 +190,7 @@ function renderBuildDetail() {
 
   // Variant bar
   renderVariantBar(build);
+  populateTrackingSelect(build);
 
   // Content for active variant
   const variant = build.variants[state.activeVariant] || build.variants[0];
@@ -198,32 +202,58 @@ function renderBuildDetail() {
   renderNotesSection(build);
 }
 
-// ── SYNC SKILL TREE IFRAMES ───────────────────────────────────────────────
-function syncSkillTreeFrames(buildId, variantIdx) {
-  const msg = { type: 'variantChange', buildId: buildId || 'default', variantIdx: variantIdx || 0 };
+// ── TRACKING VARIANT ──────────────────────────────────────────────────────
+// trackingVariant is which variant the progress snapshot is tied to
+// It's independent from state.activeVariant (which variant is being edited)
+
+function populateTrackingSelect(build) {
+  const sel = document.getElementById('trackingVariantSelect');
+  if (!sel || !build) return;
+  sel.innerHTML = '';
+  build.variants.forEach((v, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = v.name;
+    if (i === (state.trackingVariant || 0)) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function setTrackingVariant(idx) {
+  state.trackingVariant = parseInt(idx);
+  const data = getData();
+  const build = data.builds.find(b => b.id === state.activeBuildId);
+  if (!build) return;
+  const variantName = build.variants[state.trackingVariant]?.name || `Variant ${state.trackingVariant + 1}`;
+  // Update only the progress iframe to the tracking variant
   const progress = document.getElementById('skillTreeProgress');
-  const guide    = document.getElementById('skillTreeGuide');
-  if (progress?.contentWindow) progress.contentWindow.postMessage(msg, '*');
-  if (guide?.contentWindow)    guide.contentWindow.postMessage(msg, '*');
-  // Update src params for fresh loads
   if (progress) {
     const u = new URL(progress.src, window.location.href);
-    u.searchParams.set('buildId', msg.buildId);
-    u.searchParams.set('variantIdx', msg.variantIdx);
-    if (progress.src !== u.href) progress.src = u.href;
+    u.searchParams.set('buildId', state.activeBuildId);
+    u.searchParams.set('variantIdx', state.trackingVariant);
+    progress.src = u.href;
   }
+  // Send message if already loaded
+  const msg = { type: 'variantChange', buildId: state.activeBuildId, variantIdx: state.trackingVariant };
+  if (progress?.contentWindow) progress.contentWindow.postMessage(msg, '*');
+  // Update label
+  const label = document.getElementById('progressVariantLabel');
+  if (label) label.textContent = variantName.toUpperCase();
+}
+
+// ── SYNC SKILL TREE IFRAMES ───────────────────────────────────────────────
+function syncSkillTreeFrames(buildId, variantIdx) {
+  // Only sync the GUIDE iframe when detail variant changes
+  // Progress iframe is controlled by trackingVariant selector
+  const msg = { type: 'variantChange', buildId: buildId || 'default', variantIdx: variantIdx || 0 };
+  const guide = document.getElementById('skillTreeGuide');
+  if (guide?.contentWindow) guide.contentWindow.postMessage(msg, '*');
   if (guide) {
     const u = new URL(guide.src, window.location.href);
     u.searchParams.set('buildId', msg.buildId);
     u.searchParams.set('variantIdx', msg.variantIdx);
     if (guide.src !== u.href) guide.src = u.href;
   }
-  // Update variant label on progress preview
-  const data = getData();
-  const build = data.builds.find(b => b.id === buildId);
-  const variantName = build?.variants?.[variantIdx]?.name || `Variant ${(variantIdx||0)+1}`;
-  const label = document.getElementById('progressVariantLabel');
-  if (label) label.textContent = variantName.toUpperCase();
 }
 
 // ── VARIANT BAR ───────────────────────────────────────────────────────────
