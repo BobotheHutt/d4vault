@@ -347,7 +347,7 @@ const maxX=Math.max(...N.map(n=>n.x),...Object.values(H).map(h=>h.x))+250;
 const maxY=Math.max(...N.map(n=>n.y),...Object.values(H).map(h=>h.y))+250;
 cv.width=maxX;cv.height=maxY;
 
-let mode='guide',gR={},pR={},editing=true; // editing=true means guide is in edit mode
+let mode='guide',gR={},pR={},editing=false; // start locked — click Confirm to edit
 let sc=0.55,px=80,py=30,pan=false,lm={x:0,y:0},hov=null,cn=null,cs=null;
 
 function draw(){
@@ -884,15 +884,17 @@ function AX(){
   updScrollbar();
 }
 function updScrollbar(){
-  const wrap=document.getElementById('wrap');
-  const H=wrap.clientHeight,ch=cv.height*sc;
+  const tc=document.getElementById('treeContainer');
+  const H=tc?tc.clientHeight:(window.innerHeight-52);
+  const ch=cv.height*sc;
   const sb=document.getElementById('treeScrollbar');
   const sbt=document.getElementById('treeScrollThumb');
   if(!sb||!sbt)return;
   const visibleFrac=Math.min(H/ch,1);
   const thumbH=Math.max(visibleFrac*sb.clientHeight,40);
   sbt.style.height=thumbH+'px';
-  const scrollFrac=Math.max(0,Math.min((-py)/(ch-H),1));
+  const range=Math.max(ch-H,1);
+  const scrollFrac=Math.max(0,Math.min((-py)/range,1));
   sbt.style.top=(scrollFrac*(sb.clientHeight-thumbH))+'px';
 }
 
@@ -980,8 +982,26 @@ function modalCancel(){
   document.getElementById('modal').style.display='none';
   _modalCb=null;
 }
-function SV(){localStorage.setItem('d4v_g',JSON.stringify(gR));localStorage.setItem('d4v_p',JSON.stringify(pR));}
-function LV(){try{gR=JSON.parse(localStorage.getItem('d4v_g')||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem('d4v_p')||'{}');}catch(e){pR={};}}
+function getKeys(){
+  const p=new URLSearchParams(window.location.search);
+  const bid=p.get('buildId')||'default';
+  const vid=p.get('variantIdx')||'0';
+  return{g:`d4v_g_${bid}_${vid}`,p:`d4v_p_${bid}_${vid}`};
+}
+function SV(){const k=getKeys();localStorage.setItem(k.g,JSON.stringify(gR));localStorage.setItem(k.p,JSON.stringify(pR));}
+function LV(){const k=getKeys();try{gR=JSON.parse(localStorage.getItem(k.g)||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem(k.p)||'{}');}catch(e){pR={};}}
+
+// Allow parent page to reload this iframe's data when variant changes
+window.addEventListener('message',e=>{
+  if(e.data?.type==='variantChange'){
+    // Update URL params without reload by using history
+    const url=new URL(window.location.href);
+    url.searchParams.set('buildId',e.data.buildId);
+    url.searchParams.set('variantIdx',e.data.variantIdx);
+    window.history.replaceState({},'',url);
+    LV();draw();
+  }
+});
 function RR(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 function STAR(cx,cy,or,ir,pts){ctx.beginPath();for(let i=0;i<pts*2;i++){const r=i%2===0?or:ir,a=i*Math.PI/pts-Math.PI/2;if(i===0)ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));else ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}ctx.closePath();}
 function wTxt3(t,mw,fs){const cw=fs*.58,mc=Math.floor(mw/cw);if(t.length<=mc)return[t];const ws=t.split(' ');const ls=[];let c='';for(const w of ws){if((c+' '+w).trim().length>mc){if(c)ls.push(c);c=w;}else c=(c+' '+w).trim();}if(c)ls.push(c);return ls.slice(0,3);}
@@ -1010,52 +1030,58 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   }
   updEditBtn();
 })();
-// Scrollbar drag
+// Scrollbar drag — uses treeContainer height as viewport reference
 (function(){
   const sb=document.getElementById('treeScrollbar');
   const sbt=document.getElementById('treeScrollThumb');
   if(!sb||!sbt) return;
   let dragging=false,startY=0,startPy=0;
+
+  function getViewH(){ return document.getElementById('treeContainer').clientHeight||window.innerHeight-52; }
+
   sbt.addEventListener('mousedown',e=>{
-    dragging=true;startY=e.clientY;startPy=py;
-    sbt.style.background='rgba(201,168,76,.7)';
-    e.stopPropagation();e.preventDefault();
+    dragging=true; startY=e.clientY; startPy=py;
+    sbt.style.background='rgba(201,168,76,.8)';
+    sbt.style.cursor='grabbing';
     document.body.style.userSelect='none';
+    e.stopPropagation(); e.preventDefault();
   });
-  document.addEventListener('mouseup',()=>{
-    if(dragging){document.body.style.userSelect='';}
-  });
+
   document.addEventListener('mousemove',e=>{
     if(!dragging) return;
-    const wrap=document.getElementById('wrap');
+    const H=getViewH();
     const ch=cv.height*sc;
-    const H=wrap.clientHeight;
-    const thumbH=parseFloat(sbt.style.height||60);
+    const thumbH=sbt.offsetHeight;
     const maxTop=sb.clientHeight-thumbH;
+    if(maxTop<=0) return;
     const dy=e.clientY-startY;
     const scrollFrac=dy/maxTop;
-    py=startPy-scrollFrac*(ch-H);
+    py=startPy - scrollFrac*(ch-H);
     AX();
   });
+
   document.addEventListener('mouseup',()=>{
-    if(dragging){dragging=false;sbt.style.background='rgba(180,160,80,.45)';}
+    if(!dragging) return;
+    dragging=false;
+    sbt.style.background='rgba(180,160,80,.5)';
+    sbt.style.cursor='grab';
+    document.body.style.userSelect='';
   });
-  // Click on track to jump
-  sb.addEventListener('click',e=>{
-    e.stopPropagation();
+
+  // Click track to jump
+  sb.addEventListener('mousedown',e=>{
+    e.stopPropagation(); e.preventDefault();
     if(e.target===sbt) return;
-    const wrap=document.getElementById('wrap');
-    const ch=cv.height*sc, H=wrap.clientHeight;
+    const H=getViewH();
+    const ch=cv.height*sc;
     const rect=sb.getBoundingClientRect();
     const frac=(e.clientY-rect.top)/sb.clientHeight;
-    py=-(frac*(ch-H));
+    py=-(frac*Math.max(ch-H,0));
     AX();
   });
-  sb.addEventListener('mousedown',e=>e.stopPropagation());
-  sb.addEventListener('mousemove',e=>e.stopPropagation());
-  sb.addEventListener('mouseup',e=>e.stopPropagation());
-  sbt.addEventListener('mouseenter',()=>{ if(!dragging) sbt.style.background='rgba(201,168,76,.55)'; });
-  sbt.addEventListener('mouseleave',()=>{ if(!dragging) sbt.style.background='rgba(180,160,80,.45)'; });
+
+  sbt.addEventListener('mouseenter',()=>{ if(!dragging) sbt.style.background='rgba(201,168,76,.65)'; });
+  sbt.addEventListener('mouseleave',()=>{ if(!dragging) sbt.style.background='rgba(180,160,80,.5)'; });
 })();
 function toggleSettings(){
   const p=document.getElementById('settingsPanel');
