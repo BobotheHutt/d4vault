@@ -59,21 +59,20 @@
         <a class="source-link" id="buildSourceLink" href="#" target="_blank" rel="noopener"></a>
       </div>
 
+      <!-- Separator -->
+      <div style="height:1px;background:rgba(120,110,200,.2);margin:8px 0 10px;"></div>
+
+      <!-- Tracking variant selector — above the preview panels, outside the grid -->
+      <div class="tracking-variant-bar">
+        <span class="tracking-label">Tracking Variant:</span>
+        <select id="trackingVariantSelect" onchange="setTrackingVariant(this.value)" class="tracking-select"></select>
+      </div>
+
       <!-- Build Sections -->
       <div id="buildSections">
 
         <!-- ── SECTION 1: OVERVIEW (read-only snapshot) ─────────────── -->
-        <!-- Two columns: Gear preview left, Skill progress right -->
         <section class="build-section two-col-section" id="sectionOverview">
-          <!-- Tracking selector spans full width -->
-          <div class="overview-tracking-row">
-            <span style="font-size:11px;color:#5a5070;letter-spacing:.06em;text-transform:uppercase;">Tracking Variant:</span>
-            <select id="trackingVariantSelect" onchange="setTrackingVariant(this.value)"
-              style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;
-              background:#1a1a38;border:1px solid rgba(201,168,76,.4);border-radius:3px;
-              color:#c9a84c;padding:3px 10px;cursor:pointer;outline:none;min-width:140px;">
-            </select>
-          </div>
           <!-- Left: Gear preview -->
           <div class="two-col-left">
             <div class="spp-label">Gear</div>
