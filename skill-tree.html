@@ -925,6 +925,22 @@ function wTxt3(t,mw,fs){const cw=fs*.58,mc=Math.floor(mw/cw);if(t.length<=mc)ret
 function wTxt(t,mw,fs){const cw=fs*.58,mc=Math.floor(mw/cw);if(t.length<=mc)return[t];const ws=t.split(' ');const ls=[];let c='';for(const w of ws){if((c+' '+w).trim().length>mc){if(c)ls.push(c);c=w;}else c=(c+' '+w).trim();}if(c)ls.push(c);return ls.slice(0,2);}
 function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
 
+// Read URL mode param if embedded in app
+(function(){
+  const urlMode = new URLSearchParams(window.location.search).get('mode');
+  if(urlMode==='progress'||urlMode==='guide') mode=urlMode;
+  // If embedded with a specific mode, hide the other mode's button
+  // and hide reset button for the other mode
+  if(urlMode==='progress'){
+    document.getElementById('bG').style.display='none';
+    document.querySelector('[onclick="resetMode(\'guide\')"]').style.display='none';
+    SM('progress');
+  } else if(urlMode==='guide'){
+    document.getElementById('bP').style.display='none';
+    document.querySelector('[onclick="resetMode(\'progress\')"]').style.display='none';
+    SM('guide');
+  }
+})();
 LV();RV();draw();
 </script>
 </body>
