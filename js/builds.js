@@ -37,26 +37,24 @@ function selectBuild(id) {
   state.activeBoard = 0;
   renderBuilds();
   renderBuildDetail();
-  // On first load, set iframe src with buildId+variantIdx so getKeys() works from the start
-  const guide = document.getElementById('skillTreeGuide');
-  const progress = document.getElementById('skillTreeProgress');
-  if (guide) {
-    const u = new URL(guide.src, window.location.href);
-    u.searchParams.set('buildId', id);
-    u.searchParams.set('variantIdx', '0');
-    guide.src = u.href;
-  }
-  if (progress) {
-    const u = new URL(progress.src, window.location.href);
-    u.searchParams.set('buildId', id);
-    u.searchParams.set('variantIdx', '0');
-    progress.src = u.href;
-  }
+
   const data = getData();
   const build = data.builds.find(b => b.id === id);
-  if (build) {
-    populateTrackingSelect(build);
+  if (build) populateTrackingSelect(build);
+
+  // Always reload iframes with correct buildId in src so _buildId initializes correctly
+  // This is the only reliable way to scope localStorage keys per build
+  const guide = document.getElementById('skillTreeGuide');
+  const progress = document.getElementById('skillTreeProgress');
+
+  function setIframeSrc(iframe, mode, variantIdx) {
+    if (!iframe) return;
+    const base = 'skill-tree.html';
+    iframe.src = `${base}?mode=${mode}&buildId=${encodeURIComponent(id)}&variantIdx=${variantIdx}`;
   }
+
+  setIframeSrc(guide, 'guide', 0);
+  setIframeSrc(progress, 'progress', state.trackingVariant);
 }
 
 // ── ADD BUILD MODAL ────────────────────────────────────────────────────────
@@ -237,10 +235,11 @@ function setTrackingVariant(idx) {
   const build = data.builds.find(b => b.id === state.activeBuildId);
   if (!build) return;
   const variantName = build.variants[state.trackingVariant]?.name || `Variant ${state.trackingVariant + 1}`;
-  // Just postMessage - no src reload
-  const msg = { type: 'variantChange', buildId: state.activeBuildId, variantIdx: state.trackingVariant };
+  // Reload progress iframe src with correct variantIdx
   const progress = document.getElementById('skillTreeProgress');
-  if (progress?.contentWindow) progress.contentWindow.postMessage(msg, '*');
+  if (progress) {
+    progress.src = `skill-tree.html?mode=progress&buildId=${encodeURIComponent(state.activeBuildId)}&variantIdx=${state.trackingVariant}`;
+  }
   // Update label
   const label = document.getElementById('progressVariantLabel');
   if (label) label.textContent = variantName.toUpperCase();
@@ -248,11 +247,12 @@ function setTrackingVariant(idx) {
 
 // ── SYNC SKILL TREE IFRAMES ───────────────────────────────────────────────
 function syncSkillTreeFrames(buildId, variantIdx) {
-  // Send postMessage to guide iframe — it updates its keys and reloads data
-  // Do NOT reload iframe src as that wipes the current state
-  const msg = { type: 'variantChange', buildId: buildId || 'default', variantIdx: variantIdx || 0 };
+  // Reload guide iframe src with correct variantIdx
+  // postMessage alone is unreliable; reloading src ensures _variantIdx is correct from init
   const guide = document.getElementById('skillTreeGuide');
-  if (guide?.contentWindow) guide.contentWindow.postMessage(msg, '*');
+  if (guide) {
+    guide.src = `skill-tree.html?mode=guide&buildId=${encodeURIComponent(buildId)}&variantIdx=${variantIdx}`;
+  }
 }
 
 // ── VARIANT BAR ───────────────────────────────────────────────────────────
@@ -382,23 +382,19 @@ function renderVariantBar(build) {
 // ── SKILL SECTION ──────────────────────────────────────────────────────────
 function renderSkillSection(build, variant) {
   // Skill tree image
+  // skillTreeImage element removed from new layout — skip if not present
   const imgArea = document.getElementById('skillTreeImage');
-  if (build.skillTreeImage) {
-    imgArea.innerHTML = `<img src="${build.skillTreeImage}" alt="Skill tree" onclick="openModal('skillImageModal')"/>`;
-  } else {
-    imgArea.innerHTML = `
-      <div class="skill-tree-placeholder" onclick="openModal('skillImageModal')">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="color:currentColor">
-          <rect x="3" y="3" width="26" height="26" rx="3" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 2"/>
-          <line x1="16" y1="9" x2="16" y2="23" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-          <line x1="9" y1="16" x2="23" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-        </svg>
-        <span>Click to add skill tree screenshot or image URL</span>
-      </div>`;
+  if (imgArea) {
+    if (build.skillTreeImage) {
+      imgArea.innerHTML = `<img src="${build.skillTreeImage}" alt="Skill tree" onclick="openModal('skillImageModal')"/>`;
+    } else {
+      imgArea.innerHTML = `<div class="skill-tree-placeholder" onclick="openModal('skillImageModal')"><span>Click to add skill tree image</span></div>`;
+    }
   }
 
   // Leveling steps
   const guide = document.getElementById('levelingGuide');
+  if (!guide) return;
   const steps = variant.levelingSteps || [];
   if (steps.length) {
     guide.innerHTML = steps.map(s => `
@@ -412,6 +408,7 @@ function renderSkillSection(build, variant) {
 
   // Skills list
   const list = document.getElementById('skillsList');
+  if (!list) return;
   const skills = variant.skills || [];
   if (!skills.length) {
     list.innerHTML = '<div style="padding:16px 20px;font-size:13px;color:var(--text3)">No skills recorded for this variant.</div>';
