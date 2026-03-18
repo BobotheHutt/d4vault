@@ -108,9 +108,8 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   const r = document.documentElement;
 
   // Background — apply directly to body so pattern is visible everywhere
-  document.body.style.backgroundColor = t.bg;
-  document.body.style.backgroundImage = t.pattern;
   r.style.setProperty('--bg-color', t.bg);
+  if(document.body){document.body.style.backgroundColor=t.bg;document.body.style.backgroundImage=t.pattern;}
   r.style.setProperty('--bg-pattern', t.pattern);
   r.style.setProperty('--bg-overlay', t.overlay);
   r.style.setProperty('--panel-bg', t.panelBg || '#12122a');
@@ -124,12 +123,14 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
 
   // Font size — scale text only via CSS custom property
   r.style.setProperty('--font-scale', currentFontSize / 100);
+  if(document.body) document.body.style.zoom='';
 
   // Brightness — use a CSS variable + overlay approach to avoid filter breaking fixed elements
   const bv = currentBrightness / 100;
   document.documentElement.style.removeProperty('filter');
   document.body.style.filter = '';
   // Apply brightness via a dedicated overlay div
+  if(!document.body) return;
   let bOverlay = document.getElementById('brightnessOverlay');
   if (!bOverlay) {
     bOverlay = document.createElement('div');
@@ -152,6 +153,7 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
 
   // Broadcast theme to skill tree iframes
   const themeMsg = { type: 'themeChange', panelBg: t.panelBg || '#12122a', accent: a.color, accentRgb: a.rgb || '201,168,76' };
+  if(!document.body) return;
   document.querySelectorAll('iframe').forEach(f => {
     try { f.contentWindow.postMessage(themeMsg, '*'); } catch(e) {}
   });
