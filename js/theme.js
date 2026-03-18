@@ -103,8 +103,10 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   if (brightness !== null && brightness !== undefined) currentBrightness = brightness;
   if (fontSize !== null && fontSize !== undefined) currentFontSize = fontSize;
 
-  const t = THEMES[currentTheme];
-  const a = ACCENTS[currentAccent];
+  // Fall back to first available theme/accent if key not found
+  const t = THEMES[currentTheme] || THEMES[Object.keys(THEMES)[0]];
+  const a = ACCENTS[currentAccent] || ACCENTS[Object.keys(ACCENTS)[0]];
+  if (!t || !a) return;
   const r = document.documentElement;
 
   // Background — apply directly to body so pattern is visible everywhere
@@ -165,7 +167,9 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
 function loadTheme() {
   try {
     const saved = JSON.parse(localStorage.getItem('d4v_theme') || '{}');
-    applyTheme(saved.theme || 'sacredOath', saved.accent || 'holy', saved.brightness ?? 100, saved.fontSize ?? 100);
+    const themeKey = THEMES[saved.theme] ? saved.theme : 'sacredOath';
+    const accentKey = ACCENTS[saved.accent] ? saved.accent : 'holy';
+    applyTheme(themeKey, accentKey, saved.brightness ?? 100, saved.fontSize ?? 100);
   // Reset if saved value was in old narrow range
 
   } catch(e) {
