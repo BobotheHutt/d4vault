@@ -37,13 +37,25 @@ function selectBuild(id) {
   state.activeBoard = 0;
   renderBuilds();
   renderBuildDetail();
-  syncSkillTreeFrames(id, 0);
-  // Init progress iframe and tracking selector
+  // On first load, set iframe src with buildId+variantIdx so getKeys() works from the start
+  const guide = document.getElementById('skillTreeGuide');
+  const progress = document.getElementById('skillTreeProgress');
+  if (guide) {
+    const u = new URL(guide.src, window.location.href);
+    u.searchParams.set('buildId', id);
+    u.searchParams.set('variantIdx', '0');
+    guide.src = u.href;
+  }
+  if (progress) {
+    const u = new URL(progress.src, window.location.href);
+    u.searchParams.set('buildId', id);
+    u.searchParams.set('variantIdx', '0');
+    progress.src = u.href;
+  }
   const data = getData();
   const build = data.builds.find(b => b.id === id);
   if (build) {
     populateTrackingSelect(build);
-    setTrackingVariant(0);
   }
 }
 
@@ -225,16 +237,9 @@ function setTrackingVariant(idx) {
   const build = data.builds.find(b => b.id === state.activeBuildId);
   if (!build) return;
   const variantName = build.variants[state.trackingVariant]?.name || `Variant ${state.trackingVariant + 1}`;
-  // Update only the progress iframe to the tracking variant
-  const progress = document.getElementById('skillTreeProgress');
-  if (progress) {
-    const u = new URL(progress.src, window.location.href);
-    u.searchParams.set('buildId', state.activeBuildId);
-    u.searchParams.set('variantIdx', state.trackingVariant);
-    progress.src = u.href;
-  }
-  // Send message if already loaded
+  // Just postMessage - no src reload
   const msg = { type: 'variantChange', buildId: state.activeBuildId, variantIdx: state.trackingVariant };
+  const progress = document.getElementById('skillTreeProgress');
   if (progress?.contentWindow) progress.contentWindow.postMessage(msg, '*');
   // Update label
   const label = document.getElementById('progressVariantLabel');
@@ -243,17 +248,11 @@ function setTrackingVariant(idx) {
 
 // ── SYNC SKILL TREE IFRAMES ───────────────────────────────────────────────
 function syncSkillTreeFrames(buildId, variantIdx) {
-  // Only sync the GUIDE iframe when detail variant changes
-  // Progress iframe is controlled by trackingVariant selector
+  // Send postMessage to guide iframe — it updates its keys and reloads data
+  // Do NOT reload iframe src as that wipes the current state
   const msg = { type: 'variantChange', buildId: buildId || 'default', variantIdx: variantIdx || 0 };
   const guide = document.getElementById('skillTreeGuide');
   if (guide?.contentWindow) guide.contentWindow.postMessage(msg, '*');
-  if (guide) {
-    const u = new URL(guide.src, window.location.href);
-    u.searchParams.set('buildId', msg.buildId);
-    u.searchParams.set('variantIdx', msg.variantIdx);
-    if (guide.src !== u.href) guide.src = u.href;
-  }
 }
 
 // ── VARIANT BAR ───────────────────────────────────────────────────────────
