@@ -61,10 +61,16 @@ body{display:flex;flex-direction:column;}
 </div>
 <div id="settingsPanel" style="display:none;position:absolute;top:52px;right:0;width:240px;background:#1c1c3a;border:1px solid rgba(150,140,220,.4);border-top:none;border-radius:0 0 6px 6px;padding:14px 16px;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,.5);">
   <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;color:rgba(201,168,76,.8);margin-bottom:12px;text-transform:uppercase;">Settings</div>
-  <div style="display:flex;align-items:center;gap:10px;">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
     <label style="font-size:12px;color:#9a9080;min-width:80px;">Background</label>
     <input type="range" id="bgBrightness" min="5" max="60" value="26" oninput="setBgBrightness(this.value)" style="flex:1;accent-color:#c9a84c;cursor:pointer;">
     <span id="bgBrightnessVal" style="font-size:11px;color:#6a6050;min-width:28px;text-align:right;">26</span>
+  </div>
+  <div style="height:1px;background:rgba(120,110,200,.2);margin-bottom:12px;"></div>
+  <div style="font-size:11px;color:#6a6050;margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase;">Reset</div>
+  <div style="display:flex;gap:8px;">
+    <button onclick="resetFromSettings('guide')" style="flex:1;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.4);border-radius:3px;color:#c9a84c;cursor:pointer;">Reset Guide</button>
+    <button onclick="resetFromSettings('progress')" style="flex:1;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;background:rgba(62,220,129,.08);border:1px solid rgba(62,220,129,.35);border-radius:3px;color:#3edc81;cursor:pointer;">Reset Progress</button>
   </div>
 </div>
 <div id="treeContainer" style="position:relative;flex:1;overflow:hidden;"><div id="wrap" style="position:absolute;top:0;left:0;right:26px;bottom:0;overflow:hidden;cursor:grab;"><canvas id="cv"></canvas></div>
@@ -1015,17 +1021,18 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   // If embedded with a specific mode, hide the other mode's button
   // and hide reset button for the other mode
   if(urlMode==='progress'){
-    // Progress mode: hide edit toggle, hide guide reset
     document.getElementById('bEditToggle').style.display='none';
-    document.querySelector('[onclick="resetMode(\'guide\')"]').style.display='none';
-    SM('progress');
+    // Hide guide reset button in progress mode
+    const gr=document.querySelector('[onclick="resetMode('guide')"]');
+    if(gr) gr.style.display='none';
+    mode='progress';
   } else if(urlMode==='guide'){
-    // Guide mode: show edit toggle, hide progress reset
     document.getElementById('bEditToggle').style.display='';
-    document.querySelector('[onclick="resetMode(\'progress\')"]').style.display='none';
-    SM('guide');
+    // Hide progress reset button in guide mode  
+    const pr=document.querySelector('[onclick="resetMode('progress')"]');
+    if(pr) pr.style.display='none';
+    mode='guide';
   } else {
-    // Standalone testing: show both resets, show edit toggle
     document.getElementById('bEditToggle').style.display='';
   }
   updEditBtn();
@@ -1083,6 +1090,16 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   sbt.addEventListener('mouseenter',()=>{ if(!dragging) sbt.style.background='rgba(201,168,76,.65)'; });
   sbt.addEventListener('mouseleave',()=>{ if(!dragging) sbt.style.background='rgba(180,160,80,.5)'; });
 })();
+function resetFromSettings(m){
+  const label = m==='guide'?'Guide':'Progress';
+  const d = m==='guide'?gR:pR;
+  const count = Object.values(d).reduce((s,v)=>s+v,0);
+  if(count===0){ alert(`${label} is already empty.`); return; }
+  if(!confirm(`Reset ${label} mode? This will clear all ${count} points.`)) return;
+  if(m==='guide'){gR={};}else{pR={};}
+  SV(); draw();
+  document.getElementById('settingsPanel').style.display='none';
+}
 function toggleSettings(){
   const p=document.getElementById('settingsPanel');
   p.style.display=p.style.display==='none'?'block':'none';
