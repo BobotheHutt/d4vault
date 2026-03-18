@@ -272,6 +272,19 @@ function renderVariantBar(build) {
   while (build.variants.length < 5) {
     build.variants.push({ name: `Build ${build.variants.length + 1}`, skills: [], gear: [], paragonBoards: [], levelingSteps: [] });
   }
+  // Migrate old "Variant X" names to "Build X"
+  let migrated = false;
+  build.variants.forEach((v, i) => {
+    if (/^Variant \d+$/.test(v.name)) {
+      v.name = v.name.replace('Variant', 'Build');
+      migrated = true;
+    }
+  });
+  if (migrated) {
+    const data = getData();
+    const b = data.builds.find(x => x.id === build.id);
+    if (b) { b.variants = build.variants; saveData(data); }
+  }
 
   build.variants.forEach((v, i) => {
     const wrap = document.createElement('div');
