@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;background:#12122a;color:#d4cfc0;font-family:'Rajdhani',sans-serif;}
+html,body{height:100%;overflow:hidden;background:#1a1a35;color:#d4cfc0;font-family:'Rajdhani',sans-serif;}
 body{display:flex;flex-direction:column;}
 #bar{height:52px;background:#1a1a38;border-bottom:1px solid rgba(120,110,200,.3);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0;}
 .ttl{font-family:'Cinzel',serif;font-size:14px;color:#e8c97a;letter-spacing:.1em;}
@@ -38,8 +38,8 @@ body{display:flex;flex-direction:column;}
 <div id="bar">
   <span class="ttl">Paladin — Skill Tree</span>
   <div class="sep"></div>
-  <button class="mb mg" id="bG" onclick="SM('guide')">Guide Mode</button>
-  <button class="mb"    id="bP" onclick="SM('progress')">Progress Mode</button>
+  <!-- Guide mode: edit toggle. Progress mode: hidden -->
+  <button class="mb" id="bEditToggle" onclick="toggleEdit()" style="display:none"></button>
   <div class="sep"></div>
   <div class="pts">
     <div class="pi"><div class="pd" style="background:#c9a84c"></div><span style="color:#6a6050">Guide</span><span id="gP" style="font-weight:600;color:#d4cfc0">0</span><span style="color:#5a5070">/71</span></div>
@@ -56,7 +56,11 @@ body{display:flex;flex-direction:column;}
   <button class="mb" onclick="resetMode('progress')" style="color:#3edc81;border-color:rgba(62,220,129,.4)">Reset Progress</button>
   <span style="font-size:12px;color:#55506a;margin-left:4px;min-width:40px" id="zl">55%</span>
 </div>
-<div id="wrap"><canvas id="cv"></canvas></div>
+<div id="wrap"><canvas id="cv"></canvas>
+  <div id="treeScrollbar" style="position:absolute;right:6px;top:6px;bottom:6px;width:10px;background:rgba(80,70,140,.2);border-radius:5px;cursor:pointer;z-index:10;">
+    <div id="treeScrollThumb" style="position:absolute;left:0;right:0;top:0;height:60px;background:rgba(180,160,80,.45);border-radius:5px;cursor:grab;transition:background .15s;"></div>
+  </div>
+</div>
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center;">
   <div style="background:#1c1c3a;border:1px solid rgba(150,140,220,.5);border-radius:8px;padding:28px 32px;max-width:340px;text-align:center;">
     <div id="modal-title" style="font-family:'Cinzel',serif;font-size:15px;color:#e8c97a;margin-bottom:10px;"></div>
@@ -332,11 +336,11 @@ const maxX=Math.max(...N.map(n=>n.x),...Object.values(H).map(h=>h.x))+250;
 const maxY=Math.max(...N.map(n=>n.y),...Object.values(H).map(h=>h.y))+250;
 cv.width=maxX;cv.height=maxY;
 
-let mode='guide',gR={},pR={};
+let mode='guide',gR={},pR={},editing=true; // editing=true means guide is in edit mode
 let sc=0.55,px=80,py=30,pan=false,lm={x:0,y:0},hov=null,cn=null,cs=null;
 
 function draw(){
-  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.fillStyle='#1a1a35';ctx.fillRect(0,0,cv.width,cv.height);
   drawSpine();drawLines();
   for(const n of N)drawNode(n);
   drawSpineDiamonds();
@@ -728,6 +732,22 @@ function nAt(cx,cy){
   return null;
 }
 function s2c(sx,sy){const r=document.getElementById('wrap').getBoundingClientRect();return{x:(sx-r.left-px)/sc,y:(sy-r.top-py)/sc};}
+function toggleEdit(){
+  editing=!editing;
+  updEditBtn();
+  draw();
+}
+function updEditBtn(){
+  const btn=document.getElementById('bEditToggle');
+  if(!btn) return;
+  if(editing){
+    btn.textContent='Confirm';
+    btn.className='mb mp'; // green = actively editing
+  } else {
+    btn.textContent='Set Build';
+    btn.className='mb mg'; // gold = locked/set
+  }
+}
 function parentHasPoints(n){
   if(!n.parentId) return true; // hub-connected, always ok
   const d=mode==='guide'?gR:pR;
@@ -736,8 +756,9 @@ function parentHasPoints(n){
   return parPts>0||altPts>0;
 }
 function inc(n){
+  if(mode==='guide'&&!editing) return; // guide locked — must click Confirm to edit
   if(!sectionUnlocked(n.sec)) return;
-  if(!parentHasPoints(n)) return; // parent must be invested first
+  if(!parentHasPoints(n)) return;
   if(mode==='progress'){
     const guideRank=gR[n.id]||0;
     if(guideRank===0) return;
@@ -793,6 +814,7 @@ function canDec(n){
   return dependents.length===0;
 }
 function dec(n){
+  if(mode==='guide'&&!editing) return; // guide locked
   if(!canDec(n)) return;
   const d=mode==='guide'?gR:pR;
   d[n.id]=Math.max((d[n.id]||0)-1,0);
@@ -832,8 +854,36 @@ function cascadeClearProgress(parentId){
 function updPts(){document.getElementById('gP').textContent=Object.values(gR).reduce((s,v)=>s+v,0);document.getElementById('pP').textContent=Object.values(pR).reduce((s,v)=>s+v,0);}
 function SM(m){mode=m;document.getElementById('bG').className='mb'+(m==='guide'?' mg':'');document.getElementById('bP').className='mb'+(m==='progress'?' mp':'');draw();}
 function DZ(f,cx,cy){const w=document.getElementById('wrap');cx=cx??w.clientWidth/2;cy=cy??w.clientHeight/2;const ns=Math.min(Math.max(sc*f,.1),3);px=cx-(cx-px)*(ns/sc);py=cy-(cy-py)*(ns/sc);sc=ns;AX();}
-function RV(){sc=.55;px=140;py=30;AX();}
-function AX(){cv.style.transform=`translate(${px}px,${py}px) scale(${sc})`;document.getElementById('zl').textContent=Math.round(sc*100)+'%';}
+function RV(){
+  sc=.55;
+  const wrap=document.getElementById('wrap');
+  px=Math.max((wrap.clientWidth-cv.width*sc)/2,40);
+  py=30;
+  AX();
+}
+function AX(){
+  const wrap=document.getElementById('wrap');
+  const W=wrap.clientWidth,H=wrap.clientHeight;
+  const cw=cv.width*sc,ch=cv.height*sc;
+  const margin=200;
+  px=Math.min(margin,Math.max(W-cw-margin,px));
+  py=Math.min(margin,Math.max(H-ch-margin,py));
+  cv.style.transform=`translate(${px}px,${py}px) scale(${sc})`;
+  document.getElementById('zl').textContent=Math.round(sc*100)+'%';
+  updScrollbar();
+}
+function updScrollbar(){
+  const wrap=document.getElementById('wrap');
+  const H=wrap.clientHeight,ch=cv.height*sc;
+  const sb=document.getElementById('treeScrollbar');
+  const sbt=document.getElementById('treeScrollThumb');
+  if(!sb||!sbt)return;
+  const visibleFrac=Math.min(H/ch,1);
+  const thumbH=Math.max(visibleFrac*sb.clientHeight,40);
+  sbt.style.height=thumbH+'px';
+  const scrollFrac=Math.max(0,Math.min((-py)/(ch-H),1));
+  sbt.style.top=(scrollFrac*(sb.clientHeight-thumbH))+'px';
+}
 
 const wrap=document.getElementById('wrap');
 wrap.addEventListener('wheel',e=>{e.preventDefault();const r=wrap.getBoundingClientRect();DZ(e.deltaY<0?1.1:.9,e.clientX-r.left,e.clientY-r.top);},{passive:false});
@@ -871,6 +921,8 @@ function ST(n,mx,my){
     hintText=blockedSec
       ? `Cannot remove — would lose access to ${blockedSec} section`
       : 'Cannot remove — a skill depends on this';
+  } else if(mode==='guide'&&!editing){
+    hintText='Click "Confirm" to edit the build plan';
   } else if(!parentHasPoints(n)){
     hintText=n.parentId?'Invest in the previous node first':'Cannot invest yet';
   } else if(mode==='progress'&&(gR[n.id]||0)===0){
@@ -932,14 +984,59 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   // If embedded with a specific mode, hide the other mode's button
   // and hide reset button for the other mode
   if(urlMode==='progress'){
-    document.getElementById('bG').style.display='none';
+    // Progress mode: hide edit toggle, hide guide reset
+    document.getElementById('bEditToggle').style.display='none';
     document.querySelector('[onclick="resetMode(\'guide\')"]').style.display='none';
     SM('progress');
   } else if(urlMode==='guide'){
-    document.getElementById('bP').style.display='none';
+    // Guide mode: show edit toggle, hide progress reset
+    document.getElementById('bEditToggle').style.display='';
     document.querySelector('[onclick="resetMode(\'progress\')"]').style.display='none';
     SM('guide');
+  } else {
+    // Standalone testing: show both resets, show edit toggle
+    document.getElementById('bEditToggle').style.display='';
   }
+  updEditBtn();
+})();
+// Scrollbar drag
+(function(){
+  const sb=document.getElementById('treeScrollbar');
+  const sbt=document.getElementById('treeScrollThumb');
+  if(!sb||!sbt) return;
+  let dragging=false,startY=0,startPy=0;
+  sbt.addEventListener('mousedown',e=>{
+    dragging=true;startY=e.clientY;startPy=py;
+    sbt.style.background='rgba(201,168,76,.7)';
+    e.stopPropagation();e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!dragging) return;
+    const wrap=document.getElementById('wrap');
+    const ch=cv.height*sc;
+    const H=wrap.clientHeight;
+    const thumbH=parseFloat(sbt.style.height||60);
+    const maxTop=sb.clientHeight-thumbH;
+    const dy=e.clientY-startY;
+    const scrollFrac=dy/maxTop;
+    py=startPy-scrollFrac*(ch-H);
+    AX();
+  });
+  document.addEventListener('mouseup',()=>{
+    if(dragging){dragging=false;sbt.style.background='rgba(180,160,80,.45)';}
+  });
+  // Click on track to jump
+  sb.addEventListener('click',e=>{
+    if(e.target===sbt) return;
+    const wrap=document.getElementById('wrap');
+    const ch=cv.height*sc, H=wrap.clientHeight;
+    const rect=sb.getBoundingClientRect();
+    const frac=(e.clientY-rect.top)/sb.clientHeight;
+    py=-(frac*(ch-H));
+    AX();
+  });
+  sbt.addEventListener('mouseenter',()=>{ if(!dragging) sbt.style.background='rgba(201,168,76,.55)'; });
+  sbt.addEventListener('mouseleave',()=>{ if(!dragging) sbt.style.background='rgba(180,160,80,.45)'; });
 })();
 LV();RV();draw();
 </script>
