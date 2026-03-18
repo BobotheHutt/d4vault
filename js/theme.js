@@ -54,13 +54,13 @@ const THEMES = {
 };
 
 const ACCENTS = {
-  gold:    { name: 'Gold',    color: '#c9a84c', glow: 'rgba(201,168,76,.35)',  dark: '#1a1408', mid: '#8a6020' },
-  blood:   { name: 'Blood',   color: '#c03535', glow: 'rgba(192,53,53,.35)',   dark: '#180808', mid: '#802020' },
-  frost:   { name: 'Frost',   color: '#4090c8', glow: 'rgba(64,144,200,.35)',  dark: '#081018', mid: '#205880' },
-  void:    { name: 'Void',    color: '#9040c8', glow: 'rgba(144,64,200,.35)',  dark: '#100818', mid: '#602090' },
-  emerald: { name: 'Emerald', color: '#30a860', glow: 'rgba(48,168,96,.35)',   dark: '#081408', mid: '#1a6035' },
-  bone:    { name: 'Bone',    color: '#d0c8a8', glow: 'rgba(208,200,168,.25)', dark: '#181810', mid: '#908870' },
-  silver:  { name: 'Silver',  color: '#a0b0c0', glow: 'rgba(160,176,192,.25)', dark: '#0c1018', mid: '#607080' },
+  gold:    { name: 'Gold',    color: '#c9a84c', rgb: '201,168,76',  glow: 'rgba(201,168,76,.35)',  dark: '#1a1408', mid: '#8a6020' },
+  blood:   { name: 'Blood',   color: '#c03535', rgb: '192,53,53',   glow: 'rgba(192,53,53,.35)',   dark: '#180808', mid: '#802020' },
+  frost:   { name: 'Frost',   color: '#4090c8', rgb: '64,144,200',  glow: 'rgba(64,144,200,.35)',  dark: '#081018', mid: '#205880' },
+  void:    { name: 'Void',    color: '#9040c8', rgb: '144,64,200',  glow: 'rgba(144,64,200,.35)',  dark: '#100818', mid: '#602090' },
+  emerald: { name: 'Emerald', color: '#30a860', rgb: '48,168,96',   glow: 'rgba(48,168,96,.35)',   dark: '#081408', mid: '#1a6035' },
+  bone:    { name: 'Bone',    color: '#d0c8a8', rgb: '208,200,168', glow: 'rgba(208,200,168,.25)', dark: '#181810', mid: '#908870' },
+  silver:  { name: 'Silver',  color: '#a0b0c0', rgb: '160,176,192', glow: 'rgba(160,176,192,.25)', dark: '#0c1018', mid: '#607080' },
 };
 
 let currentTheme = 'abyss';
@@ -86,6 +86,7 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
 
   // Accent colors
   r.style.setProperty('--accent',      a.color);
+  r.style.setProperty('--accent-rgb',  a.rgb || '201,168,76');
   r.style.setProperty('--accent-glow', a.glow);
   r.style.setProperty('--accent-dark', a.dark);
   r.style.setProperty('--accent-mid',  a.mid);
@@ -132,7 +133,7 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   localStorage.setItem('d4v_theme', JSON.stringify({ theme: currentTheme, accent: currentAccent, brightness: currentBrightness, fontSize: currentFontSize }));
 
   // Broadcast theme to skill tree iframes
-  const themeMsg = { type: 'themeChange', panelBg: t.panelBg || '#12122a', accent: a.color, accentRgb: a.color };
+  const themeMsg = { type: 'themeChange', panelBg: t.panelBg || '#12122a', accent: a.color, accentRgb: a.rgb || '201,168,76' };
   document.querySelectorAll('iframe').forEach(f => {
     try { f.contentWindow.postMessage(themeMsg, '*'); } catch(e) {}
   });
@@ -233,7 +234,8 @@ document.addEventListener('click', e => {
   }
 });
 
+// Apply theme immediately so no flash of unstyled content
+loadTheme();
 document.addEventListener('DOMContentLoaded', () => {
-  loadTheme();
   buildThemePanel();
 });
