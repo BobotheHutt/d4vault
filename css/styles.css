@@ -317,16 +317,16 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text3);
+  color: var(--accent,#c9a84c);
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(var(--accent-rgb,201,168,76),.3);
   border-radius: 2px;
   padding: 4px 10px;
   cursor: pointer;
   transition: all 0.15s;
   flex-shrink: 0;
 }
-.rename-btn:hover { border-color: var(--border2); color: var(--text2); }
+.rename-btn:hover { border-color: var(--accent,#c9a84c); color: var(--text); }
 .build-meta {
   display: flex;
   gap: 6px;
@@ -342,7 +342,7 @@ body {
   border-radius: 2px;
 }
 .tag-class    { background: rgba(var(--accent-rgb,201,168,76),0.12); border: 1px solid rgba(var(--accent-rgb,201,168,76),0.3); color: var(--accent,#c9a84c); }
-.tag-season   { background: rgba(60,50,38,0.5); border: 1px solid rgba(80,65,48,0.5); color: var(--text3); }
+.tag-season   { background: rgba(var(--accent-rgb,201,168,76),0.08); border: 1px solid rgba(var(--accent-rgb,201,168,76),0.2); color: var(--accent,#c9a84c); opacity: .8; }
 .tag-d4builds { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #2ecc71; }
 .tag-maxroll  { background: rgba(93,173,226,0.1); border: 1px solid rgba(93,173,226,0.3); color: #5dade2; }
 .tag-mobalytics { background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3); color: #9b59b6; }
