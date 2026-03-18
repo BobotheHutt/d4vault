@@ -1,56 +1,85 @@
 {
   "class": "Paladin",
-  "canvasWidth": 1200,
-  "canvasHeight": 3200,
+  "canvasWidth": 1400,
+  "canvasHeight": 3600,
+  "spine": [
+    { "id": "hub-basic",    "x": 560,  "y": 120  },
+    { "id": "hub-core",     "x": 280,  "y": 520  },
+    { "id": "hub-aura",     "x": 700,  "y": 880  },
+    { "id": "hub-valor",    "x": 280,  "y": 1280 },
+    { "id": "hub-justice",  "x": 700,  "y": 1680 },
+    { "id": "hub-ultimate", "x": 280,  "y": 2100 },
+    { "id": "hub-keys",     "x": 700,  "y": 2500 }
+  ],
   "sections": [
     {
       "id": "basic",
       "name": "Basic",
+      "hubId": "hub-basic",
       "color": "#c8a96e",
-      "y": 80,
       "nodes": [
-        { "id": "brandish",    "name": "Brandish",  "type": "active", "maxRank": 5, "x": 180, "y": 120,
-          "desc": "Brandish the Light, unleashing an arc that deals 105% damage.",
-          "tags": ["Juggernaut"],
+        {
+          "id": "brandish", "name": "Brandish", "type": "active", "maxRank": 5,
+          "x": 400, "y": 60,
+          "desc": "Brandish the Light, unleashing an arc that deals 105% damage.", "tags": ["Juggernaut"],
           "upgrades": [
-            { "id": "brandish-enh", "name": "Enhanced Brandish", "type": "upgrade", "maxRank": 1, "x": 100, "y": 220, "desc": "Brandish now pierces.", "upgrades": [
-              { "id": "brandish-ret", "name": "Returning Light",  "type": "upgrade", "maxRank": 1, "x": 40,  "y": 320, "desc": "Brandish's light returns to you, dealing 52% damage on its return.", "upgrades": [] },
-              { "id": "brandish-swd", "name": "Sword of Mastery", "type": "upgrade", "maxRank": 1, "x": 160, "y": 320, "desc": "While Healthy, Brandish deals 128% damage and travels 100% faster.", "upgrades": [] }
-            ]},
-            { "id": "brandish-crs", "name": "Cross Strike",     "type": "upgrade", "maxRank": 1, "x": 260, "y": 220, "desc": "Brandish unleashes 2 additional arcs that deal 120% damage and apply Vulnerable.", "upgrades": [] }
+            { "id": "brandish-enh", "name": "Enhanced Brandish", "type": "upgrade", "maxRank": 1, "x": 300, "y": 140,
+              "desc": "Brandish now pierces.",
+              "upgrades": [
+                { "id": "brandish-ret", "name": "Returning Light",  "type": "upgrade", "maxRank": 1, "x": 200, "y": 220, "desc": "Brandish's light returns dealing 52% damage.", "upgrades": [] },
+                { "id": "brandish-swd", "name": "Sword of Mastery", "type": "upgrade", "maxRank": 1, "x": 320, "y": 220, "desc": "While Healthy, Brandish deals 128% damage and travels 100% faster.", "upgrades": [] }
+              ]
+            },
+            { "id": "brandish-crs", "name": "Cross Strike", "type": "upgrade", "maxRank": 1, "x": 460, "y": 140,
+              "desc": "Brandish unleashes 2 additional arcs that deal 120% damage and apply Vulnerable.", "upgrades": [] }
           ]
         },
-        { "id": "holybolt",   "name": "Holy Bolt",  "type": "active", "maxRank": 5, "x": 480, "y": 120,
-          "desc": "Throw a Holy hammer, dealing 126% damage.",
-          "tags": ["Judicator"],
+        {
+          "id": "holybolt", "name": "Holy Bolt", "type": "active", "maxRank": 5,
+          "x": 560, "y": 60,
+          "desc": "Throw a Holy hammer, dealing 126% damage.", "tags": ["Judicator"],
           "upgrades": [
-            { "id": "holybolt-enh", "name": "Enhanced Holy Bolt", "type": "upgrade", "maxRank": 1, "x": 400, "y": 220, "desc": "Holy Bolt now applies Judgement.", "upgrades": [
-              { "id": "holybolt-ric", "name": "Ricocheting Bolt", "type": "upgrade", "maxRank": 1, "x": 340, "y": 320, "desc": "Holy Bolt deals 135% damage and ricochets 3 times.", "upgrades": [] },
-              { "id": "holybolt-div", "name": "Divine Bolt",      "type": "upgrade", "maxRank": 1, "x": 460, "y": 320, "desc": "Holy Bolt becomes a Disciple Skill. Holy Bolt pierces, deals 120% damage, and applies Vulnerable.", "upgrades": [] }
-            ]},
-            { "id": "holybolt-str", "name": "Storm Bolt",        "type": "upgrade", "maxRank": 1, "x": 560, "y": 220, "desc": "Holy Bolt becomes a Justice Skill. Deals 315% damage and Stuns enemies for 2 seconds.", "upgrades": [] }
+            { "id": "holybolt-enh", "name": "Enhanced Holy Bolt", "type": "upgrade", "maxRank": 1, "x": 560, "y": 160,
+              "desc": "Holy Bolt now applies Judgement.",
+              "upgrades": [
+                { "id": "holybolt-ric", "name": "Ricocheting Bolt", "type": "upgrade", "maxRank": 1, "x": 480, "y": 240, "desc": "Holy Bolt deals 135% damage and ricochets 3 times.", "upgrades": [] },
+                { "id": "holybolt-div", "name": "Divine Bolt",      "type": "upgrade", "maxRank": 1, "x": 640, "y": 240, "desc": "Holy Bolt becomes a Disciple Skill, pierces, deals 120% damage, and applies Vulnerable.", "upgrades": [] }
+              ]
+            },
+            { "id": "holybolt-str", "name": "Storm Bolt", "type": "upgrade", "maxRank": 1, "x": 700, "y": 160,
+              "desc": "Holy Bolt becomes a Justice Skill dealing 315% damage and Stunning for 2 seconds.", "upgrades": [] }
           ]
         },
-        { "id": "clash",      "name": "Clash",      "type": "active", "maxRank": 5, "x": 780, "y": 120,
-          "desc": "Strike an enemy with your weapon and shield, dealing 161% damage.",
-          "tags": ["Juggernaut"],
+        {
+          "id": "clash", "name": "Clash", "type": "active", "maxRank": 5,
+          "x": 720, "y": 60,
+          "desc": "Strike an enemy with your weapon and shield, dealing 161% damage.", "tags": ["Juggernaut"],
           "upgrades": [
-            { "id": "clash-enh", "name": "Enhanced Clash",  "type": "upgrade", "maxRank": 1, "x": 700, "y": 220, "desc": "Whenever you cast Clash, gain Crusader's March for 6 seconds.", "upgrades": [
-              { "id": "clash-pun", "name": "Punishment",    "type": "upgrade", "maxRank": 1, "x": 640, "y": 320, "desc": "You are emboldened during Crusader's March, granting 30% Retribution Chance, 3 Thorns, x20% Thorns damage.", "upgrades": [] },
-              { "id": "clash-ski", "name": "Skirmish",      "type": "upgrade", "maxRank": 1, "x": 760, "y": 320, "desc": "Clash becomes a Zealot Skill and cleaves in an area for 155% damage.", "upgrades": [] }
-            ]},
-            { "id": "clash-sei", "name": "Seize Them",      "type": "upgrade", "maxRank": 1, "x": 860, "y": 220, "desc": "Your Resolve empowers Clash, dealing x8% increased damage per stack. Every 3rd strike, enemies are Pulled in.", "upgrades": [] }
+            { "id": "clash-enh", "name": "Enhanced Clash", "type": "upgrade", "maxRank": 1, "x": 780, "y": 160,
+              "desc": "Whenever you cast Clash, gain Crusader's March for 6 seconds.",
+              "upgrades": [
+                { "id": "clash-pun", "name": "Punishment", "type": "upgrade", "maxRank": 1, "x": 820, "y": 240, "desc": "Emboldened during Crusader's March: 30% Retribution Chance, 3 Thorns, x20% Thorns damage.", "upgrades": [] },
+                { "id": "clash-ski", "name": "Skirmish",   "type": "upgrade", "maxRank": 1, "x": 940, "y": 240, "desc": "Clash becomes a Zealot Skill cleaving in an area for 155% damage.", "upgrades": [] }
+              ]
+            },
+            { "id": "clash-sei", "name": "Seize Them", "type": "upgrade", "maxRank": 1, "x": 900, "y": 160,
+              "desc": "Resolve empowers Clash, x8% increased damage per stack. Every 3rd strike, enemies are Pulled in.", "upgrades": [] }
           ]
         },
-        { "id": "advance",    "name": "Advance",    "type": "active", "maxRank": 5, "x": 1080, "y": 120,
-          "desc": "Advance forward with your weapon, dealing 147% damage.",
-          "tags": ["Zealot", "Mobility"],
+        {
+          "id": "advance", "name": "Advance", "type": "active", "maxRank": 5,
+          "x": 860, "y": 60,
+          "desc": "Advance forward with your weapon, dealing 147% damage.", "tags": ["Zealot","Mobility"],
           "upgrades": [
-            { "id": "advance-enh", "name": "Enhanced Advance",   "type": "upgrade", "maxRank": 1, "x": 1000, "y": 220, "desc": "Casting Advance grants you Unhindered for 2 seconds.", "upgrades": [
-              { "id": "advance-van", "name": "Vanguard's Rush",   "type": "upgrade", "maxRank": 1, "x": 940,  "y": 320, "desc": "Advance rushes into enemies, granting 1 Fervor on each strike and deals x25% damage per stack of Fervor.", "upgrades": [] },
-              { "id": "advance-wav", "name": "Wave Dash",         "type": "upgrade", "maxRank": 1, "x": 1060, "y": 320, "desc": "Advance becomes a Juggernaut Skill. Impact waves out, dealing 136% damage and gains 1 Resolve per meter dashed.", "upgrades": [] }
-            ]},
-            { "id": "advance-fla", "name": "Flash of the Blade", "type": "upgrade", "maxRank": 1, "x": 1140, "y": 220, "desc": "Advance becomes a Disciple Skill with 10 second cooldown. Dashes through enemies applying Vulnerable and dealing 230% damage.", "upgrades": [] }
+            { "id": "advance-enh", "name": "Enhanced Advance", "type": "upgrade", "maxRank": 1, "x": 960, "y": 140,
+              "desc": "Casting Advance grants Unhindered for 2 seconds.",
+              "upgrades": [
+                { "id": "advance-van", "name": "Vanguard's Rush",   "type": "upgrade", "maxRank": 1, "x": 980, "y": 220, "desc": "Advance rushes into enemies, granting 1 Fervor on each strike.", "upgrades": [] },
+                { "id": "advance-wav", "name": "Wave Dash",         "type": "upgrade", "maxRank": 1, "x": 1080,"y": 220, "desc": "Advance becomes a Juggernaut Skill, waves out dealing 136% damage.", "upgrades": [] }
+              ]
+            },
+            { "id": "advance-fla", "name": "Flash of the Blade", "type": "upgrade", "maxRank": 1, "x": 1060, "y": 140,
+              "desc": "Advance becomes a Disciple Skill with 10s cooldown, dealing 230% damage and applying Vulnerable.", "upgrades": [] }
           ]
         }
       ]
@@ -58,69 +87,94 @@
     {
       "id": "core",
       "name": "Core",
+      "hubId": "hub-core",
       "color": "#e8c97a",
-      "y": 440,
       "passives": [
-        { "id": "discipline", "name": "Discipline",  "type": "passive", "maxRank": 3, "x": 180,  "y": 480, "desc": "Your Core Skills deal x18% increased damage." },
-        { "id": "en-guarde",  "name": "En Guarde",   "type": "passive", "maxRank": 3, "x": 480,  "y": 480, "desc": "You gain +30% Armor and +15% Block Chance." },
-        { "id": "riposte",    "name": "Riposte",     "type": "passive", "maxRank": 3, "x": 780,  "y": 480, "desc": "Blocking grants you 18% damage for 5 seconds." },
-        { "id": "parry",      "name": "Parry",       "type": "passive", "maxRank": 3, "x": 980,  "y": 480, "desc": "Blocking restores 3 Faith." },
-        { "id": "piety",      "name": "Piety",       "type": "passive", "maxRank": 3, "x": 1140, "y": 480, "desc": "Your Maximum Faith is increased by 15." }
+        { "id": "discipline", "name": "Discipline", "type": "passive", "maxRank": 3, "x": 440, "y": 480, "desc": "Your Core Skills deal x18% increased damage." },
+        { "id": "en-guarde",  "name": "En Guarde",  "type": "passive", "maxRank": 3, "x": 440, "y": 540, "desc": "You gain +30% Armor and +15% Block Chance." },
+        { "id": "riposte",    "name": "Riposte",    "type": "passive", "maxRank": 3, "x": 440, "y": 600, "desc": "Blocking grants you 18% damage for 5 seconds." },
+        { "id": "parry",      "name": "Parry",      "type": "passive", "maxRank": 3, "x": 440, "y": 660, "desc": "Blocking restores 3 Faith." },
+        { "id": "piety",      "name": "Piety",      "type": "passive", "maxRank": 3, "x": 440, "y": 720, "desc": "Your Maximum Faith is increased by 15." }
       ],
       "nodes": [
-        { "id": "zeal",        "name": "Zeal",         "type": "active", "maxRank": 5, "x": 180, "y": 620,
-          "desc": "Strike enemies with blinding speed, dealing 112% damage followed by 3 additional strikes dealing 28% damage each.",
-          "tags": ["Zealot"],
+        {
+          "id": "zeal", "name": "Zeal", "type": "active", "maxRank": 5,
+          "x": 80, "y": 440,
+          "desc": "Strike with blinding speed, 112% damage followed by 3 strikes dealing 28% each.", "tags": ["Zealot"],
           "upgrades": [
-            { "id": "zeal-enh", "name": "Enhanced Zeal",    "type": "upgrade", "maxRank": 1, "x": 100, "y": 720, "desc": "Zeal gains 2 additional strikes.", "upgrades": [
-              { "id": "zeal-cul", "name": "Cull the Wicked", "type": "upgrade", "maxRank": 1, "x": 40,  "y": 820, "desc": "Zeal's cleave is larger, gains 2 additional strikes, and deals x25% increased damage to Weakened enemies.", "upgrades": [] },
-              { "id": "zeal-dog", "name": "Death or Glory",  "type": "upgrade", "maxRank": 1, "x": 160, "y": 820, "desc": "Zeal costs x10% Maximum Life instead of Faith and strikes around you in a circle.", "upgrades": [] }
-            ]},
-            { "id": "zeal-leg", "name": "Zealot's Legacy",  "type": "upgrade", "maxRank": 1, "x": 260, "y": 720, "desc": "Zeal extends its assault, randomly seeking surrounding enemies and striking 4 additional times.", "upgrades": [] }
+            { "id": "zeal-enh", "name": "Enhanced Zeal", "type": "upgrade", "maxRank": 1, "x": 60, "y": 540,
+              "desc": "Zeal gains 2 additional strikes.",
+              "upgrades": [
+                { "id": "zeal-cul", "name": "Cull the Wicked", "type": "upgrade", "maxRank": 1, "x": 20,  "y": 620, "desc": "Zeal's cleave is larger, 2 additional strikes, x25% increased damage to Weakened enemies.", "upgrades": [] },
+                { "id": "zeal-dog", "name": "Death or Glory",  "type": "upgrade", "maxRank": 1, "x": 120, "y": 620, "desc": "Zeal costs x10% Maximum Life instead of Faith and strikes around you in a circle.", "upgrades": [] }
+              ]
+            },
+            { "id": "zeal-leg", "name": "Zealot's Legacy", "type": "upgrade", "maxRank": 1, "x": 160, "y": 540,
+              "desc": "Zeal extends its assault, randomly seeking surrounding enemies and striking 4 additional times.", "upgrades": [] }
           ]
         },
-        { "id": "blessedshield", "name": "Blessed Shield", "type": "active", "maxRank": 5, "x": 480, "y": 620,
-          "desc": "Bless and hurl your shield with Holy energy, dealing 302% damage that ricochets up to 3 times.",
-          "tags": ["Judicator"],
+        {
+          "id": "blessedshield", "name": "Blessed Shield", "type": "active", "maxRank": 5,
+          "x": 80, "y": 560,
+          "desc": "Bless and hurl your shield dealing 302% damage ricocheting up to 3 times.", "tags": ["Judicator"],
           "upgrades": [
-            { "id": "bshield-enh", "name": "Enhanced Blessed Shield",    "type": "upgrade", "maxRank": 1, "x": 400, "y": 720, "desc": "Blessed Shield deals 1% additional damage for each Armor on your shield.", "upgrades": [
-              { "id": "bshield-jus", "name": "Shield of Justice",         "type": "upgrade", "maxRank": 1, "x": 340, "y": 820, "desc": "Blessed Shield detonates Judgement and ricochets 5 additional times.", "upgrades": [] },
-              { "id": "bshield-rev", "name": "Shield of the Revenant",    "type": "upgrade", "maxRank": 1, "x": 460, "y": 820, "desc": "Blessed Shield now boomerangs and pierces, dealing 270% damage.", "upgrades": [] }
-            ]},
-            { "id": "bshield-ret", "name": "Shield of Retribution",      "type": "upgrade", "maxRank": 1, "x": 560, "y": 720, "desc": "Blessed Shield becomes a Juggernaut Skill. Travels straight, pulsing Thorns damage before bursting for 378% damage.", "upgrades": [] }
+            { "id": "bshield-enh", "name": "Enhanced Blessed Shield", "type": "upgrade", "maxRank": 1, "x": 60, "y": 660,
+              "desc": "Blessed Shield deals 1% additional damage for each Armor on your shield.",
+              "upgrades": [
+                { "id": "bshield-jus", "name": "Shield of Justice",      "type": "upgrade", "maxRank": 1, "x": 20,  "y": 740, "desc": "Blessed Shield detonates Judgement and ricochets 5 additional times.", "upgrades": [] },
+                { "id": "bshield-rev", "name": "Shield of the Revenant", "type": "upgrade", "maxRank": 1, "x": 120, "y": 740, "desc": "Blessed Shield boomerangs and pierces, dealing 270% damage.", "upgrades": [] }
+              ]
+            },
+            { "id": "bshield-ret", "name": "Shield of Retribution", "type": "upgrade", "maxRank": 1, "x": 160, "y": 660,
+              "desc": "Blessed Shield becomes a Juggernaut Skill, pulsing Thorns damage before bursting for 378%.", "upgrades": [] }
           ]
         },
-        { "id": "blessedhammer", "name": "Blessed Hammer", "type": "active", "maxRank": 5, "x": 720, "y": 620,
-          "desc": "Throw a Blessed Hammer that spirals out, dealing 161% damage.",
-          "tags": ["Judicator"],
+        {
+          "id": "blessedhammer", "name": "Blessed Hammer", "type": "active", "maxRank": 5,
+          "x": 80, "y": 680,
+          "desc": "Throw a Blessed Hammer that spirals out dealing 161% damage.", "tags": ["Judicator"],
           "upgrades": [
-            { "id": "bhammer-enh", "name": "Enhanced Blessed Hammer", "type": "upgrade", "maxRank": 1, "x": 640, "y": 720, "desc": "Blessed Hammer now hits enemies multiple times.", "upgrades": [
-              { "id": "bhammer-sht", "name": "Shattering Blow",        "type": "upgrade", "maxRank": 1, "x": 580, "y": 820, "desc": "Blessed Hammer deals 115% and shatters into 3 small explosions on impact.", "upgrades": [] },
-              { "id": "bhammer-dis", "name": "Disciple's Halo",        "type": "upgrade", "maxRank": 1, "x": 700, "y": 820, "desc": "Blessed Hammer becomes a Disciple Skill and orbits around you.", "upgrades": [] }
-            ]},
-            { "id": "bhammer-mor", "name": "Mortar Combat",            "type": "upgrade", "maxRank": 1, "x": 800, "y": 720, "desc": "Blessed Hammer mortars 3 hammers to the ground, dealing 67% damage in an area.", "upgrades": [] }
+            { "id": "bhammer-enh", "name": "Enhanced Blessed Hammer", "type": "upgrade", "maxRank": 1, "x": 60, "y": 780,
+              "desc": "Blessed Hammer now hits enemies multiple times.",
+              "upgrades": [
+                { "id": "bhammer-sht", "name": "Shattering Blow",  "type": "upgrade", "maxRank": 1, "x": 20,  "y": 860, "desc": "Blessed Hammer deals 115% and shatters into 3 small explosions on impact.", "upgrades": [] },
+                { "id": "bhammer-dis", "name": "Disciple's Halo",  "type": "upgrade", "maxRank": 1, "x": 120, "y": 860, "desc": "Becomes a Disciple Skill orbiting around you.", "upgrades": [] }
+              ]
+            },
+            { "id": "bhammer-mor", "name": "Mortar Combat", "type": "upgrade", "maxRank": 1, "x": 160, "y": 780,
+              "desc": "Blessed Hammer mortars 3 hammers to the ground, dealing 67% damage in an area.", "upgrades": [] }
           ]
         },
-        { "id": "divinelance", "name": "Divine Lance",  "type": "active", "maxRank": 5, "x": 920, "y": 620,
-          "desc": "Impale enemies with a heavenly lance, stabbing 2 times for 126% damage each.",
-          "tags": ["Disciple", "Mobility"],
+        {
+          "id": "divinelance", "name": "Divine Lance", "type": "active", "maxRank": 5,
+          "x": 80, "y": 800,
+          "desc": "Impale enemies with a heavenly lance, stabbing 2 times for 126% damage each.", "tags": ["Disciple","Mobility"],
           "upgrades": [
-            { "id": "dlance-enh", "name": "Enhanced Divine Lance", "type": "upgrade", "maxRank": 1, "x": 840, "y": 720, "desc": "Divine Lance's damage is increased by 30% of your Movement Speed bonus.", "upgrades": [
-              { "id": "dlance-tip", "name": "Tip of the Spear",    "type": "upgrade", "maxRank": 1, "x": 780, "y": 820, "desc": "Divine Lance flurries, stabbing 2 additional times.", "upgrades": [] },
-              { "id": "dlance-jou", "name": "Zealous Joust",       "type": "upgrade", "maxRank": 1, "x": 900, "y": 820, "desc": "Divine Lance becomes a Zealot Skill, stabbing with 2 additional spears.", "upgrades": [] }
-            ]},
-            { "id": "dlance-jav", "name": "Divine Javelin",        "type": "upgrade", "maxRank": 1, "x": 1000, "y": 720, "desc": "Throw Divine Lance, dealing 90% damage to the first enemy hit and bursting for 450%.", "upgrades": [] }
+            { "id": "dlance-enh", "name": "Enhanced Divine Lance", "type": "upgrade", "maxRank": 1, "x": 60, "y": 900,
+              "desc": "Divine Lance's damage increased by 30% of your Movement Speed bonus.",
+              "upgrades": [
+                { "id": "dlance-tip", "name": "Tip of the Spear", "type": "upgrade", "maxRank": 1, "x": 20,  "y": 980, "desc": "Divine Lance flurries, stabbing 2 additional times.", "upgrades": [] },
+                { "id": "dlance-jou", "name": "Zealous Joust",   "type": "upgrade", "maxRank": 1, "x": 120, "y": 980, "desc": "Becomes a Zealot Skill, stabbing with 2 additional spears.", "upgrades": [] }
+              ]
+            },
+            { "id": "dlance-jav", "name": "Divine Javelin", "type": "upgrade", "maxRank": 1, "x": 160, "y": 900,
+              "desc": "Throw Divine Lance, dealing 90% damage to first enemy and bursting for 450%.", "upgrades": [] }
           ]
         },
-        { "id": "shieldbash", "name": "Shield Bash",   "type": "active", "maxRank": 5, "x": 1120, "y": 620,
-          "desc": "Charge at an enemy and bash in front of you, dealing 287% damage.",
-          "tags": ["Mobility", "Juggernaut"],
+        {
+          "id": "shieldbash", "name": "Shield Bash", "type": "active", "maxRank": 5,
+          "x": 80, "y": 920,
+          "desc": "Charge at an enemy and bash in front of you, dealing 287% damage.", "tags": ["Mobility","Juggernaut"],
           "upgrades": [
-            { "id": "sbash-enh", "name": "Enhanced Shield Bash", "type": "upgrade", "maxRank": 1, "x": 1040, "y": 720, "desc": "Hits with Shield Bash counts as Blocks.", "upgrades": [
-              { "id": "sbash-bre", "name": "Breach",              "type": "upgrade", "maxRank": 1, "x": 980,  "y": 820, "desc": "Hits with Shield Bash grant you 10% Retribution Chance for 5 seconds, stacking up to 5 times.", "upgrades": [] },
-              { "id": "sbash-smi", "name": "Smite",               "type": "upgrade", "maxRank": 1, "x": 1100, "y": 820, "desc": "Shield Bash smites the first enemy hit, dealing 287% damage and Stunning for 1 second.", "upgrades": [] }
-            ]},
-            { "id": "sbash-lay", "name": "Lay Siege",             "type": "upgrade", "maxRank": 1, "x": 1180, "y": 720, "desc": "Whenever you have Resolve, Shield Bash increases impact size by x50% and deals 246% damage.", "upgrades": [] }
+            { "id": "sbash-enh", "name": "Enhanced Shield Bash", "type": "upgrade", "maxRank": 1, "x": 60, "y": 1020,
+              "desc": "Hits with Shield Bash count as Blocks.",
+              "upgrades": [
+                { "id": "sbash-bre", "name": "Breach",    "type": "upgrade", "maxRank": 1, "x": 20,  "y": 1100, "desc": "Shield Bash grants 10% Retribution Chance for 5 seconds, stacking up to 5 times.", "upgrades": [] },
+                { "id": "sbash-smi", "name": "Smite",     "type": "upgrade", "maxRank": 1, "x": 120, "y": 1100, "desc": "Shield Bash smites first enemy hit, dealing 287% damage and Stunning for 1 second.", "upgrades": [] }
+              ]
+            },
+            { "id": "sbash-lay", "name": "Lay Siege", "type": "upgrade", "maxRank": 1, "x": 160, "y": 1020,
+              "desc": "Whenever you have Resolve, Shield Bash increases impact size by x50% and deals 246% damage.", "upgrades": [] }
           ]
         }
       ]
@@ -128,45 +182,60 @@
     {
       "id": "aura",
       "name": "Aura",
+      "hubId": "hub-aura",
       "color": "#ffb347",
-      "y": 960,
       "passives": [
-        { "id": "longevity",  "name": "Longevity",  "type": "passive", "maxRank": 3, "x": 200, "y": 1000, "desc": "You gain +30% Healing received." },
-        { "id": "anointing",  "name": "Anointing",  "type": "passive", "maxRank": 3, "x": 500, "y": 1000, "desc": "Your allies Heal for +33% of the Healing you receive." },
-        { "id": "renewal",    "name": "Renewal",    "type": "passive", "maxRank": 3, "x": 800, "y": 1000, "desc": "Blocking Fortifies you for 1.5% of your Maximum Life." }
+        { "id": "longevity", "name": "Longevity", "type": "passive", "maxRank": 3, "x": 560, "y": 840,  "desc": "You gain +30% Healing received." },
+        { "id": "anointing", "name": "Anointing", "type": "passive", "maxRank": 3, "x": 560, "y": 900,  "desc": "Your allies Heal for +33% of the Healing you receive." },
+        { "id": "renewal",   "name": "Renewal",   "type": "passive", "maxRank": 3, "x": 560, "y": 960,  "desc": "Blocking Fortifies you for 1.5% of your Maximum Life." }
       ],
       "nodes": [
-        { "id": "fanaticism-aura", "name": "Fanaticism Aura", "type": "active", "maxRank": 5, "x": 200, "y": 1120,
-          "desc": "Passive: Spending Faith grants you and allies +7% Attack Speed and +2.8% Critical Strike Chance. Active: Weaken all Nearby enemies for 4 seconds.",
-          "tags": ["Zealot"], "cooldown": 15,
+        {
+          "id": "fanaticism-aura", "name": "Fanaticism Aura", "type": "active", "maxRank": 5,
+          "x": 900, "y": 800,
+          "desc": "Passive: Spending Faith grants +7% Attack Speed and +2.8% Crit Chance. Active: Weaken all Nearby enemies.", "tags": ["Zealot"], "cooldown": 15,
           "upgrades": [
-            { "id": "fan-enh", "name": "Enhanced Fanaticism Aura", "type": "upgrade", "maxRank": 1, "x": 120, "y": 1220, "desc": "Fanaticism Aura's passive also grants 10% Maximum Resource.", "upgrades": [
-              { "id": "fan-ven", "name": "Rite of Vengeance",       "type": "upgrade", "maxRank": 1, "x": 60,  "y": 1320, "desc": "Fanaticism Aura Passive increases Critical Strike Damage by x15%. Critical Strikes trigger Fanaticism's Passive.", "upgrades": [] },
-              { "id": "fan-hum", "name": "Rite of Humility",        "type": "upgrade", "maxRank": 1, "x": 180, "y": 1320, "desc": "Fanaticism Aura's active instead makes Nearby enemies Vulnerable for 4 seconds.", "upgrades": [] }
-            ]},
-            { "id": "fan-red", "name": "Rite of Redemption",       "type": "upgrade", "maxRank": 1, "x": 280, "y": 1220, "desc": "Weakened enemies who die within Fanaticism Aura's radius Heal you for 0.5% and Fortify for 1% of your Maximum Life.", "upgrades": [] }
+            { "id": "fan-enh", "name": "Enhanced Fanaticism Aura", "type": "upgrade", "maxRank": 1, "x": 980, "y": 880,
+              "desc": "Fanaticism Aura's passive also grants 10% Maximum Resource.",
+              "upgrades": [
+                { "id": "fan-ven", "name": "Rite of Vengeance", "type": "upgrade", "maxRank": 1, "x": 960,  "y": 960, "desc": "Passive increases Critical Strike Damage by x15%. Critical Strikes trigger Fanaticism's Passive.", "upgrades": [] },
+                { "id": "fan-hum", "name": "Rite of Humility",  "type": "upgrade", "maxRank": 1, "x": 1060, "y": 960, "desc": "Active instead makes Nearby enemies Vulnerable for 4 seconds.", "upgrades": [] }
+              ]
+            },
+            { "id": "fan-red", "name": "Rite of Redemption", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 880,
+              "desc": "Weakened enemies who die within Fanaticism Aura's radius Heal you for 0.5% and Fortify for 1% Maximum Life.", "upgrades": [] }
           ]
         },
-        { "id": "defiance-aura", "name": "Defiance Aura",   "type": "active", "maxRank": 5, "x": 550, "y": 1120,
-          "desc": "Passive: Grants you and allies 42% Armor and 42% bonus All Resistances. Active: You become Unstoppable for 2 seconds.",
-          "tags": ["Defensive", "Juggernaut"], "cooldown": 20,
+        {
+          "id": "defiance-aura", "name": "Defiance Aura", "type": "active", "maxRank": 5,
+          "x": 900, "y": 920,
+          "desc": "Passive: Grants you and allies 42% Armor and 42% All Resistances. Active: Become Unstoppable for 2 seconds.", "tags": ["Defensive","Juggernaut"], "cooldown": 20,
           "upgrades": [
-            { "id": "def-enh", "name": "Enhanced Defiance Aura", "type": "upgrade", "maxRank": 1, "x": 470, "y": 1220, "desc": "Defiance Aura's passive also grants 10% Maximum Life.", "upgrades": [
-              { "id": "def-mig", "name": "Rite of Might",         "type": "upgrade", "maxRank": 1, "x": 410, "y": 1320, "desc": "Defiance Aura increases your damage by x10% for 4 seconds whenever you gain Resolve.", "upgrades": [] },
-              { "id": "def-pra", "name": "Rite of Prayer",        "type": "upgrade", "maxRank": 1, "x": 530, "y": 1320, "desc": "Defiance Aura's passive Heals you and allies for 2% Maximum Life per second.", "upgrades": [] }
-            ]},
-            { "id": "def-tho", "name": "Rite of Thorns",         "type": "upgrade", "maxRank": 1, "x": 630, "y": 1220, "desc": "Defiance Aura grants 3 Thorns and increases Thorns damage by x75%. Active releases a nova of Thorns damage.", "upgrades": [] }
+            { "id": "def-enh", "name": "Enhanced Defiance Aura", "type": "upgrade", "maxRank": 1, "x": 980, "y": 1000,
+              "desc": "Passive also grants 10% Maximum Life.",
+              "upgrades": [
+                { "id": "def-mig", "name": "Rite of Might",  "type": "upgrade", "maxRank": 1, "x": 960,  "y": 1080, "desc": "Increases your damage by x10% for 4 seconds whenever you gain Resolve.", "upgrades": [] },
+                { "id": "def-pra", "name": "Rite of Prayer", "type": "upgrade", "maxRank": 1, "x": 1060, "y": 1080, "desc": "Passive Heals you and allies for 2% Maximum Life per second.", "upgrades": [] }
+              ]
+            },
+            { "id": "def-tho", "name": "Rite of Thorns", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 1000,
+              "desc": "Grants 3 Thorns and increases Thorns damage by x75%. Active releases a nova of Thorns damage.", "upgrades": [] }
           ]
         },
-        { "id": "holylight-aura", "name": "Holy Light Aura", "type": "active", "maxRank": 5, "x": 900, "y": 1120,
-          "desc": "Passive: You and allies deal 126% damage every 2 seconds to 3 random Nearby enemies. Active: Unleash 2 bolts of light dealing 448% Holy damage chaining up to 4 enemies.",
-          "tags": ["Judicator"], "cooldown": 25,
+        {
+          "id": "holylight-aura", "name": "Holy Light Aura", "type": "active", "maxRank": 5,
+          "x": 900, "y": 1040,
+          "desc": "Passive: You and allies deal 126% damage every 2 seconds to 3 random Nearby enemies. Active: Unleash 2 bolts of light dealing 448% Holy damage chaining to 4 enemies.", "tags": ["Judicator"], "cooldown": 25,
           "upgrades": [
-            { "id": "hla-enh", "name": "Enhanced Holy Light Aura", "type": "upgrade", "maxRank": 1, "x": 820, "y": 1220, "desc": "Holy Light's passive now targets 2 additional enemies.", "upgrades": [
-              { "id": "hla-jud", "name": "Rite of Judgement",       "type": "upgrade", "maxRank": 1, "x": 760, "y": 1320, "desc": "Holy Light's active instead Judges enemies and its Cooldown is reduced per rank.", "upgrades": [] },
-              { "id": "hla-mer", "name": "Rite of Mercy",           "type": "upgrade", "maxRank": 1, "x": 880, "y": 1320, "desc": "Holy Light's active chains 2 more times and Fortifies you and allies for 4% of Maximum Life.", "upgrades": [] }
-            ]},
-            { "id": "hla-sub", "name": "Rite of Submission",       "type": "upgrade", "maxRank": 1, "x": 980, "y": 1220, "desc": "Holy Light's active now Stuns enemies for 3 seconds and deals 182% damage.", "upgrades": [] }
+            { "id": "hla-enh", "name": "Enhanced Holy Light Aura", "type": "upgrade", "maxRank": 1, "x": 980, "y": 1120,
+              "desc": "Holy Light's passive now targets 2 additional enemies.",
+              "upgrades": [
+                { "id": "hla-jud", "name": "Rite of Judgement", "type": "upgrade", "maxRank": 1, "x": 960,  "y": 1200, "desc": "Holy Light's active instead Judges enemies and Cooldown is reduced per rank.", "upgrades": [] },
+                { "id": "hla-mer", "name": "Rite of Mercy",     "type": "upgrade", "maxRank": 1, "x": 1060, "y": 1200, "desc": "Holy Light's active chains 2 more times and Fortifies you and allies for 4% Maximum Life.", "upgrades": [] }
+              ]
+            },
+            { "id": "hla-sub", "name": "Rite of Submission", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 1120,
+              "desc": "Holy Light's active now Stuns enemies for 3 seconds and deals 182% damage.", "upgrades": [] }
           ]
         }
       ]
@@ -174,61 +243,81 @@
     {
       "id": "valor",
       "name": "Valor",
+      "hubId": "hub-valor",
       "color": "#90ee90",
-      "y": 1460,
       "passives": [
-        { "id": "resolute",   "name": "Resolute",            "type": "passive", "maxRank": 3, "x": 100,  "y": 1500, "desc": "Gaining a stack of Resolve Heals for 1.5% of your Maximum Life." },
-        { "id": "conviction", "name": "Conviction",          "type": "passive", "maxRank": 3, "x": 300,  "y": 1500, "desc": "Gain +0.9% Attack Speed for each stack of Resolve, up to 9%." },
-        { "id": "attenuate",  "name": "Attenuate",           "type": "passive", "maxRank": 3, "x": 500,  "y": 1500, "desc": "Gain +3% Resource Cost Reduction for every stack of Resolve, up to 15%." },
-        { "id": "courage",    "name": "Courage",             "type": "passive", "maxRank": 3, "x": 700,  "y": 1500, "desc": "You gain 1 Resolve every 5 seconds an Elite enemy is Nearby." },
-        { "id": "best-off",   "name": "The Best Offense",    "type": "passive", "maxRank": 3, "x": 900,  "y": 1500, "desc": "You deal x18% increased damage while Fortified." },
-        { "id": "fortitude",  "name": "Fortitude",           "type": "passive", "maxRank": 3, "x": 1050, "y": 1500, "desc": "Gain x18% Critical Strike Damage while Fortified." },
-        { "id": "thorns-thi", "name": "Thorns and Thistles", "type": "passive", "maxRank": 3, "x": 200,  "y": 1560, "desc": "Gain Thorns and your total Thorns damage is increased by x45%." },
-        { "id": "repentance", "name": "Repentance",          "type": "passive", "maxRank": 3, "x": 600,  "y": 1560, "desc": "Gain +18% Retribution chance." }
+        { "id": "resolute",   "name": "Resolute",            "type": "passive", "maxRank": 3, "x": 440, "y": 1200, "desc": "Gaining a stack of Resolve Heals for 1.5% of your Maximum Life." },
+        { "id": "conviction", "name": "Conviction",          "type": "passive", "maxRank": 3, "x": 440, "y": 1260, "desc": "Gain +0.9% Attack Speed for each stack of Resolve, up to 9%." },
+        { "id": "attenuate",  "name": "Attenuate",           "type": "passive", "maxRank": 3, "x": 440, "y": 1320, "desc": "Gain +3% Resource Cost Reduction for every stack of Resolve, up to 15%." },
+        { "id": "courage",    "name": "Courage",             "type": "passive", "maxRank": 3, "x": 440, "y": 1380, "desc": "You gain 1 Resolve every 5 seconds an Elite enemy is Nearby." },
+        { "id": "best-off",   "name": "The Best Offense",    "type": "passive", "maxRank": 3, "x": 440, "y": 1440, "desc": "You deal x18% increased damage while Fortified." },
+        { "id": "fortitude",  "name": "Fortitude",           "type": "passive", "maxRank": 3, "x": 440, "y": 1500, "desc": "Gain x18% Critical Strike Damage while Fortified." },
+        { "id": "thorns-thi", "name": "Thorns and Thistles", "type": "passive", "maxRank": 3, "x": 440, "y": 1560, "desc": "Gain Thorns and your total Thorns damage is increased by x45%." },
+        { "id": "repentance", "name": "Repentance",          "type": "passive", "maxRank": 3, "x": 440, "y": 1620, "desc": "Gain +18% Retribution chance." }
       ],
       "nodes": [
-        { "id": "shieldcharge", "name": "Shield Charge", "type": "active", "maxRank": 5, "x": 180, "y": 1680,
-          "desc": "Charge with your shield and push enemies Back, granting 14% Damage Reduction and dealing 126% damage while Channeling.",
-          "tags": ["Mobility", "Juggernaut"], "cooldown": 10,
+        {
+          "id": "shieldcharge", "name": "Shield Charge", "type": "active", "maxRank": 5,
+          "x": 80, "y": 1180,
+          "desc": "Charge with your shield pushing enemies Back, granting 14% Damage Reduction and dealing 126% damage while Channeling.", "tags": ["Mobility","Juggernaut"], "cooldown": 10,
           "upgrades": [
-            { "id": "sc-enh", "name": "Enhanced Shield Charge",  "type": "upgrade", "maxRank": 1, "x": 100, "y": 1780, "desc": "Shield Charge grants 1 Resolve whenever it hits an enemy.", "upgrades": [
-              { "id": "sc-rel", "name": "Relentless Charge",      "type": "upgrade", "maxRank": 1, "x": 40,  "y": 1880, "desc": "Shield Charge becomes a Core Skill. Costs 20 Faith plus 1 Faith per second.", "upgrades": [] },
-              { "id": "sc-vir", "name": "Virtuous Charge",        "type": "upgrade", "maxRank": 1, "x": 160, "y": 1880, "desc": "Shield Charge becomes a Judicator Skill and consumes Judgement on impact.", "upgrades": [] }
-            ]},
-            { "id": "sc-pha", "name": "Phalanx Charge",          "type": "upgrade", "maxRank": 1, "x": 260, "y": 1780, "desc": "Shield Charge surges forward in a wave of energy and Knocks enemies Back, dealing 157% damage.", "upgrades": [] }
+            { "id": "sc-enh", "name": "Enhanced Shield Charge", "type": "upgrade", "maxRank": 1, "x": 60, "y": 1280,
+              "desc": "Shield Charge grants 1 Resolve whenever it hits an enemy.",
+              "upgrades": [
+                { "id": "sc-rel", "name": "Relentless Charge", "type": "upgrade", "maxRank": 1, "x": 20,  "y": 1360, "desc": "Shield Charge becomes a Core Skill costing 20 Faith plus 1 Faith per second.", "upgrades": [] },
+                { "id": "sc-vir", "name": "Virtuous Charge",   "type": "upgrade", "maxRank": 1, "x": 120, "y": 1360, "desc": "Shield Charge becomes a Judicator Skill consuming Judgement on impact.", "upgrades": [] }
+              ]
+            },
+            { "id": "sc-pha", "name": "Phalanx Charge", "type": "upgrade", "maxRank": 1, "x": 160, "y": 1280,
+              "desc": "Shield Charge surges forward in a wave of energy Knocking enemies Back, dealing 157% damage.", "upgrades": [] }
           ]
         },
-        { "id": "aegis", "name": "Aegis",         "type": "active", "maxRank": 5, "x": 480, "y": 1680,
-          "desc": "Surround yourself with shields of the Light, Taunting Close enemies and gaining 100% Block Chance for 4 seconds.",
-          "tags": ["Defensive", "Juggernaut"], "cooldown": 16,
+        {
+          "id": "aegis", "name": "Aegis", "type": "active", "maxRank": 5,
+          "x": 80, "y": 1300,
+          "desc": "Surround yourself with shields of the Light, Taunting Close enemies and gaining 100% Block Chance for 4 seconds.", "tags": ["Defensive","Juggernaut"], "cooldown": 16,
           "upgrades": [
-            { "id": "aegis-enh", "name": "Enhanced Aegis",    "type": "upgrade", "maxRank": 1, "x": 400, "y": 1780, "desc": "Casting Aegis grants Unstoppable for 4 seconds.", "upgrades": [
-              { "id": "aegis-res", "name": "Stay Resolute",   "type": "upgrade", "maxRank": 1, "x": 340, "y": 1880, "desc": "Passive: Gaining or spending Resolve has a 4% chance to trigger a free Aegis.", "upgrades": [] },
-              { "id": "aegis-fai", "name": "Faith Is My Shield","type": "upgrade", "maxRank": 1, "x": 460, "y": 1880, "desc": "Aegis now applies Judgement instead of Taunting enemies.", "upgrades": [] }
-            ]},
-            { "id": "aegis-imp", "name": "Impunity",          "type": "upgrade", "maxRank": 1, "x": 560, "y": 1780, "desc": "While Aegis is active, you gain 40% Thorns and Retribution Chance.", "upgrades": [] }
+            { "id": "aegis-enh", "name": "Enhanced Aegis", "type": "upgrade", "maxRank": 1, "x": 60, "y": 1400,
+              "desc": "Casting Aegis grants Unstoppable for 4 seconds.",
+              "upgrades": [
+                { "id": "aegis-res", "name": "Stay Resolute",    "type": "upgrade", "maxRank": 1, "x": 20,  "y": 1480, "desc": "Passive: Gaining or spending Resolve has 4% chance to trigger a free Aegis.", "upgrades": [] },
+                { "id": "aegis-fai", "name": "Faith Is My Shield","type": "upgrade", "maxRank": 1, "x": 120, "y": 1480, "desc": "Aegis now applies Judgement instead of Taunting enemies.", "upgrades": [] }
+              ]
+            },
+            { "id": "aegis-imp", "name": "Impunity", "type": "upgrade", "maxRank": 1, "x": 160, "y": 1400,
+              "desc": "While Aegis is active, you gain 40% Thorns and Retribution Chance.", "upgrades": [] }
           ]
         },
-        { "id": "fallingstar", "name": "Falling Star", "type": "active", "maxRank": 5, "x": 780, "y": 1680,
-          "desc": "Soar into the air with angel wings and dive down, dealing 112% on liftoff and 336% damage on impact.",
-          "tags": ["Disciple", "Mobility"], "cooldown": 12,
+        {
+          "id": "fallingstar", "name": "Falling Star", "type": "active", "maxRank": 5,
+          "x": 80, "y": 1420,
+          "desc": "Soar into the air and dive down, dealing 112% on liftoff and 336% damage on impact.", "tags": ["Disciple","Mobility"], "cooldown": 12,
           "upgrades": [
-            { "id": "fstar-enh", "name": "Enhanced Falling Star", "type": "upgrade", "maxRank": 1, "x": 700, "y": 1780, "desc": "Killing a Vulnerable enemy reduces Falling Star cooldown by 1 second.", "upgrades": [
-              { "id": "fstar-fre", "name": "Freefall",             "type": "upgrade", "maxRank": 1, "x": 640, "y": 1880, "desc": "Falling Star has 1 additional charge.", "upgrades": [] },
-              { "id": "fstar-fan", "name": "Fanatic Descent",      "type": "upgrade", "maxRank": 1, "x": 760, "y": 1880, "desc": "Falling Star becomes a Zealot skill, dealing 560% damage on landing and Weakening enemies for 4 seconds.", "upgrades": [] }
-            ]},
-            { "id": "fstar-ftl", "name": "Faster Than Light",     "type": "upgrade", "maxRank": 1, "x": 860, "y": 1780, "desc": "Falling Star cuts through the battlefield, creating a fissure dealing 180% damage before erupting for 60%.", "upgrades": [] }
+            { "id": "fstar-enh", "name": "Enhanced Falling Star", "type": "upgrade", "maxRank": 1, "x": 60, "y": 1520,
+              "desc": "Killing a Vulnerable enemy reduces Falling Star cooldown by 1 second.",
+              "upgrades": [
+                { "id": "fstar-fre", "name": "Freefall",        "type": "upgrade", "maxRank": 1, "x": 20,  "y": 1600, "desc": "Falling Star has 1 additional charge.", "upgrades": [] },
+                { "id": "fstar-fan", "name": "Fanatic Descent", "type": "upgrade", "maxRank": 1, "x": 120, "y": 1600, "desc": "Becomes a Zealot skill, dealing 560% damage on landing and Weakening enemies for 4 seconds.", "upgrades": [] }
+              ]
+            },
+            { "id": "fstar-ftl", "name": "Faster Than Light", "type": "upgrade", "maxRank": 1, "x": 160, "y": 1520,
+              "desc": "Falling Star cuts through the battlefield, creating a fissure dealing 180% damage before erupting for 60%.", "upgrades": [] }
           ]
         },
-        { "id": "rally", "name": "Rally",         "type": "active", "maxRank": 5, "x": 1050, "y": 1680,
-          "desc": "Rally forth, gaining 20% Movement Speed for 8 seconds and generate 30 Faith.",
-          "tags": ["Zealot"], "charges": 3, "chargeCooldown": 16,
+        {
+          "id": "rally", "name": "Rally", "type": "active", "maxRank": 5,
+          "x": 80, "y": 1540,
+          "desc": "Rally forth, gaining 20% Movement Speed for 8 seconds and generating 30 Faith.", "tags": ["Zealot"], "charges": 3, "chargeCooldown": 16,
           "upgrades": [
-            { "id": "rally-enh", "name": "Enhanced Rally",        "type": "upgrade", "maxRank": 1, "x": 970,  "y": 1780, "desc": "Rally increases Movement Speed by additional 10% and generates 5 additional Faith.", "upgrades": [
-              { "id": "rally-sac", "name": "Words of Sacrifice",  "type": "upgrade", "maxRank": 1, "x": 910,  "y": 1880, "desc": "Rally now costs 15% of your Maximum Life and can stack.", "upgrades": [] },
-              { "id": "rally-ins", "name": "Words of Inspiration","type": "upgrade", "maxRank": 1, "x": 1030, "y": 1880, "desc": "Rally spends all available Charges, reducing all active Justice Skill Cooldowns by 3 seconds per Charge.", "upgrades": [] }
-            ]},
-            { "id": "rally-rej", "name": "Words of Rejuvenation", "type": "upgrade", "maxRank": 1, "x": 1130, "y": 1780, "desc": "Rally generates 20 more Faith and gains 1 additional Charge.", "upgrades": [] }
+            { "id": "rally-enh", "name": "Enhanced Rally", "type": "upgrade", "maxRank": 1, "x": 60, "y": 1640,
+              "desc": "Rally increases Movement Speed by additional 10% and generates 5 additional Faith.",
+              "upgrades": [
+                { "id": "rally-sac", "name": "Words of Sacrifice",   "type": "upgrade", "maxRank": 1, "x": 20,  "y": 1720, "desc": "Rally now costs 15% of your Maximum Life and can stack.", "upgrades": [] },
+                { "id": "rally-ins", "name": "Words of Inspiration", "type": "upgrade", "maxRank": 1, "x": 120, "y": 1720, "desc": "Rally spends all Charges, reducing all active Justice Skill Cooldowns by 3 seconds per Charge.", "upgrades": [] }
+              ]
+            },
+            { "id": "rally-rej", "name": "Words of Rejuvenation", "type": "upgrade", "maxRank": 1, "x": 160, "y": 1640,
+              "desc": "Rally generates 20 more Faith and gains 1 additional Charge.", "upgrades": [] }
           ]
         }
       ]
@@ -236,63 +325,83 @@
     {
       "id": "justice",
       "name": "Justice",
+      "hubId": "hub-justice",
       "color": "#da70d6",
-      "y": 2020,
       "passives": [
-        { "id": "crack-armor",  "name": "Crack in the Armor",   "type": "passive", "maxRank": 3, "x": 100,  "y": 2060, "desc": "You deal x18% increased damage to Vulnerable enemies." },
-        { "id": "high-charity", "name": "High Charity",         "type": "passive", "maxRank": 3, "x": 300,  "y": 2060, "desc": "You gain 12% Cooldown Reduction." },
-        { "id": "iron-sharp",   "name": "Iron Sharpens Iron",   "type": "passive", "maxRank": 3, "x": 500,  "y": 2060, "desc": "You gain +18% Critical Strike Damage." },
-        { "id": "break-line",   "name": "Break the Line",       "type": "passive", "maxRank": 3, "x": 700,  "y": 2060, "desc": "You have +6% increased Critical Strike Chance and deal x15% increased Damage to Weakened enemies." },
-        { "id": "press-adv",    "name": "Press the Advantage",  "type": "passive", "maxRank": 3, "x": 900,  "y": 2060, "desc": "Critically Striking grants you 9% Damage Reduction for 5 seconds." },
-        { "id": "heavyweight",  "name": "Heavyweight",          "type": "passive", "maxRank": 3, "x": 1100, "y": 2060, "desc": "You deal x18% Critical Strike Damage while Healthy." },
-        { "id": "pacify",       "name": "Pacify",               "type": "passive", "maxRank": 3, "x": 200,  "y": 2120, "desc": "You gain +45% increased Crowd Control duration." },
-        { "id": "dizzying",     "name": "Dizzying Blow",        "type": "passive", "maxRank": 3, "x": 500,  "y": 2120, "desc": "You deal x21% increased damage to Crowd Controlled enemies." },
-        { "id": "righteous",    "name": "Righteousness",        "type": "passive", "maxRank": 3, "x": 800,  "y": 2120, "desc": "You deal x18% increased Holy and Fire damage." },
-        { "id": "leave-luck",   "name": "Leave Luck to Heaven", "type": "passive", "maxRank": 3, "x": 1050, "y": 2120, "desc": "You gain 9% Lucky Hit Chance." }
+        { "id": "crack-armor",  "name": "Crack in the Armor",   "type": "passive", "maxRank": 3, "x": 560, "y": 1620, "desc": "You deal x18% increased damage to Vulnerable enemies." },
+        { "id": "high-charity", "name": "High Charity",         "type": "passive", "maxRank": 3, "x": 560, "y": 1680, "desc": "You gain 12% Cooldown Reduction." },
+        { "id": "iron-sharp",   "name": "Iron Sharpens Iron",   "type": "passive", "maxRank": 3, "x": 560, "y": 1740, "desc": "You gain +18% Critical Strike Damage." },
+        { "id": "break-line",   "name": "Break the Line",       "type": "passive", "maxRank": 3, "x": 560, "y": 1800, "desc": "You have +6% Critical Strike Chance and deal x15% increased Damage to Weakened enemies." },
+        { "id": "press-adv",    "name": "Press the Advantage",  "type": "passive", "maxRank": 3, "x": 560, "y": 1860, "desc": "Critically Striking grants you 9% Damage Reduction for 5 seconds." },
+        { "id": "heavyweight",  "name": "Heavyweight",          "type": "passive", "maxRank": 3, "x": 560, "y": 1920, "desc": "You deal x18% Critical Strike Damage while Healthy." },
+        { "id": "pacify",       "name": "Pacify",               "type": "passive", "maxRank": 3, "x": 560, "y": 1980, "desc": "You gain +45% increased Crowd Control duration." },
+        { "id": "dizzying",     "name": "Dizzying Blow",        "type": "passive", "maxRank": 3, "x": 560, "y": 2040, "desc": "You deal x21% increased damage to Crowd Controlled enemies." },
+        { "id": "righteous",    "name": "Righteousness",        "type": "passive", "maxRank": 3, "x": 840, "y": 1620, "desc": "You deal x18% increased Holy and Fire damage." },
+        { "id": "leave-luck",   "name": "Leave Luck to Heaven", "type": "passive", "maxRank": 3, "x": 840, "y": 1680, "desc": "You gain 9% Lucky Hit Chance." }
       ],
       "nodes": [
-        { "id": "purify", "name": "Purify",               "type": "active", "maxRank": 5, "x": 180, "y": 2260,
-          "desc": "Enshroud your enemies in the Light, Dazing them for 2 seconds.",
-          "tags": ["Defensive", "Judicator"], "cooldown": 10,
+        {
+          "id": "purify", "name": "Purify", "type": "active", "maxRank": 5,
+          "x": 900, "y": 1600,
+          "desc": "Enshroud your enemies in the Light, Dazing them for 2 seconds.", "tags": ["Defensive","Judicator"], "cooldown": 10,
           "upgrades": [
-            { "id": "pur-enh", "name": "Enhanced Purify", "type": "upgrade", "maxRank": 1, "x": 100, "y": 2360, "desc": "Purify generates 10 Faith for each enemy affected.", "upgrades": [
-              { "id": "pur-sen", "name": "Sentence",      "type": "upgrade", "maxRank": 1, "x": 40,  "y": 2460, "desc": "Purify also Judges enemies and its cooldown is reduced by 4 seconds.", "upgrades": [] },
-              { "id": "pur-sur", "name": "Surrender",     "type": "upgrade", "maxRank": 1, "x": 160, "y": 2460, "desc": "Purify now Stuns for 4 seconds.", "upgrades": [] }
-            ]},
-            { "id": "pur-abs", "name": "Absolution",     "type": "upgrade", "maxRank": 1, "x": 260, "y": 2360, "desc": "Purify deals 380% damage and Weakens enemies for 4 seconds.", "upgrades": [] }
+            { "id": "pur-enh", "name": "Enhanced Purify", "type": "upgrade", "maxRank": 1, "x": 980, "y": 1680,
+              "desc": "Purify generates 10 Faith for each enemy affected.",
+              "upgrades": [
+                { "id": "pur-sen", "name": "Sentence",   "type": "upgrade", "maxRank": 1, "x": 960,  "y": 1760, "desc": "Purify also Judges enemies and cooldown is reduced by 4 seconds.", "upgrades": [] },
+                { "id": "pur-sur", "name": "Surrender",  "type": "upgrade", "maxRank": 1, "x": 1060, "y": 1760, "desc": "Purify now Stuns for 4 seconds.", "upgrades": [] }
+              ]
+            },
+            { "id": "pur-abs", "name": "Absolution", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 1680,
+              "desc": "Purify deals 380% damage and Weakens enemies for 4 seconds.", "upgrades": [] }
           ]
         },
-        { "id": "consecration", "name": "Consecration",  "type": "active", "maxRank": 5, "x": 480, "y": 2260,
-          "desc": "Bathe in the Light for 6 seconds, Healing you and allies for 5.6% Maximum Life per second and dealing 105% damage per second.",
-          "tags": ["Defensive", "Judicator"], "cooldown": 18,
+        {
+          "id": "consecration", "name": "Consecration", "type": "active", "maxRank": 5,
+          "x": 900, "y": 1720,
+          "desc": "Bathe in the Light for 6 seconds, Healing for 5.6% Maximum Life per second and dealing 105% damage per second.", "tags": ["Defensive","Judicator"], "cooldown": 18,
           "upgrades": [
-            { "id": "con-enh", "name": "Enhanced Consecration", "type": "upgrade", "maxRank": 1, "x": 400, "y": 2360, "desc": "While inside Consecration, you and allies deal x15% additional damage.", "upgrades": [
-              { "id": "con-hal", "name": "Hallowed Ground",      "type": "upgrade", "maxRank": 1, "x": 340, "y": 2460, "desc": "Consecration's size is increased and lasts an additional 4 seconds. Enemies within are Weakened.", "upgrades": [] },
-              { "id": "con-bas", "name": "Bastion",              "type": "upgrade", "maxRank": 1, "x": 460, "y": 2460, "desc": "Consecration Immobilizes enemies and can be cast anywhere.", "upgrades": [] }
-            ]},
-            { "id": "con-san", "name": "Sanctify",              "type": "upgrade", "maxRank": 1, "x": 560, "y": 2360, "desc": "Consecration lasts 3 seconds increasing damage and Healing by 20% each second, then detonates.", "upgrades": [] }
+            { "id": "con-enh", "name": "Enhanced Consecration", "type": "upgrade", "maxRank": 1, "x": 980, "y": 1800,
+              "desc": "While inside Consecration, you and allies deal x15% additional damage.",
+              "upgrades": [
+                { "id": "con-hal", "name": "Hallowed Ground", "type": "upgrade", "maxRank": 1, "x": 960,  "y": 1880, "desc": "Consecration's size is increased and lasts 4 seconds longer. Enemies within are Weakened.", "upgrades": [] },
+                { "id": "con-bas", "name": "Bastion",         "type": "upgrade", "maxRank": 1, "x": 1060, "y": 1880, "desc": "Consecration Immobilizes enemies and can be cast anywhere.", "upgrades": [] }
+              ]
+            },
+            { "id": "con-san", "name": "Sanctify", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 1800,
+              "desc": "Consecration lasts 3 seconds increasing damage and Healing by 20% each second, then detonates.", "upgrades": [] }
           ]
         },
-        { "id": "condemn", "name": "Condemn",             "type": "active", "maxRank": 5, "x": 780, "y": 2260,
-          "desc": "Harness the Light and Pull enemies in after 1.5 seconds, briefly Stunning them and dealing 336% damage.",
-          "tags": ["Disciple"], "cooldown": 15,
+        {
+          "id": "condemn", "name": "Condemn", "type": "active", "maxRank": 5,
+          "x": 900, "y": 1840,
+          "desc": "Harness the Light and Pull enemies in after 1.5 seconds, briefly Stunning them and dealing 336% damage.", "tags": ["Disciple"], "cooldown": 15,
           "upgrades": [
-            { "id": "cnd-enh", "name": "Enhanced Condemn",   "type": "upgrade", "maxRank": 1, "x": 700, "y": 2360, "desc": "While Casting Condemn, become Unhindered for 1.5 seconds.", "upgrades": [
-              { "id": "cnd-gui", "name": "Gather the Guilty", "type": "upgrade", "maxRank": 1, "x": 640, "y": 2460, "desc": "Condemn now has 1 additional Charge and applies Vulnerable for 4 seconds.", "upgrades": [] },
-              { "id": "cnd-ato", "name": "Atonement",         "type": "upgrade", "maxRank": 1, "x": 760, "y": 2460, "desc": "Condemn Casts significantly faster instead of Pulling enemies in, dealing 420% damage.", "upgrades": [] }
-            ]},
-            { "id": "cnd-she", "name": "Shepard the Flock",  "type": "upgrade", "maxRank": 1, "x": 860, "y": 2360, "desc": "Condemn's build up marks all enemies and drags them to your location after it Casts.", "upgrades": [] }
+            { "id": "cnd-enh", "name": "Enhanced Condemn", "type": "upgrade", "maxRank": 1, "x": 980, "y": 1920,
+              "desc": "While Casting Condemn, become Unhindered for 1.5 seconds.",
+              "upgrades": [
+                { "id": "cnd-gui", "name": "Gather the Guilty", "type": "upgrade", "maxRank": 1, "x": 960,  "y": 2000, "desc": "Condemn now has 1 additional Charge and applies Vulnerable for 4 seconds.", "upgrades": [] },
+                { "id": "cnd-ato", "name": "Atonement",         "type": "upgrade", "maxRank": 1, "x": 1060, "y": 2000, "desc": "Condemn Casts significantly faster instead of Pulling enemies in, dealing 420% damage.", "upgrades": [] }
+              ]
+            },
+            { "id": "cnd-she", "name": "Shepard the Flock", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 1920,
+              "desc": "Condemn's build up marks all enemies and drags them to your location after it Casts.", "upgrades": [] }
           ]
         },
-        { "id": "spearofheavens", "name": "Spear of the Heavens", "type": "active", "maxRank": 5, "x": 1060, "y": 2260,
-          "desc": "Rain down 4 heavenly spears, dealing 224% damage and Knocking Down enemies for 1.5 seconds. After 1.5 seconds, the spears burst for 168% damage.",
-          "tags": ["Judicator"], "cooldown": 14,
+        {
+          "id": "spearofheavens", "name": "Spear of the Heavens", "type": "active", "maxRank": 5,
+          "x": 900, "y": 1960,
+          "desc": "Rain down 4 heavenly spears dealing 224% damage and Knocking Down for 1.5 seconds. After 1.5 seconds spears burst for 168%.", "tags": ["Judicator"], "cooldown": 14,
           "upgrades": [
-            { "id": "sph-enh", "name": "Enhanced Spear of the Heavens",  "type": "upgrade", "maxRank": 1, "x": 980,  "y": 2360, "desc": "Consuming Judgement reduces Spear of the Heavens cooldown by 0.5 seconds.", "upgrades": [
-              { "id": "sph-pro", "name": "Pronouncement of Heaven",       "type": "upgrade", "maxRank": 1, "x": 920,  "y": 2460, "desc": "First spear gains permanent Judgement mark and remains on the battlefield dealing 120% damage per second for 8 seconds.", "upgrades": [] },
-              { "id": "sph-par", "name": "Part the Heavens",              "type": "upgrade", "maxRank": 1, "x": 1040, "y": 2460, "desc": "Spear of the Heavens now drops 8 spears along the path toward your target.", "upgrades": [] }
-            ]},
-            { "id": "sph-fis", "name": "Fist of the Heavens",            "type": "upgrade", "maxRank": 1, "x": 1140, "y": 2360, "desc": "Becomes a Core Skill. Pure Holy energy crashes from the sky dealing 386% damage and breaking into 5 projectiles.", "upgrades": [] }
+            { "id": "sph-enh", "name": "Enhanced Spear of the Heavens", "type": "upgrade", "maxRank": 1, "x": 980, "y": 2040,
+              "desc": "Consuming Judgement reduces Spear of the Heavens cooldown by 0.5 seconds.",
+              "upgrades": [
+                { "id": "sph-pro", "name": "Pronouncement of Heaven", "type": "upgrade", "maxRank": 1, "x": 960,  "y": 2120, "desc": "First spear gains permanent Judgement mark and remains on battlefield dealing 120% damage per second.", "upgrades": [] },
+                { "id": "sph-par", "name": "Part the Heavens",        "type": "upgrade", "maxRank": 1, "x": 1060, "y": 2120, "desc": "Spear of the Heavens now drops 8 spears along the path toward your target.", "upgrades": [] }
+              ]
+            },
+            { "id": "sph-fis", "name": "Fist of the Heavens", "type": "upgrade", "maxRank": 1, "x": 1100, "y": 2040,
+              "desc": "Becomes a Core Skill. Pure Holy energy crashes from the sky dealing 386% damage breaking into 5 projectiles.", "upgrades": [] }
           ]
         }
       ]
@@ -300,62 +409,82 @@
     {
       "id": "ultimate",
       "name": "Ultimate",
+      "hubId": "hub-ultimate",
       "color": "#ff6b6b",
-      "y": 2600,
       "passives": [
-        { "id": "shining-armor", "name": "Shining Armor",      "type": "passive", "maxRank": 3, "x": 100,  "y": 2640, "desc": "Gain a bonus based on equipped weapon and armor qualities. Unique Weapon/Shield: x15% Damage. Unique Helmet/Chest/Pants: +15% Armor." },
-        { "id": "giant-slayer", "name": "Giant Slayer",         "type": "passive", "maxRank": 3, "x": 320,  "y": 2640, "desc": "You deal x15% increased damage to Elites and x24% increased damage to Healthy enemies." },
-        { "id": "sacred-arms",  "name": "Sacred Arms",         "type": "passive", "maxRank": 3, "x": 540,  "y": 2640, "desc": "Two Handed: x15% Critical Strike Damage. One Handed and Shield: 15% chance to ignore damage." },
-        { "id": "master-craft", "name": "Master Craftwork",    "type": "passive", "maxRank": 3, "x": 760,  "y": 2640, "desc": "Your Armor is increased by 150% of your Shield's Block Chance." },
-        { "id": "shake-off",    "name": "Shake It Off",        "type": "passive", "maxRank": 3, "x": 980,  "y": 2640, "desc": "You have a 24% chance to become Unstoppable for 1 second after being hit by a Crowd Control Effect." },
-        { "id": "coat-arms",    "name": "Coat of Arms",        "type": "passive", "maxRank": 3, "x": 200,  "y": 2700, "desc": "Your damage is increased by 75% of your Armor Percent and 50% of your Block Chance." },
-        { "id": "path-pen",     "name": "Path of the Penitent","type": "passive", "maxRank": 3, "x": 500,  "y": 2700, "desc": "Zealot Skills cost 100% more Faith, but Casting them grants all Skills +6% Resource Cost Reduction and x10% increased damage." },
-        { "id": "exaltation",   "name": "Exaltation",          "type": "passive", "maxRank": 3, "x": 800,  "y": 2700, "desc": "During Arbiter your damage is increased by x85% and Wing Strikes strike 1 additional time." },
-        { "id": "judgement-day","name": "Judgement Day",       "type": "passive", "maxRank": 3, "x": 1050, "y": 2700, "desc": "Consuming Judgement increases your damage by x6% for 5 seconds, up to x90%. Judgement now spreads to nearby targets." }
+        { "id": "shining-armor", "name": "Shining Armor",       "type": "passive", "maxRank": 3, "x": 440, "y": 2020, "desc": "Unique Weapon/Shield: x15% Damage. Unique Helmet/Chest/Pants: +15% Armor." },
+        { "id": "giant-slayer",  "name": "Giant Slayer",        "type": "passive", "maxRank": 3, "x": 440, "y": 2080, "desc": "You deal x15% increased damage to Elites and x24% to Healthy enemies." },
+        { "id": "sacred-arms",   "name": "Sacred Arms",         "type": "passive", "maxRank": 3, "x": 440, "y": 2140, "desc": "Two Handed: x15% Critical Strike Damage. One Handed and Shield: 15% chance to ignore damage." },
+        { "id": "master-craft",  "name": "Master Craftwork",    "type": "passive", "maxRank": 3, "x": 440, "y": 2200, "desc": "Your Armor is increased by 150% of your Shield's Block Chance." },
+        { "id": "shake-off",     "name": "Shake It Off",        "type": "passive", "maxRank": 3, "x": 440, "y": 2260, "desc": "You have 24% chance to become Unstoppable for 1 second after being hit by a Crowd Control Effect." },
+        { "id": "coat-arms",     "name": "Coat of Arms",        "type": "passive", "maxRank": 3, "x": 440, "y": 2320, "desc": "Your damage is increased by 75% of your Armor Percent and 50% of your Block Chance." },
+        { "id": "path-pen",      "name": "Path of the Penitent","type": "passive", "maxRank": 3, "x": 440, "y": 2380, "desc": "Zealot Skills cost 100% more Faith, but grants all Skills +6% Resource Cost Reduction and x10% increased damage." },
+        { "id": "exaltation",    "name": "Exaltation",          "type": "passive", "maxRank": 3, "x": 440, "y": 2440, "desc": "During Arbiter your damage is increased by x85% and Wing Strikes strike 1 additional time." },
+        { "id": "judgement-day", "name": "Judgement Day",       "type": "passive", "maxRank": 3, "x": 440, "y": 2500, "desc": "Consuming Judgement increases your damage by x6% for 5 seconds, up to x90%. Judgement now spreads to nearby targets." }
       ],
       "nodes": [
-        { "id": "heavens-fury", "name": "Heaven's Fury",       "type": "ultimate", "maxRank": 5, "x": 180, "y": 2840,
-          "desc": "Grasp the Light, dealing 200% damage per second before releasing it to seek Nearby enemies and dealing 126% damage per hit for 7 seconds.",
-          "tags": ["Judicator"], "cooldown": 30,
+        {
+          "id": "heavens-fury", "name": "Heaven's Fury", "type": "ultimate", "maxRank": 5,
+          "x": 80, "y": 2020,
+          "desc": "Grasp the Light, dealing 200% damage per second before releasing it to seek Nearby enemies dealing 126% damage per hit for 7 seconds.", "tags": ["Judicator"], "cooldown": 30,
           "upgrades": [
-            { "id": "hf-enh", "name": "Enhanced Heaven's Fury", "type": "upgrade", "maxRank": 1, "x": 100, "y": 2940, "desc": "Heaven's Fury's light Judges enemies.", "upgrades": [
-              { "id": "hf-fin", "name": "Final Justice",         "type": "upgrade", "maxRank": 1, "x": 40,  "y": 3040, "desc": "Heaven's Fury can Cast anywhere, concentrating as it grows and Pulls enemies in before erupting for 1,260% damage.", "upgrades": [] },
-              { "id": "hf-wal", "name": "Walk With The Light",  "type": "upgrade", "maxRank": 1, "x": 160, "y": 3040, "desc": "Heaven's Fury splits into 5 orbiting beams, dealing 78% damage each hit for 7 seconds.", "upgrades": [] }
-            ]},
-            { "id": "hf-tri", "name": "Triplicate",             "type": "upgrade", "maxRank": 1, "x": 260, "y": 2940, "desc": "Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds.", "upgrades": [] }
+            { "id": "hf-enh", "name": "Enhanced Heaven's Fury", "type": "upgrade", "maxRank": 1, "x": 60, "y": 2120,
+              "desc": "Heaven's Fury's light Judges enemies.",
+              "upgrades": [
+                { "id": "hf-fin", "name": "Final Justice",        "type": "upgrade", "maxRank": 1, "x": 20,  "y": 2200, "desc": "Heaven's Fury can Cast anywhere, concentrating as it grows and Pulls enemies in before erupting for 1,260% damage.", "upgrades": [] },
+                { "id": "hf-wal", "name": "Walk With The Light", "type": "upgrade", "maxRank": 1, "x": 120, "y": 2200, "desc": "Heaven's Fury splits into 5 orbiting beams, dealing 78% damage each hit for 7 seconds.", "upgrades": [] }
+              ]
+            },
+            { "id": "hf-tri", "name": "Triplicate", "type": "upgrade", "maxRank": 1, "x": 160, "y": 2120,
+              "desc": "Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds.", "upgrades": [] }
           ]
         },
-        { "id": "fortress",     "name": "Fortress",            "type": "ultimate", "maxRank": 5, "x": 480, "y": 2840,
-          "desc": "Make your stand, becoming Immune for 3 seconds and create a defensive area for 13.5 seconds. Standing in Fortress grants you and allies 2 Resolve stacks every 0.5 seconds.",
-          "tags": ["Defensive", "Juggernaut"], "cooldown": 60,
+        {
+          "id": "fortress", "name": "Fortress", "type": "ultimate", "maxRank": 5,
+          "x": 80, "y": 2160,
+          "desc": "Make your stand, becoming Immune for 3 seconds and create a defensive area for 13.5 seconds. Standing in Fortress grants you and allies 2 Resolve stacks every 0.5 seconds.", "tags": ["Defensive","Juggernaut"], "cooldown": 60,
           "upgrades": [
-            { "id": "for-enh", "name": "Enhanced Fortress", "type": "upgrade", "maxRank": 1, "x": 400, "y": 2940, "desc": "While inside Fortress your Skills are free to Cast and you gain x4% damage per stack of Resolve.", "upgrades": [
-              { "id": "for-ent", "name": "Entrench",         "type": "upgrade", "maxRank": 1, "x": 340, "y": 3040, "desc": "While inside of Fortress your Life cannot be reduced below 1.", "upgrades": [] },
-              { "id": "for-bar", "name": "Barricade",        "type": "upgrade", "maxRank": 1, "x": 460, "y": 3040, "desc": "Killing enemies inside Fortress extends its duration by 0.5 seconds up to 20 seconds. You may recast Fortress to move it.", "upgrades": [] }
-            ]},
-            { "id": "for-ram", "name": "Rampart of Thorns", "type": "upgrade", "maxRank": 1, "x": 560, "y": 2940, "desc": "Enemies inside Fortress are Slowed by 50% and take 500% of your Thorns damage per second.", "upgrades": [] }
+            { "id": "for-enh", "name": "Enhanced Fortress", "type": "upgrade", "maxRank": 1, "x": 60, "y": 2260,
+              "desc": "While inside Fortress your Skills are free to Cast and you gain x4% damage per stack of Resolve.",
+              "upgrades": [
+                { "id": "for-ent", "name": "Entrench",   "type": "upgrade", "maxRank": 1, "x": 20,  "y": 2340, "desc": "While inside of Fortress your Life cannot be reduced below 1.", "upgrades": [] },
+                { "id": "for-bar", "name": "Barricade",  "type": "upgrade", "maxRank": 1, "x": 120, "y": 2340, "desc": "Killing enemies inside Fortress extends its duration by 0.5 seconds up to 20 seconds.", "upgrades": [] }
+              ]
+            },
+            { "id": "for-ram", "name": "Rampart of Thorns", "type": "upgrade", "maxRank": 1, "x": 160, "y": 2260,
+              "desc": "Enemies inside Fortress are Slowed by 50% and take 500% of your Thorns damage per second.", "upgrades": [] }
           ]
         },
-        { "id": "zenith",       "name": "Zenith",              "type": "ultimate", "maxRank": 5, "x": 780, "y": 2840,
-          "desc": "Summon a divine sword that cleaves the battlefield for 630% damage. Casting Zenith again cuts through for 560% damage and Knocks Down enemies for 2 seconds.",
-          "tags": ["Zealot"], "cooldown": 25,
+        {
+          "id": "zenith", "name": "Zenith", "type": "ultimate", "maxRank": 5,
+          "x": 80, "y": 2300,
+          "desc": "Summon a divine sword that cleaves the battlefield for 630% damage. Casting Zenith again cuts through for 560% damage and Knocks Down enemies for 2 seconds.", "tags": ["Zealot"], "cooldown": 25,
           "upgrades": [
-            { "id": "zen-enh", "name": "Enhanced Zenith",    "type": "upgrade", "maxRank": 1, "x": 700, "y": 2940, "desc": "While Zenith is active, you are Unstoppable.", "upgrades": [
-              { "id": "zen-emp", "name": "Empyrean Edge",    "type": "upgrade", "maxRank": 1, "x": 640, "y": 3040, "desc": "Zenith is now also a Mobility Skill that Dashes to enemies, Weakens them, and gains 25% Critical Strike Chance.", "upgrades": [] },
-              { "id": "zen-ser", "name": "Sermon of Steel",  "type": "upgrade", "maxRank": 1, "x": 760, "y": 3040, "desc": "Zenith unleashes your wrath and can be cast indefinitely for 4 seconds before starting its Cooldown.", "upgrades": [] }
-            ]},
-            { "id": "zen-sun", "name": "Sunder",             "type": "upgrade", "maxRank": 1, "x": 860, "y": 2940, "desc": "Zenith sunders a rift, Knocking Down enemies and dealing 900% damage. After 1 second the rift detonates for 675%.", "upgrades": [] }
+            { "id": "zen-enh", "name": "Enhanced Zenith", "type": "upgrade", "maxRank": 1, "x": 60, "y": 2400,
+              "desc": "While Zenith is active, you are Unstoppable.",
+              "upgrades": [
+                { "id": "zen-emp", "name": "Empyrean Edge",   "type": "upgrade", "maxRank": 1, "x": 20,  "y": 2480, "desc": "Zenith is now also a Mobility Skill that Dashes to enemies, Weakens them, gains 25% Critical Strike Chance.", "upgrades": [] },
+                { "id": "zen-ser", "name": "Sermon of Steel", "type": "upgrade", "maxRank": 1, "x": 120, "y": 2480, "desc": "Zenith unleashes your wrath and can be cast indefinitely for 4 seconds before starting its Cooldown.", "upgrades": [] }
+              ]
+            },
+            { "id": "zen-sun", "name": "Sunder", "type": "upgrade", "maxRank": 1, "x": 160, "y": 2400,
+              "desc": "Zenith sunders a rift, Knocking Down enemies and dealing 900% damage. After 1 second the rift detonates for 675%.", "upgrades": [] }
           ]
         },
-        { "id": "arbiter",      "name": "Arbiter of Justice",  "type": "ultimate", "maxRank": 5, "x": 1060, "y": 2840,
-          "desc": "Ascend to the heavens and crash upon the battlefield as an Arbiter for 20 seconds, dealing 840% damage upon landing.",
-          "tags": ["Disciple", "Mobility"], "cooldown": 98,
+        {
+          "id": "arbiter", "name": "Arbiter of Justice", "type": "ultimate", "maxRank": 5,
+          "x": 80, "y": 2440,
+          "desc": "Ascend to the heavens and crash upon the battlefield as an Arbiter for 20 seconds, dealing 840% damage upon landing.", "tags": ["Disciple","Mobility"], "cooldown": 98,
           "upgrades": [
-            { "id": "arb-enh", "name": "Enhanced Arbiter of Justice", "type": "upgrade", "maxRank": 1, "x": 980,  "y": 2940, "desc": "Arbiter form's Wing Strikes recast time is reduced by 0.5 seconds.", "upgrades": [
-              { "id": "arb-div", "name": "Divine Intervention",       "type": "upgrade", "maxRank": 1, "x": 920,  "y": 3040, "desc": "Arbiter of Justice ascends for 2 extra seconds and rains 10 additional Blessed Spears on landing.", "upgrades": [] },
-              { "id": "arb-rea", "name": "Reach of the Law",          "type": "upgrade", "maxRank": 1, "x": 1040, "y": 3040, "desc": "Arbiter's Wing Strikes now apply Judgement to enemies.", "upgrades": [] }
-            ]},
-            { "id": "arb-ser", "name": "Seraph's Wings",              "type": "upgrade", "maxRank": 1, "x": 1140, "y": 2940, "desc": "Arbiter form gains 100% Movement Speed, Wing Strikes deal x200% increased damage, and makes Nearby enemies Vulnerable.", "upgrades": [] }
+            { "id": "arb-enh", "name": "Enhanced Arbiter of Justice", "type": "upgrade", "maxRank": 1, "x": 60, "y": 2540,
+              "desc": "Arbiter form's Wing Strikes recast time is reduced by 0.5 seconds.",
+              "upgrades": [
+                { "id": "arb-div", "name": "Divine Intervention", "type": "upgrade", "maxRank": 1, "x": 20,  "y": 2620, "desc": "Ascends for 2 extra seconds and rains 10 additional Blessed Spears on landing.", "upgrades": [] },
+                { "id": "arb-rea", "name": "Reach of the Law",    "type": "upgrade", "maxRank": 1, "x": 120, "y": 2620, "desc": "Arbiter's Wing Strikes now apply Judgement to enemies.", "upgrades": [] }
+              ]
+            },
+            { "id": "arb-ser", "name": "Seraph's Wings", "type": "upgrade", "maxRank": 1, "x": 160, "y": 2540,
+              "desc": "Arbiter form gains 100% Movement Speed, Wing Strikes deal x200% increased damage, makes Nearby enemies Vulnerable.", "upgrades": [] }
           ]
         }
       ]
@@ -363,13 +492,13 @@
     {
       "id": "key-passives",
       "name": "Key Passives",
+      "hubId": "hub-keys",
       "color": "#ff4444",
-      "y": 3160,
       "nodes": [
-        { "id": "kp-zealot",    "name": "Zealot",    "type": "key-passive", "maxRank": 1, "x": 250,  "y": 3200, "desc": "Casting Zealot Skills grants Fervor for 4 seconds. Critically Striking with these Skills echoes the attack for 47% of the damage per stack of Fervor." },
-        { "id": "kp-juggernaut","name": "Juggernaut","type": "key-passive", "maxRank": 1, "x": 550,  "y": 3200, "desc": "Casting a Juggernaut Skill Consumes 8 stacks of Resolve, giving Juggernaut Skills x60% increased damage and 20% increased size for 5 seconds." },
-        { "id": "kp-judicator", "name": "Judicator", "type": "key-passive", "maxRank": 1, "x": 850,  "y": 3200, "desc": "Your Basic Skills now apply Judgement. Judgement can be detonated by Core Judicator Skills. Each time you Judge an enemy, increase damage they take from you by x8%, up to x80%." },
-        { "id": "kp-disciple",  "name": "Disciple",  "type": "key-passive", "maxRank": 1, "x": 1050, "y": 3200, "desc": "Casting a Disciple Skill with a cooldown grants Arbiter for 4.5 seconds. Wing Strikes gain Disciple Skill benefits. While in Arbiter form, Disciple Skills deal x50% increased damage." }
+        { "id": "kp-zealot",     "name": "Zealot",     "type": "key-passive", "maxRank": 1, "x": 500, "y": 2500, "desc": "Casting Zealot Skills grants Fervor for 4 seconds. Critically Striking with these Skills echoes the attack for 47% of the damage per stack of Fervor.", "upgrades": [] },
+        { "id": "kp-juggernaut", "name": "Juggernaut", "type": "key-passive", "maxRank": 1, "x": 640, "y": 2500, "desc": "Casting a Juggernaut Skill Consumes 8 stacks of Resolve, giving Juggernaut Skills x60% increased damage and 20% increased size for 5 seconds.", "upgrades": [] },
+        { "id": "kp-judicator",  "name": "Judicator",  "type": "key-passive", "maxRank": 1, "x": 780, "y": 2500, "desc": "Your Basic Skills now apply Judgement. Each time you Judge an enemy, increase the damage they take from you by x8%, up to x80%.", "upgrades": [] },
+        { "id": "kp-disciple",   "name": "Disciple",   "type": "key-passive", "maxRank": 1, "x": 920, "y": 2500, "desc": "Casting a Disciple Skill with a cooldown grants Arbiter for 4.5 seconds. Wing Strikes gain Disciple Skill benefits. In Arbiter form, Disciple Skills deal x50% increased damage.", "upgrades": [] }
       ]
     }
   ]
