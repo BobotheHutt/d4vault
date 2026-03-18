@@ -987,23 +987,26 @@ function modalCancel(){
   document.getElementById('modal').style.display='none';
   _modalCb=null;
 }
-function getKeys(){
+// Store current scope in variables — more reliable than reading URL params
+let _buildId='default', _variantIdx='0';
+// Init from URL params on load
+(function(){
   const p=new URLSearchParams(window.location.search);
-  const bid=p.get('buildId')||'default';
-  const vid=p.get('variantIdx')||'0';
-  return{g:`d4v_g_${bid}_${vid}`,p:`d4v_p_${bid}_${vid}`};
+  _buildId=p.get('buildId')||'default';
+  _variantIdx=p.get('variantIdx')||'0';
+})();
+
+function getKeys(){
+  return{g:`d4v_g_${_buildId}_${_variantIdx}`,p:`d4v_p_${_buildId}_${_variantIdx}`};
 }
 function SV(){const k=getKeys();localStorage.setItem(k.g,JSON.stringify(gR));localStorage.setItem(k.p,JSON.stringify(pR));}
-function LV(){const k=getKeys();try{gR=JSON.parse(localStorage.getItem(k.g)||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem(k.p)||'{}');}catch(e){pR={};}}
+function LV(){const k=getKeys();try{gR=JSON.parse(localStorage.getItem(k.g)||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem(k.p)||'{}');}catch(e){pR={};};}
 
-// Allow parent page to reload this iframe's data when variant changes
+// Allow parent page to switch variant
 window.addEventListener('message',e=>{
   if(e.data?.type==='variantChange'){
-    // Update URL params without reload by using history
-    const url=new URL(window.location.href);
-    url.searchParams.set('buildId',e.data.buildId);
-    url.searchParams.set('variantIdx',e.data.variantIdx);
-    window.history.replaceState({},'',url);
+    _buildId=String(e.data.buildId||'default');
+    _variantIdx=String(e.data.variantIdx||'0');
     LV();draw();
   }
 });
