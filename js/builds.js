@@ -33,7 +33,7 @@ function renderBuilds() {
 function selectBuild(id) {
   state.activeBuildId = id;
   state.activeBuild = 0;
-  state.trackingBuild = 0;
+  state.trackingVariant = 0;
   state.activeBoard = 0;
   renderBuilds();
   renderBuildDetail();
@@ -203,7 +203,7 @@ function renderBuildDetail() {
   populateTrackingSelect(build);
 
   // Content for active variant
-  const build = build.variants[state.activeVariant] || build.variants[0];
+  const variant = build.variants[state.activeVariant] || build.variants[0];
   if (!variant) return;
 
   renderSkillSection(build, variant);
@@ -225,7 +225,7 @@ function populateTrackingSelect(build) {
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = v.name;
-    if (i === (state.trackingBuild || 0)) opt.selected = true;
+    if (i === (state.trackingVariant || 0)) opt.selected = true;
     sel.appendChild(opt);
   });
   // Re-attach focus listener to refresh names when dropdown opens
@@ -237,11 +237,11 @@ function populateTrackingSelect(build) {
 }
 
 function setTrackingVariant(idx) {
-  state.trackingBuild = parseInt(idx);
+  state.trackingVariant = parseInt(idx);
   const data = getData();
   const build = data.builds.find(b => b.id === state.activeBuildId);
   if (!build) return;
-  const variantName = build.variants[state.trackingVariant]?.name || `Build ${state.trackingBuild + 1}`;
+  const variantName = build.variants[state.trackingVariant]?.name || `Build ${state.trackingVariant + 1}`;
   // Reload progress iframe src with correct variantIdx
   const progress = document.getElementById('skillTreeProgress');
   if (progress) {
@@ -285,7 +285,7 @@ function renderVariantBar(build) {
       state.activeBuild = i;
       state.activeBoard = 0;
       renderVariantBar(build);
-      const build = build.variants[i];
+      const variant = build.variants[i];
       renderSkillSection(build, variant);
       renderGearSection(variant);
       renderParagonSection(build, variant);
@@ -574,7 +574,7 @@ function openAddBoardModal() {
   if (!state.activeBuildId) return;
   const data = getData();
   const build = data.builds.find(b => b.id === state.activeBuildId);
-  const build = build?.variants[state.activeVariant];
+  const variant = build?.variants[state.activeVariant];
   if (!variant) return;
 
   const sel = document.getElementById('boardSelect');
@@ -599,7 +599,7 @@ function confirmAddBoard() {
   if (!boardId) return;
   const data = getData();
   const build = data.builds.find(b => b.id === state.activeBuildId);
-  const build = build?.variants[state.activeVariant];
+  const variant = build?.variants[state.activeVariant];
   if (!variant) return;
   variant.paragonBoards = variant.paragonBoards || [];
   variant.paragonBoards.push({ boardId, guideNodes: [], unlockedNodes: [] });
@@ -612,7 +612,7 @@ function confirmAddBoard() {
 function removeBoard(idx) {
   const data = getData();
   const build = data.builds.find(b => b.id === state.activeBuildId);
-  const build = build?.variants[state.activeVariant];
+  const variant = build?.variants[state.activeVariant];
   if (!variant) return;
   variant.paragonBoards.splice(idx, 1);
   saveData(data);
