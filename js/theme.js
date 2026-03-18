@@ -64,10 +64,10 @@ let currentBrightness = 100;
 let currentFontSize = 100;
 
 function applyTheme(themeKey, accentKey, brightness, fontSize) {
-  currentTheme = themeKey || currentTheme;
-  currentAccent = accentKey || currentAccent;
-  currentBrightness = brightness !== undefined ? brightness : currentBrightness;
-  currentFontSize = fontSize !== undefined ? fontSize : currentFontSize;
+  if (themeKey !== null && themeKey !== undefined) currentTheme = themeKey;
+  if (accentKey !== null && accentKey !== undefined) currentAccent = accentKey;
+  if (brightness !== null && brightness !== undefined) currentBrightness = brightness;
+  if (fontSize !== null && fontSize !== undefined) currentFontSize = fontSize;
 
   const t = THEMES[currentTheme];
   const a = ACCENTS[currentAccent];
@@ -184,14 +184,14 @@ function buildThemePanel() {
       <div class="theme-section-label" style="margin-top:14px;">Font Size</div>
       <div class="brightness-row">
         <input type="range" id="fontSizeSlider" min="70" max="130" value="${currentFontSize}"
-          oninput="applyTheme(null,null,null,parseInt(this.value));document.getElementById('fontSizeLabel').textContent=this.value+'%'"
+          oninput="currentFontSize=parseInt(this.value);document.body.style.fontSize=this.value+'%';document.getElementById('fontSizeLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="fontSizeLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
       </div>
       <div class="theme-section-label" style="margin-top:14px;">Brightness</div>
       <div class="brightness-row">
         <input type="range" id="brightnessSlider" min="30" max="160" value="${currentBrightness}"
-          oninput="applyTheme(null,null,parseInt(this.value));document.getElementById('brightnessLabel').textContent=this.value+'%'"
+          oninput="currentBrightness=parseInt(this.value);applyTheme(null,null,currentBrightness);document.getElementById('brightnessLabel').textContent=this.value+'%'"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="brightnessLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentBrightness}%</span>
       </div>
