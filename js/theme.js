@@ -84,15 +84,30 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   r.style.setProperty('--accent-dark', a.dark);
   r.style.setProperty('--accent-mid',  a.mid);
 
-  // Font size — applied to html root so rem units scale everything
-  document.documentElement.style.fontSize = currentFontSize === 100 ? '' : `${currentFontSize}%`;
+  // Font size — applied to body so it scales text without breaking layouts
+  document.body.style.fontSize = currentFontSize === 100 ? '' : `${currentFontSize}%`;
 
-  // Brightness — applied to root element
-  // Use a gentler curve: map 30-160 range so changes feel natural
+  // Brightness — use a CSS variable + overlay approach to avoid filter breaking fixed elements
   const bv = currentBrightness / 100;
-  document.documentElement.style.filter = (bv !== 1)
-    ? `brightness(${bv})`
-    : '';
+  document.documentElement.style.removeProperty('filter');
+  document.body.style.filter = '';
+  // Apply brightness via a dedicated overlay div
+  let bOverlay = document.getElementById('brightnessOverlay');
+  if (!bOverlay) {
+    bOverlay = document.createElement('div');
+    bOverlay.id = 'brightnessOverlay';
+    bOverlay.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;transition:background .2s;';
+    document.body.appendChild(bOverlay);
+  }
+  if (bv < 1) {
+    const darkness = Math.round((1 - bv) * 100);
+    bOverlay.style.background = `rgba(0,0,0,${(1-bv) * 0.85})`;
+  } else if (bv > 1) {
+    const lightness = Math.round((bv - 1) * 100);
+    bOverlay.style.background = `rgba(255,255,255,${(bv-1) * 0.3})`;
+  } else {
+    bOverlay.style.background = 'transparent';
+  }
 
   // Save to localStorage
   localStorage.setItem('d4v_theme', JSON.stringify({ theme: currentTheme, accent: currentAccent, brightness: currentBrightness, fontSize: currentFontSize }));
