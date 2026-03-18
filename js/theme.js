@@ -131,6 +131,12 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   // Save to localStorage
   localStorage.setItem('d4v_theme', JSON.stringify({ theme: currentTheme, accent: currentAccent, brightness: currentBrightness, fontSize: currentFontSize }));
 
+  // Broadcast theme to skill tree iframes
+  const themeMsg = { type: 'themeChange', panelBg: t.panelBg || '#12122a', accent: a.color, accentRgb: a.color };
+  document.querySelectorAll('iframe').forEach(f => {
+    try { f.contentWindow.postMessage(themeMsg, '*'); } catch(e) {}
+  });
+
   // Update selector UI if open
   updateThemeUI();
 }
