@@ -78,7 +78,9 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   const a = ACCENTS[currentAccent];
   const r = document.documentElement;
 
-  // Background
+  // Background — apply directly to body so pattern is visible everywhere
+  document.body.style.backgroundColor = t.bg;
+  document.body.style.backgroundImage = t.pattern;
   r.style.setProperty('--bg-color', t.bg);
   r.style.setProperty('--bg-pattern', t.pattern);
   r.style.setProperty('--bg-overlay', t.overlay);
