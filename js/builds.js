@@ -221,13 +221,16 @@ function renderVariantBar(build) {
   const affects = document.getElementById('variantAffects');
   bar.innerHTML = '';
 
-  // Always show variant bar (even with 1 variant so user can add more)
-  const vs = document.getElementById('variantSection');
-  if(vs) vs.style.display = 'block';
-  const dtabs = document.getElementById('detail-tabs-row') || document.querySelector('.detail-tabs-row');
-  if(dtabs) dtabs.style.display = 'block';
+  // Ensure exactly 5 variants exist
+  while (build.variants.length < 5) {
+    build.variants.push({ name: `Variant ${build.variants.length + 1}`, skills: [], gear: [], paragonBoards: [], levelingSteps: [] });
+  }
 
   build.variants.forEach((v, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'variant-tab-wrap' + (i === state.activeVariant ? ' active' : '');
+
+    // Main tab button
     const btn = document.createElement('button');
     btn.className = 'variant-btn' + (i === state.activeVariant ? ' active' : '');
     btn.textContent = v.name;
@@ -241,37 +244,99 @@ function renderVariantBar(build) {
       renderParagonSection(build, variant);
       syncSkillTreeFrames(build.id, i);
     });
-    bar.appendChild(btn);
+
+    // Pencil rename button
+    const pencil = document.createElement('button');
+    pencil.className = 'variant-icon-btn';
+    pencil.title = 'Rename';
+    pencil.innerHTML = '✏';
+    pencil.addEventListener('click', e => {
+      e.stopPropagation();
+      const name = prompt('Rename variant:', v.name);
+      if (name && name.trim()) {
+        const data = getData();
+        const b = data.builds.find(x => x.id === build.id);
+        if (b) { b.variants[i].name = name.trim(); saveData(data); renderVariantBar(b); }
+      }
+    });
+
+    // Dropdown arrow with copy/delete options
+    const ddBtn = document.createElement('button');
+    ddBtn.className = 'variant-icon-btn variant-dd-btn';
+    ddBtn.title = 'Options';
+    ddBtn.innerHTML = '▾';
+    ddBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      // Remove any existing dropdowns
+      document.querySelectorAll('.variant-dropdown').forEach(d => d.remove());
+      const dd = document.createElement('div');
+      dd.className = 'variant-dropdown';
+      // Copy from options
+      const others = build.variants.map((ov, oi) => oi !== i ? {name:ov.name, idx:oi} : null).filter(Boolean);
+      if (others.length) {
+        const copyLabel = document.createElement('div');
+        copyLabel.className = 'variant-dd-label';
+        copyLabel.textContent = 'Copy from:';
+        dd.appendChild(copyLabel);
+        others.forEach(o => {
+          const item = document.createElement('button');
+          item.className = 'variant-dd-item';
+          item.textContent = o.name;
+          item.addEventListener('click', () => {
+            if (!confirm(`Copy "${o.name}" into "${v.name}"? This will overwrite current data.`)) return;
+            const data = getData();
+            const b = data.builds.find(x => x.id === build.id);
+            const src = JSON.parse(JSON.stringify(b.variants[o.idx]));
+            src.name = b.variants[i].name; // keep current name
+            b.variants[i] = src;
+            saveData(data);
+            dd.remove();
+            syncSkillTreeFrames(b.id, i);
+            renderBuildDetail();
+          });
+          dd.appendChild(item);
+        });
+        const sep = document.createElement('div');
+        sep.className = 'variant-dd-sep';
+        dd.appendChild(sep);
+      }
+      // Clear/delete option
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'variant-dd-item variant-dd-danger';
+      clearBtn.textContent = 'Clear this variant';
+      clearBtn.addEventListener('click', () => {
+        if (!confirm(`Clear all data from "${v.name}"?`)) return;
+        const data = getData();
+        const b = data.builds.find(x => x.id === build.id);
+        const name = b.variants[i].name;
+        b.variants[i] = { name, skills: [], gear: [], paragonBoards: [], levelingSteps: [] };
+        // Clear skill tree localStorage for this variant
+        const gKey = `d4v_g_${b.id}_${i}`;
+        const pKey = `d4v_p_${b.id}_${i}`;
+        localStorage.removeItem(gKey);
+        localStorage.removeItem(pKey);
+        saveData(data);
+        dd.remove();
+        syncSkillTreeFrames(b.id, i);
+        renderBuildDetail();
+      });
+      dd.appendChild(clearBtn);
+      // Position dropdown
+      const rect = ddBtn.getBoundingClientRect();
+      dd.style.top = (rect.bottom + 4) + 'px';
+      dd.style.left = (rect.left) + 'px';
+      document.body.appendChild(dd);
+      // Close on outside click
+      setTimeout(() => document.addEventListener('click', () => dd.remove(), {once:true}), 0);
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(pencil);
+    wrap.appendChild(ddBtn);
+    bar.appendChild(wrap);
   });
 
-  // Add variant button (max 5)
-  if (build.variants.length < 5) {
-    const addBtn = document.createElement('button');
-    addBtn.className = 'variant-btn variant-add-btn';
-    addBtn.textContent = '+ Variant';
-    addBtn.addEventListener('click', () => {
-      const data = getData();
-      const b = data.builds.find(x => x.id === build.id);
-      if (!b || b.variants.length >= 5) return;
-      b.variants.push({ name: `Variant ${b.variants.length + 1}`, skills: [], gear: [], paragonBoards: [], levelingSteps: [] });
-      saveData(data);
-      state.activeVariant = b.variants.length - 1;
-      renderBuildDetail();
-      syncSkillTreeFrames(b.id, state.activeVariant);
-    });
-    bar.appendChild(addBtn);
-  }
-
-  // Show what changes across variants
-  const v = build.variants[state.activeVariant];
-  const parts = [];
-  if (v.skills && v.skills.length)           parts.push('Skills');
-  if (v.gear && v.gear.length)               parts.push('Gear');
-  if (v.paragonBoards && v.paragonBoards.length) parts.push('Paragon');
-  if (v.levelingSteps && v.levelingSteps.length) parts.push('Leveling Guide');
-  affects.textContent = parts.length
-    ? `This variant includes: ${parts.join(', ')}`
-    : 'No data yet for this variant — add skills and gear below.';
+  if (affects) affects.textContent = '';
 }
 
 // ── SKILL SECTION ──────────────────────────────────────────────────────────
