@@ -59,55 +59,55 @@
         <a class="source-link" id="buildSourceLink" href="#" target="_blank" rel="noopener"></a>
       </div>
 
-      <!-- Variant Bar -->
-      <div id="variantSection">
-        <div class="variant-bar" id="variantBar"></div>
-        <div class="variant-affects" id="variantAffects"></div>
-      </div>
-
       <!-- Build Sections -->
       <div id="buildSections">
 
-        <!-- Skills -->
-        <section class="build-section" id="sectionSkills">
-          <div class="section-header">
-            <h2 class="section-title">Skill Tree</h2>
-            <div class="section-actions">
-              <button class="sec-btn" onclick="toggleLevelingGuide()">Leveling Guide</button>
+        <!-- ── SECTION 1: OVERVIEW (read-only snapshot) ─────────────── -->
+        <!-- Two columns: Gear preview left, Skill progress right -->
+        <section class="build-section two-col-section" id="sectionOverview">
+          <!-- Left: Gear preview -->
+          <div class="two-col-left">
+            <div class="spp-label">Gear</div>
+            <div id="gearPreview" class="gear-preview-area">
+              <div class="gear-preview-empty">Gear preview coming soon</div>
             </div>
           </div>
-          <!-- Progress snapshot (top, progress-mode only) -->
-          <div id="skillProgressPanel" class="skill-progress-panel">
-            <div class="spp-label">Current Progress</div>
-            <div class="spp-tracker">
-              <iframe id="skillTreeProgress"
-                src="skill-tree.html?mode=progress"
-                class="skill-tree-frame skill-tree-frame--progress"
-                title="Skill Tree Progress">
-              </iframe>
-            </div>
-          </div>
-
-          <!-- Guide planner (detail, guide-mode only) -->
-          <div id="skillGuidePanel" class="skill-guide-panel">
-            <div class="spp-label">Build Guide</div>
-            <iframe id="skillTreeGuide"
-              src="skill-tree.html?mode=guide"
-              class="skill-tree-frame skill-tree-frame--guide"
-              title="Skill Tree Guide">
+          <!-- Right: Skill progress snapshot -->
+          <div class="two-col-right">
+            <div class="spp-label">Skill Progress</div>
+            <iframe id="skillTreeProgress"
+              src="skill-tree.html?mode=progress"
+              class="skill-tree-frame skill-tree-frame--progress"
+              title="Skill Tree Progress">
             </iframe>
           </div>
-
-          <div id="levelingGuide" class="leveling-guide" style="display:none"></div>
-          <div id="skillsList" class="skills-list"></div>
         </section>
 
-        <!-- Gear -->
-        <section class="build-section" id="sectionGear">
-          <div class="section-header">
-            <h2 class="section-title">Gear &amp; Stats</h2>
+        <!-- ── SECTION 2: BUILD DETAIL (tabbed, editable) ───────────── -->
+        <!-- Variant tabs across the top, then two columns below -->
+        <section class="build-section two-col-section" id="sectionDetail">
+          <!-- Variant tabs span full width -->
+          <div class="detail-tabs-row">
+            <div class="variant-bar" id="variantBar"></div>
+            <div class="variant-affects" id="variantAffects"></div>
           </div>
-          <div id="gearList" class="gear-grid"></div>
+          <!-- Left: Full gear editor -->
+          <div class="two-col-left">
+            <div class="spp-label">Gear &amp; Stats</div>
+            <div id="gearList" class="gear-grid"></div>
+          </div>
+          <!-- Right: Skill tree guide planner -->
+          <div class="two-col-right">
+            <div class="spp-label">Skill Tree — Build Guide</div>
+            <div id="skillGuidePanel">
+              <iframe id="skillTreeGuide"
+                src="skill-tree.html?mode=guide"
+                class="skill-tree-frame skill-tree-frame--guide"
+                title="Skill Tree Guide">
+              </iframe>
+            </div>
+            <div id="levelingGuide" class="leveling-guide" style="display:none"></div>
+          </div>
         </section>
 
         <!-- Paragon -->
