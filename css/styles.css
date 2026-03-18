@@ -1024,3 +1024,72 @@ body {
 .variant-btn.active { background: rgba(201,168,76,.15); border-color: #c9a84c; color: #e8c97a; }
 .variant-add-btn { border-style: dashed; color: #5a5070; }
 .variant-add-btn:hover { border-color: rgba(201,168,76,.5); color: #c9a84c; }
+
+/* ── Variant tab wraps ───────────────────────────────────────── */
+.variant-tab-wrap {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(120,110,200,.25);
+  border-radius: 4px;
+  overflow: visible;
+  background: rgba(20,18,40,.6);
+}
+.variant-tab-wrap.active {
+  border-color: rgba(201,168,76,.5);
+  background: rgba(201,168,76,.08);
+}
+.variant-tab-wrap .variant-btn {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+.variant-icon-btn {
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(120,110,200,.2);
+  color: #5a5070;
+  cursor: pointer;
+  padding: 4px 7px;
+  font-size: 11px;
+  transition: color .15s, background .15s;
+  height: 100%;
+}
+.variant-icon-btn:hover { color: #c9a84c; background: rgba(201,168,76,.08); }
+.variant-tab-wrap.active .variant-icon-btn { border-left-color: rgba(201,168,76,.2); }
+
+/* ── Variant dropdown ────────────────────────────────────────── */
+.variant-dropdown {
+  position: fixed;
+  background: #1c1c3a;
+  border: 1px solid rgba(150,140,220,.4);
+  border-radius: 5px;
+  min-width: 160px;
+  z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  overflow: hidden;
+}
+.variant-dd-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #5a5070;
+  padding: 8px 12px 4px;
+}
+.variant-dd-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 7px 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  color: #9a90c0;
+  cursor: pointer;
+  transition: background .1s, color .1s;
+}
+.variant-dd-item:hover { background: rgba(120,110,200,.15); color: #d0c8e8; }
+.variant-dd-danger { color: #c05050 !important; }
+.variant-dd-danger:hover { background: rgba(200,60,60,.15) !important; color: #e06060 !important; }
+.variant-dd-sep { height: 1px; background: rgba(120,110,200,.2); margin: 4px 0; }
