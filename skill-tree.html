@@ -21,7 +21,8 @@ body{display:flex;flex-direction:column;}
 .pd{width:8px;height:8px;border-radius:50%;}
 .zb{width:28px;height:28px;font-size:16px;border:1px solid rgba(120,110,200,.35);border-radius:3px;background:transparent;color:#8080b0;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .zb:hover{border-color:rgba(160,150,220,.7);color:#c0c0f0;}
-#wrap{flex:1;overflow:hidden;position:relative;cursor:grab;}
+#wrap{position:absolute;inset:0;overflow:hidden;cursor:grab;}
+#treeContainer{flex:1;position:relative;overflow:hidden;}
 #wrap.g{cursor:grabbing;}
 #cv{position:absolute;top:0;left:0;transform-origin:0 0;}
 #tip{position:fixed;background:#1c1c3a;border:1px solid rgba(150,140,220,.55);border-radius:5px;padding:11px 14px;max-width:285px;pointer-events:none;z-index:1000;display:none;}
@@ -55,11 +56,21 @@ body{display:flex;flex-direction:column;}
   <button class="mb" onclick="resetMode('guide')" style="color:#c9a84c;border-color:rgba(201,168,76,.4)">Reset Guide</button>
   <button class="mb" onclick="resetMode('progress')" style="color:#3edc81;border-color:rgba(62,220,129,.4)">Reset Progress</button>
   <span style="font-size:12px;color:#55506a;margin-left:4px;min-width:40px" id="zl">55%</span>
+  <div style="margin-left:auto"></div>
+  <button class="zb" id="settingsBtn" onclick="toggleSettings()" title="Settings" style="width:32px;height:32px;font-size:16px;">⚙</button>
 </div>
-<div id="wrap"><canvas id="cv"></canvas>
-  <div id="treeScrollbar" style="position:absolute;right:6px;top:6px;bottom:6px;width:10px;background:rgba(80,70,140,.2);border-radius:5px;cursor:pointer;z-index:10;">
-    <div id="treeScrollThumb" style="position:absolute;left:0;right:0;top:0;height:60px;background:rgba(180,160,80,.45);border-radius:5px;cursor:grab;transition:background .15s;"></div>
+<div id="settingsPanel" style="display:none;position:absolute;top:52px;right:0;width:240px;background:#1c1c3a;border:1px solid rgba(150,140,220,.4);border-top:none;border-radius:0 0 6px 6px;padding:14px 16px;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,.5);">
+  <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;color:rgba(201,168,76,.8);margin-bottom:12px;text-transform:uppercase;">Settings</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <label style="font-size:12px;color:#9a9080;min-width:80px;">Background</label>
+    <input type="range" id="bgBrightness" min="5" max="60" value="26" oninput="setBgBrightness(this.value)" style="flex:1;accent-color:#c9a84c;cursor:pointer;">
+    <span id="bgBrightnessVal" style="font-size:11px;color:#6a6050;min-width:28px;text-align:right;">26</span>
   </div>
+</div>
+<div id="treeContainer" style="position:relative;flex:1;overflow:hidden;"><div id="wrap" style="position:absolute;inset:0;overflow:hidden;cursor:grab;"><canvas id="cv"></canvas></div>
+<div id="treeScrollbar" style="position:absolute;right:6px;top:6px;bottom:6px;width:14px;background:rgba(80,70,140,.25);border-radius:7px;cursor:pointer;z-index:100;">
+  <div id="treeScrollThumb" style="position:absolute;left:1px;right:1px;top:0;height:60px;background:rgba(180,160,80,.5);border-radius:6px;cursor:grab;transition:background .15s;"></div>
+</div>
 </div>
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center;">
   <div style="background:#1c1c3a;border:1px solid rgba(150,140,220,.5);border-radius:8px;padding:28px 32px;max-width:340px;text-align:center;">
@@ -340,7 +351,7 @@ let mode='guide',gR={},pR={},editing=true; // editing=true means guide is in edi
 let sc=0.55,px=80,py=30,pan=false,lm={x:0,y:0},hov=null,cn=null,cs=null;
 
 function draw(){
-  ctx.fillStyle='#1a1a35';ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.fillStyle=window._bgColor||'#1a1a35';ctx.fillRect(0,0,cv.width,cv.height);
   drawSpine();drawLines();
   for(const n of N)drawNode(n);
   drawSpineDiamonds();
@@ -1009,6 +1020,10 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
     dragging=true;startY=e.clientY;startPy=py;
     sbt.style.background='rgba(201,168,76,.7)';
     e.stopPropagation();e.preventDefault();
+    document.body.style.userSelect='none';
+  });
+  document.addEventListener('mouseup',()=>{
+    if(dragging){document.body.style.userSelect='';}
   });
   document.addEventListener('mousemove',e=>{
     if(!dragging) return;
@@ -1027,6 +1042,7 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   });
   // Click on track to jump
   sb.addEventListener('click',e=>{
+    e.stopPropagation();
     if(e.target===sbt) return;
     const wrap=document.getElementById('wrap');
     const ch=cv.height*sc, H=wrap.clientHeight;
@@ -1035,9 +1051,33 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
     py=-(frac*(ch-H));
     AX();
   });
+  sb.addEventListener('mousedown',e=>e.stopPropagation());
+  sb.addEventListener('mousemove',e=>e.stopPropagation());
+  sb.addEventListener('mouseup',e=>e.stopPropagation());
   sbt.addEventListener('mouseenter',()=>{ if(!dragging) sbt.style.background='rgba(201,168,76,.55)'; });
   sbt.addEventListener('mouseleave',()=>{ if(!dragging) sbt.style.background='rgba(180,160,80,.45)'; });
 })();
+function toggleSettings(){
+  const p=document.getElementById('settingsPanel');
+  p.style.display=p.style.display==='none'?'block':'none';
+}
+function setBgBrightness(val){
+  const v=parseInt(val);
+  document.getElementById('bgBrightnessVal').textContent=v;
+  // Convert 0-60 value to hex color — base is #1a1a35
+  const c=Math.round(v*255/100);
+  const hex=c.toString(16).padStart(2,'0');
+  // Use same value for R and G, slightly higher for B
+  const rb=Math.round(v*0.8*255/100);
+  const bb=Math.round(v*1.3*255/100);
+  const rhex=rb.toString(16).padStart(2,'0');
+  const bhex=Math.min(bb,255).toString(16).padStart(2,'0');
+  window._bgColor=`#${rhex}${rhex}${bhex}`;
+  document.body.style.background=window._bgColor;
+  draw();
+}
+// Override background fill in draw to use dynamic color
+window._bgColor='#1a1a35';
 LV();RV();draw();
 </script>
 </body>
