@@ -1280,3 +1280,8 @@ body::before {
   position: relative;
   z-index: 1;
 }
+
+/* ── Counter-zoom scrollbar so it stays put when page zooms ─── */
+#treeScrollbar {
+  zoom: reset;  /* Firefox */
+}
