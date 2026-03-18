@@ -1214,8 +1214,8 @@ body::before {
   gap: 8px;
 }
 .theme-card {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 64px;
   border-radius: 4px;
   border: 2px solid rgba(120,110,180,.2);
   cursor: pointer;
@@ -1231,17 +1231,33 @@ body::before {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 4px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 5px;
+  background: linear-gradient(transparent 30%, rgba(0,0,0,.6) 100%);
 }
 .theme-card-name {
   font-family: 'Rajdhani', sans-serif;
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  color: rgba(220,210,200,.8);
+  color: rgba(255,250,230,.9);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+  white-space: normal;
+  padding: 0 3px;
+}
+.theme-card-cls {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(200,190,160,.6);
+  text-align: center;
 }
 
 /* Accent swatches */
