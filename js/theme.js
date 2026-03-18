@@ -84,8 +84,9 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   r.style.setProperty('--accent-dark', a.dark);
   r.style.setProperty('--accent-mid',  a.mid);
 
-  // Font size — applied to body so it scales text without breaking layouts
-  document.body.style.fontSize = currentFontSize === 100 ? '' : `${currentFontSize}%`;
+  // Font size — use zoom to scale everything including px-based fonts
+  const zoomVal = currentFontSize / 100;
+  document.body.style.zoom = zoomVal === 1 ? '' : zoomVal;
 
   // Brightness — use a CSS variable + overlay approach to avoid filter breaking fixed elements
   const bv = currentBrightness / 100;
@@ -184,7 +185,7 @@ function buildThemePanel() {
       <div class="theme-section-label" style="margin-top:14px;">Font Size</div>
       <div class="brightness-row">
         <input type="range" id="fontSizeSlider" min="70" max="130" value="${currentFontSize}"
-          oninput="currentFontSize=parseInt(this.value);document.body.style.fontSize=this.value+'%';document.getElementById('fontSizeLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
+          oninput="currentFontSize=parseInt(this.value);document.body.style.zoom=currentFontSize/100;document.getElementById('fontSizeLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="fontSizeLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
       </div>
