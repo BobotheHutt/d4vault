@@ -48,7 +48,7 @@ function openSeasonModal() {
       const usedNums = data.seasons.map(s => s.number);
       const sel = document.getElementById('seasonSelect');
       sel.innerHTML = '';
-      const available = seasons.filter(s => !usedNums.includes(s.number));
+      const available = seasons.filter(s => !usedNums.includes(s.number)).reverse();
       if (!available.length) {
         sel.innerHTML = '<option disabled>All seasons already added</option>';
       } else {
