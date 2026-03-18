@@ -1,5 +1,6 @@
 :root {
   --bg:    #0a0a0f;
+  --font-scale: 1;
   --bg2:   #111118;
   --bg3:   #16161e;
   --bg4:   #1c1c26;
@@ -42,7 +43,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: calc(16px * var(--font-scale, 1));
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -63,15 +64,15 @@ body {
 }
 .brand {
   font-family: var(--font-head);
-  font-size: 20px;
+  font-size: calc(22px * var(--font-scale, 1));
   letter-spacing: 0.14em;
   color: var(--accent,#e8c97a);
 }
 .topbar-right { display: flex; align-items: center; gap: 14px; }
-.username-label { font-size: 13px; color: var(--text3); letter-spacing: 0.06em; }
+.username-label { font-size: 14px; color: var(--text3); letter-spacing: 0.06em; }
 .btn-signout {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -334,7 +335,7 @@ body {
   margin-bottom: 8px;
 }
 .tag {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -934,7 +935,7 @@ body {
 
 .spp-label {
   font-family: 'Cinzel', serif;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: rgba(var(--accent-rgb,201,168,76),.7);
@@ -1016,10 +1017,10 @@ body {
 
 .variant-btn {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: .06em;
-  padding: 5px 14px;
+  padding: 6px 16px;
   border-radius: 3px;
   border: 1px solid rgba(var(--accent-rgb,120,110,200),.3);
   background: transparent;
