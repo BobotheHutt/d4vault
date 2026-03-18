@@ -1019,10 +1019,7 @@ window.addEventListener('message',e=>{
     // Apply accent color to CSS vars
     if(e.data.accent){
       document.documentElement.style.setProperty('--accent', e.data.accent);
-      // Parse rgb from hex
-      const hex=e.data.accent.replace('#','');
-      const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
-      document.documentElement.style.setProperty('--accent-rgb',`${r},${g},${b}`);
+      if(e.data.accentRgb) document.documentElement.style.setProperty('--accent-rgb', e.data.accentRgb);
     }
     draw();
   }
