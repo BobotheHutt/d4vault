@@ -15,6 +15,7 @@ let state = {
   activeBuildId: null,
   activeVariant: 0,
   activeBoard: 0,
+  trackingVariant: 0,
   showTooltips: true,
   paragons: []          // loaded from JSON
 };
