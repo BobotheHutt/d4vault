@@ -1106,3 +1106,37 @@ body {
   border-radius: 4px;
   margin-bottom: 4px;
 }
+
+/* ── Tracking variant bar ────────────────────────────────────── */
+.tracking-variant-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  background: rgba(201,168,76,.06);
+  border: 1px solid rgba(201,168,76,.2);
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.tracking-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #5a5070;
+  white-space: nowrap;
+}
+.tracking-select {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  background: #1a1a38;
+  border: 1px solid rgba(201,168,76,.4);
+  border-radius: 3px;
+  color: #c9a84c;
+  padding: 3px 10px;
+  cursor: pointer;
+  outline: none;
+  min-width: 140px;
+}
