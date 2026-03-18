@@ -37,6 +37,11 @@ function selectBuild(id) {
   renderBuilds();
   renderBuildDetail();
   syncSkillTreeFrames(id, 0);
+  // Set initial variant label
+  const data = getData();
+  const build = data.builds.find(b => b.id === id);
+  const label = document.getElementById('progressVariantLabel');
+  if (label && build) label.textContent = (build.variants?.[0]?.name || 'Variant 1').toUpperCase();
 }
 
 // ── ADD BUILD MODAL ────────────────────────────────────────────────────────
@@ -200,7 +205,7 @@ function syncSkillTreeFrames(buildId, variantIdx) {
   const guide    = document.getElementById('skillTreeGuide');
   if (progress?.contentWindow) progress.contentWindow.postMessage(msg, '*');
   if (guide?.contentWindow)    guide.contentWindow.postMessage(msg, '*');
-  // Also update src params for fresh loads
+  // Update src params for fresh loads
   if (progress) {
     const u = new URL(progress.src, window.location.href);
     u.searchParams.set('buildId', msg.buildId);
@@ -213,6 +218,12 @@ function syncSkillTreeFrames(buildId, variantIdx) {
     u.searchParams.set('variantIdx', msg.variantIdx);
     if (guide.src !== u.href) guide.src = u.href;
   }
+  // Update variant label on progress preview
+  const data = getData();
+  const build = data.builds.find(b => b.id === buildId);
+  const variantName = build?.variants?.[variantIdx]?.name || `Variant ${(variantIdx||0)+1}`;
+  const label = document.getElementById('progressVariantLabel');
+  if (label) label.textContent = variantName.toUpperCase();
 }
 
 // ── VARIANT BAR ───────────────────────────────────────────────────────────
