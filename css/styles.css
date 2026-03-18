@@ -994,3 +994,33 @@ body {
   font-size: 13px;
   letter-spacing: .06em;
 }
+
+/* ── Variant tabs in detail section ─────────────────────────── */
+.detail-tabs-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(120,110,200,.2);
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.variant-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  padding: 5px 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(120,110,200,.3);
+  background: transparent;
+  color: #7070a0;
+  cursor: pointer;
+  transition: all .15s;
+}
+.variant-btn:hover { border-color: rgba(160,150,220,.6); color: #b0b0e0; }
+.variant-btn.active { background: rgba(201,168,76,.15); border-color: #c9a84c; color: #e8c97a; }
+.variant-add-btn { border-style: dashed; color: #5a5070; }
+.variant-add-btn:hover { border-color: rgba(201,168,76,.5); color: #c9a84c; }
