@@ -61,11 +61,13 @@ const ACCENTS = {
 let currentTheme = 'abyss';
 let currentAccent = 'gold';
 let currentBrightness = 100;
+let currentFontSize = 100;
 
-function applyTheme(themeKey, accentKey, brightness) {
+function applyTheme(themeKey, accentKey, brightness, fontSize) {
   currentTheme = themeKey || currentTheme;
   currentAccent = accentKey || currentAccent;
   currentBrightness = brightness !== undefined ? brightness : currentBrightness;
+  currentFontSize = fontSize !== undefined ? fontSize : currentFontSize;
 
   const t = THEMES[currentTheme];
   const a = ACCENTS[currentAccent];
@@ -82,13 +84,18 @@ function applyTheme(themeKey, accentKey, brightness) {
   r.style.setProperty('--accent-dark', a.dark);
   r.style.setProperty('--accent-mid',  a.mid);
 
-  // Brightness
-  document.body.style.filter = currentBrightness < 100
-    ? `brightness(${currentBrightness}%)`
+  // Font size — applied to html root so rem units scale everything
+  document.documentElement.style.fontSize = currentFontSize === 100 ? '' : `${currentFontSize}%`;
+
+  // Brightness — applied to root element
+  // Use a gentler curve: map 30-160 range so changes feel natural
+  const bv = currentBrightness / 100;
+  document.documentElement.style.filter = (bv !== 1)
+    ? `brightness(${bv})`
     : '';
 
   // Save to localStorage
-  localStorage.setItem('d4v_theme', JSON.stringify({ theme: currentTheme, accent: currentAccent, brightness: currentBrightness }));
+  localStorage.setItem('d4v_theme', JSON.stringify({ theme: currentTheme, accent: currentAccent, brightness: currentBrightness, fontSize: currentFontSize }));
 
   // Update selector UI if open
   updateThemeUI();
@@ -97,7 +104,9 @@ function applyTheme(themeKey, accentKey, brightness) {
 function loadTheme() {
   try {
     const saved = JSON.parse(localStorage.getItem('d4v_theme') || '{}');
-    applyTheme(saved.theme || 'abyss', saved.accent || 'gold', saved.brightness ?? 100);
+    applyTheme(saved.theme || 'abyss', saved.accent || 'gold', saved.brightness ?? 100, saved.fontSize ?? 100);
+  // Reset if saved value was in old narrow range
+
   } catch(e) {
     applyTheme('abyss', 'gold', 100);
   }
@@ -110,10 +119,14 @@ function updateThemeUI() {
   document.querySelectorAll('.accent-swatch').forEach(el => {
     el.classList.toggle('active', el.dataset.accent === currentAccent);
   });
-  const slider = document.getElementById('brightnessSlider');
-  if (slider) slider.value = currentBrightness;
-  const label = document.getElementById('brightnessLabel');
-  if (label) label.textContent = currentBrightness + '%';
+  const bSlider = document.getElementById('brightnessSlider');
+  if (bSlider) bSlider.value = currentBrightness;
+  const bLabel = document.getElementById('brightnessLabel');
+  if (bLabel) bLabel.textContent = currentBrightness + '%';
+  const fSlider = document.getElementById('fontSizeSlider');
+  if (fSlider) fSlider.value = currentFontSize;
+  const fLabel = document.getElementById('fontSizeLabel');
+  if (fLabel) fLabel.textContent = currentFontSize + '%';
 }
 
 function toggleThemePanel() {
@@ -153,9 +166,16 @@ function buildThemePanel() {
       <div class="theme-cards">${themeCards}</div>
       <div class="theme-section-label" style="margin-top:14px;">Accent</div>
       <div class="accent-swatches">${accentSwatches}</div>
+      <div class="theme-section-label" style="margin-top:14px;">Font Size</div>
+      <div class="brightness-row">
+        <input type="range" id="fontSizeSlider" min="70" max="130" value="${currentFontSize}"
+          oninput="applyTheme(null,null,null,parseInt(this.value));document.getElementById('fontSizeLabel').textContent=this.value+'%'"
+          style="flex:1;accent-color:var(--accent,#c9a84c);">
+        <span id="fontSizeLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
+      </div>
       <div class="theme-section-label" style="margin-top:14px;">Brightness</div>
       <div class="brightness-row">
-        <input type="range" id="brightnessSlider" min="40" max="120" value="${currentBrightness}"
+        <input type="range" id="brightnessSlider" min="30" max="160" value="${currentBrightness}"
           oninput="applyTheme(null,null,parseInt(this.value));document.getElementById('brightnessLabel').textContent=this.value+'%'"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="brightnessLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentBrightness}%</span>
