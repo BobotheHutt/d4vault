@@ -1093,3 +1093,16 @@ body {
 .variant-dd-danger { color: #c05050 !important; }
 .variant-dd-danger:hover { background: rgba(200,60,60,.15) !important; color: #e06060 !important; }
 .variant-dd-sep { height: 1px; background: rgba(120,110,200,.2); margin: 4px 0; }
+
+/* ── Overview tracking row ───────────────────────────────────── */
+.overview-tracking-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(201,168,76,.06);
+  border: 1px solid rgba(201,168,76,.2);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
