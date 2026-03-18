@@ -1262,3 +1262,21 @@ body::before {
   align-items: center;
   gap: 10px;
 }
+
+/* ── Isolate iframe panels from page background pattern ─────── */
+.skill-guide-panel,
+.skill-progress-panel,
+.two-col-left,
+.two-col-right,
+.skill-tree-frame {
+  background: #12122a !important;
+  isolation: isolate;
+}
+
+/* Make sure section panels have solid bg too */
+.build-section,
+#buildContent {
+  background: var(--bg, #0a0a0f);
+  position: relative;
+  z-index: 1;
+}
