@@ -994,13 +994,14 @@ let _buildId='default', _variantIdx='0';
   const p=new URLSearchParams(window.location.search);
   _buildId=p.get('buildId')||'default';
   _variantIdx=p.get('variantIdx')||'0';
+  console.log('[skill-tree] init:', _buildId, _variantIdx, window.location.search);
 })();
 
 function getKeys(){
   return{g:`d4v_g_${_buildId}_${_variantIdx}`,p:`d4v_p_${_buildId}_${_variantIdx}`};
 }
-function SV(){const k=getKeys();localStorage.setItem(k.g,JSON.stringify(gR));localStorage.setItem(k.p,JSON.stringify(pR));}
-function LV(){const k=getKeys();try{gR=JSON.parse(localStorage.getItem(k.g)||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem(k.p)||'{}');}catch(e){pR={};};}
+function SV(){const k=getKeys();console.log('[skill-tree] SAVE',k.g);localStorage.setItem(k.g,JSON.stringify(gR));localStorage.setItem(k.p,JSON.stringify(pR));}
+function LV(){const k=getKeys();console.log('[skill-tree] LOAD',k.g);try{gR=JSON.parse(localStorage.getItem(k.g)||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem(k.p)||'{}');}catch(e){pR={};}}
 
 // Allow parent page to switch variant
 window.addEventListener('message',e=>{
