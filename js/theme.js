@@ -103,6 +103,9 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
       if (el) el.style.zoom = zoomVal === 1 ? '' : zoomVal;
     });
     zoomTarget.style.zoom = zoomVal === 1 ? '' : zoomVal;
+    // Keep theme panel outside zoom so its scrollbar doesn't drift
+    const tp = document.getElementById('themePanel');
+    if (tp) tp.style.zoom = zoomVal === 1 ? '' : (1/zoomVal);
   } else {
     document.body.style.zoom = zoomVal === 1 ? '' : zoomVal;
   }
@@ -214,7 +217,7 @@ function buildThemePanel() {
       <div class="theme-section-label" style="margin-top:14px;">Zoom</div>
       <div class="brightness-row">
         <input type="range" id="zoomSlider" min="70" max="130" value="${currentFontSize}"
-          oninput="currentFontSize=parseInt(this.value);(document.getElementById('mainLayout')||document.body).style.zoom=currentFontSize/100;['topbar','seasonRail','buildSidebar'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.zoom=currentFontSize/100;});document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
+          oninput="currentFontSize=parseInt(this.value);(document.getElementById('mainLayout')||document.body).style.zoom=currentFontSize/100;['topbar','seasonRail','buildSidebar'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.zoom=currentFontSize/100;});const tp=document.getElementById('themePanel');if(tp)tp.style.zoom=100/currentFontSize;document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="zoomLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
       </div>
