@@ -42,8 +42,8 @@ body{display:flex;flex-direction:column;}
   <button class="mb"    id="bP" onclick="SM('progress')">Progress Mode</button>
   <div class="sep"></div>
   <div class="pts">
-    <div class="pi"><div class="pd" style="background:#c9a84c"></div><span style="color:#6a6050">Guide</span><span id="gP" style="font-weight:600;color:#d4cfc0">0</span></div>
-    <div class="pi"><div class="pd" style="background:#3edc81"></div><span style="color:#6a6050">Progress</span><span id="pP" style="font-weight:600;color:#d4cfc0">0</span></div>
+    <div class="pi"><div class="pd" style="background:#c9a84c"></div><span style="color:#6a6050">Guide</span><span id="gP" style="font-weight:600;color:#d4cfc0">0</span><span style="color:#5a5070">/71</span></div>
+    <div class="pi"><div class="pd" style="background:#3edc81"></div><span style="color:#6a6050">Progress</span><span id="pP" style="font-weight:600;color:#d4cfc0">0</span><span style="color:#5a5070">/71</span></div>
   </div>
   <div class="sep"></div>
   <div style="display:flex;gap:4px">
@@ -65,6 +65,7 @@ body{display:flex;flex-direction:column;}
 <script>
 const D2R=Math.PI/180;
 const SZ={active:50,ultimate:56,passive:26,upgrade:20,key:116};
+const SECTION_REQ={basic:0,core:1,aura:2,valor:11,justice:16,ultimate:23,keys:33};
 
 // Passive color — consistent brownish neutral
 const PASSCOL={fill:'#1a1208',border:'#907040',node:'#b08850'};
@@ -388,12 +389,13 @@ function drawSq(n,has,ih,rank){
   const ddx=hub?hub.x-x:0,ddy=hub?hub.y-y:0;
   const dist=Math.sqrt(ddx*ddx+ddy*ddy)||1;
   const cx=x+(ddx/dist)*extra, cy=y+(ddy/dist)*extra;
+  const secLocked=!sectionUnlocked(n.sec);
   if(has){ctx.shadowColor=mode==='guide'?c.border:'#3edc81';ctx.shadowBlur=18;}
-  else if(ih){ctx.shadowColor='rgba(180,170,240,.6)';ctx.shadowBlur=10;}
-  ctx.fillStyle=has?(mode==='guide'?c.fill:'#0a2015'):(ih?'#1e1e3c':c.fill);
+  else if(ih&&!secLocked){ctx.shadowColor='rgba(180,170,240,.6)';ctx.shadowBlur=10;}
+  ctx.fillStyle=secLocked?'#0e0e1e':has?(mode==='guide'?c.fill:'#0a2015'):(ih?'#1e1e3c':c.fill);
   RR(cx-h,cy-h,sz,sz,5);ctx.fill();ctx.shadowBlur=0;
-  ctx.strokeStyle=has?(mode==='guide'?c.border:'#3edc81'):(ih?'rgba(180,170,240,.9)':c.border);
-  ctx.lineWidth=has?2.5:(ih?2:1.5);ctx.globalAlpha=has?1:(ih?0.9:0.6);
+  ctx.strokeStyle=secLocked?'rgba(80,80,120,.3)':has?(mode==='guide'?c.border:'#3edc81'):(ih?'rgba(180,170,240,.9)':c.border);
+  ctx.lineWidth=has?2.5:(ih?2:1.5);ctx.globalAlpha=secLocked?0.3:(has?1:(ih?0.9:0.6));
   RR(cx-h,cy-h,sz,sz,5);ctx.stroke();ctx.globalAlpha=1;
   if(mode==='progress'&&(gR[n.id]||0)>0){const f=Math.min((pR[n.id]||0)/maxRank,1);ctx.fillStyle='rgba(62,220,129,.25)';ctx.fillRect(cx-h+3,cy+h-7,(sz-6)*f,4);}
   if(maxRank>1){ctx.font='bold 13px Rajdhani,sans-serif';ctx.fillStyle=has?(mode==='guide'?c.node:'#5eec99'):c.node;ctx.globalAlpha=has?1:0.65;ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(`${rank}/${maxRank}`,cx,cy+h-2);ctx.globalAlpha=1;}
@@ -463,7 +465,19 @@ function nAt(cx,cy){
   for(const n of[...N].reverse()){const r=n.type==='key-passive'?SZ.key/2+8:n.type==='active'?SZ.active/2+5:n.type==='ultimate'?SZ.ultimate/2+5:n.type==='passive'?SZ.passive/2+5:SZ.upgrade/2+5;if(Math.abs(cx-n.x)<=r&&Math.abs(cy-n.y)<=r)return n;}return null;
 }
 function s2c(sx,sy){const r=document.getElementById('wrap').getBoundingClientRect();return{x:(sx-r.left-px)/sc,y:(sy-r.top-py)/sc};}
-function inc(n){const d=mode==='guide'?gR:pR;d[n.id]=Math.min((d[n.id]||0)+1,n.maxRank||1);SV();draw();}
+function inc(n){
+  if(!sectionUnlocked(n.sec)) return;
+  const d=mode==='guide'?gR:pR;
+  d[n.id]=Math.min((d[n.id]||0)+1,n.maxRank||1);
+  SV();draw();
+}
+function totalSpent(){
+  const d=mode==='guide'?gR:pR;
+  return Object.values(d).reduce((s,v)=>s+v,0);
+}
+function sectionUnlocked(sec){
+  return totalSpent()>=( SECTION_REQ[sec]??0);
+}
 function canDec(n){
   const d=mode==='guide'?gR:pR;
   const cur=d[n.id]||0;
@@ -520,7 +534,9 @@ function ST(n,mx,my){
   document.getElementById('tD').textContent=n.desc||'';
   document.getElementById('tC').textContent=n.cooldown?`Cooldown: ${n.cooldown}s`:n.charges?`${n.charges} Charges (${n.chargeCd}s)`:'';
   const locked=(gR[n.id]||0)>0&&!canDec(n);
-  document.getElementById('tH').textContent=mode==='guide'?(locked?'Cannot remove — a skill depends on this':'Left click +rank · Right click −rank'):(locked?'Cannot remove — a skill depends on this':'Left click mark progress · Right click remove');
+  const secLock=!sectionUnlocked(n.sec);
+  const req=SECTION_REQ[n.sec]??0;
+  document.getElementById('tH').textContent=secLock?`Requires ${req} points spent to unlock`:mode==='guide'?(locked?'Cannot remove — a skill depends on this':'Left click +rank · Right click −rank'):(locked?'Cannot remove — a skill depends on this':'Left click mark progress · Right click remove');
   const tip=document.getElementById('tip');let tx=mx+16,ty=my-16;
   if(tx+295>window.innerWidth)tx=mx-311;if(ty+190>window.innerHeight)ty=my-190;
   tip.style.left=tx+'px';tip.style.top=ty+'px';tip.style.display='block';
