@@ -259,6 +259,29 @@ document.addEventListener('click', e => {
   }
 });
 
-// Apply theme immediately so no flash of unstyled content
-loadTheme();
+// Apply CSS vars immediately (safe - uses documentElement only)
+// Body-dependent styles applied once DOM is ready
+(function(){
+  try {
+    const saved = JSON.parse(localStorage.getItem('d4v_theme') || '{}');
+    const t = THEMES[saved.theme] || THEMES['sacredOath'];
+    const a = ACCENTS[saved.accent] || ACCENTS['holy'];
+    const r = document.documentElement;
+    r.style.setProperty('--bg-color', t.bg);
+    r.style.setProperty('--panel-bg', t.panelBg || '#12122a');
+    r.style.setProperty('--accent', a.color);
+    r.style.setProperty('--accent-rgb', a.rgb || '201,168,76');
+    r.style.setProperty('--accent-glow', a.glow);
+    r.style.setProperty('--accent-dark', a.dark);
+    r.style.setProperty('--accent-mid', a.mid);
+    r.style.setProperty('--font-scale', (saved.fontSize || 100) / 100);
+  } catch(e) {}
+})();
+
+// Full theme apply (including body) once DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadTheme);
+} else {
+  loadTheme();
+}
 // Panel built lazily on first open via toggleThemePanel()
