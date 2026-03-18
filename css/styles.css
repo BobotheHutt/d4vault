@@ -1267,21 +1267,25 @@ body::before {
 .skill-guide-panel,
 .skill-progress-panel,
 .two-col-left,
-.two-col-right,
-.skill-tree-frame {
-  background: var(--panel-bg, #12122a) !important;
+.two-col-right {
+  background: rgba(0,0,0,.35) !important;
   isolation: isolate;
 }
 
-/* Gear preview area matches theme */
-.gear-preview-area {
-  background: var(--panel-bg, #12122a);
+/* Skill tree iframe keeps its own bg (set via postMessage) */
+.skill-tree-frame {
+  background: var(--panel-bg, #12122a) !important;
 }
 
-/* Make sure section panels have solid bg too */
+/* Gear preview area — transparent so page bg shows */
+.gear-preview-area {
+  background: transparent;
+}
+
+/* Section panels — semi-transparent so bg pattern shows through */
 .build-section,
 #buildContent {
-  background: var(--bg, #0a0a0f);
+  background: transparent;
   position: relative;
   z-index: 1;
 }
@@ -1290,3 +1294,20 @@ body::before {
 #treeScrollbar {
   zoom: reset;  /* Firefox */
 }
+
+/* ── Source icon button ──────────────────────────────────────── */
+.source-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 3px 9px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+.source-icon-btn:hover { opacity: .8; transform: translateY(-1px); }
