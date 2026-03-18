@@ -939,8 +939,8 @@ body {
   text-transform: uppercase;
   color: rgba(var(--accent-rgb,201,168,76),.7);
   padding: 8px 14px;
-  border-bottom: 1px solid rgba(var(--accent-rgb,120,110,200),.15);
-  background: rgba(26,26,56,.8);
+  border-bottom: 1px solid rgba(var(--accent-rgb,201,168,76),.15);
+  background: rgba(0,0,0,.35);
 }
 
 .skill-tree-frame {
@@ -1274,7 +1274,7 @@ body::before {
 
 /* Skill tree iframe keeps its own bg (set via postMessage) */
 .skill-tree-frame {
-  background: var(--panel-bg, #12122a) !important;
+  background: transparent !important;
 }
 
 /* Gear preview area — transparent so page bg shows */
