@@ -6,6 +6,7 @@ const THEMES = {
   abyss: {
     name: 'Abyss',
     bg: '#0a0a0f',
+    panelBg: '#12122a',
     pattern: `radial-gradient(ellipse at 20% 50%, rgba(40,20,60,.4) 0%, transparent 60%),
               radial-gradient(ellipse at 80% 20%, rgba(20,10,40,.5) 0%, transparent 50%),
               repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(80,60,120,.03) 40px, rgba(80,60,120,.03) 41px)`,
@@ -14,6 +15,7 @@ const THEMES = {
   infernal: {
     name: 'Infernal',
     bg: '#0f0806',
+    panelBg: '#1a100a',
     pattern: `radial-gradient(ellipse at 30% 70%, rgba(120,30,10,.45) 0%, transparent 55%),
               radial-gradient(ellipse at 75% 25%, rgba(80,20,5,.4) 0%, transparent 50%),
               repeating-linear-gradient(-30deg, transparent, transparent 50px, rgba(150,40,10,.04) 50px, rgba(150,40,10,.04) 51px),
@@ -23,6 +25,7 @@ const THEMES = {
   celestial: {
     name: 'Celestial',
     bg: '#060810',
+    panelBg: '#0a0e1e',
     pattern: `radial-gradient(ellipse at 50% 0%, rgba(20,40,120,.5) 0%, transparent 60%),
               radial-gradient(ellipse at 10% 80%, rgba(10,20,80,.4) 0%, transparent 50%),
               radial-gradient(ellipse at 90% 60%, rgba(30,10,80,.3) 0%, transparent 40%),
@@ -32,6 +35,7 @@ const THEMES = {
   sanctuary: {
     name: 'Sanctuary',
     bg: '#0d0b08',
+    panelBg: '#161208',
     pattern: `radial-gradient(ellipse at 60% 40%, rgba(80,60,20,.4) 0%, transparent 55%),
               radial-gradient(ellipse at 20% 70%, rgba(60,40,15,.35) 0%, transparent 50%),
               repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(100,80,30,.04) 60px, rgba(100,80,30,.04) 61px),
@@ -41,6 +45,7 @@ const THEMES = {
   void: {
     name: 'Void',
     bg: '#050508',
+    panelBg: '#0c0c14',
     pattern: `radial-gradient(ellipse at 50% 50%, rgba(20,20,60,.6) 0%, transparent 70%),
               repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(30,20,60,.04) 1deg, transparent 2deg, transparent 20deg),
               linear-gradient(180deg, rgba(10,5,30,.3) 0%, transparent 100%)`,
@@ -77,6 +82,7 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   r.style.setProperty('--bg-color', t.bg);
   r.style.setProperty('--bg-pattern', t.pattern);
   r.style.setProperty('--bg-overlay', t.overlay);
+  r.style.setProperty('--panel-bg', t.panelBg || '#12122a');
 
   // Accent colors
   r.style.setProperty('--accent',      a.color);
