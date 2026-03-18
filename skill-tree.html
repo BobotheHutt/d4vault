@@ -101,13 +101,13 @@ const D2R = Math.PI/180;
 // Hub positions on the zigzag spine
 // Spine alternates: odd sections left (~x=380), even sections right (~x=820)
 const HUBS = {
-  basic:    {x:700,  y:120,  cw:true},
-  core:     {x:340,  y:540,  cw:false},
-  aura:     {x:860,  y:980,  cw:true},
-  valor:    {x:340,  y:1460, cw:false},
-  justice:  {x:860,  y:1940, cw:true},
-  ultimate: {x:340,  y:2400, cw:false},
-  keys:     {x:860,  y:2860, cw:true}
+  basic:    {x:700,  y:320,  cw:true},
+  core:     {x:340,  y:800,  cw:false},
+  aura:     {x:860,  y:1280, cw:true},
+  valor:    {x:340,  y:1760, cw:false},
+  justice:  {x:860,  y:2240, cw:true},
+  ultimate: {x:340,  y:2720, cw:false},
+  keys:     {x:860,  y:3200, cw:true}
 };
 
 // Section colors
@@ -141,7 +141,7 @@ const SECTIONS = [
           ]},
          {id:'brandish-crs',name:'Cross Strike',desc:'Brandish unleashes 2 additional arcs dealing 120% damage and applying Vulnerable.',maxRank:1}
        ]},
-      {id:'holybolt',  name:'Holy Bolt', angle:45,  maxRank:5, type:'active', tags:['Judicator'],
+      {id:'holybolt',  name:'Holy Bolt', angle:355,  maxRank:5, type:'active', tags:['Judicator'],
        desc:'Throw a Holy hammer, dealing 126% damage.',
        upgrades:[
          {id:'holybolt-enh',name:'Enhanced Holy Bolt',desc:'Holy Bolt now applies Judgement.',maxRank:1,
@@ -151,7 +151,7 @@ const SECTIONS = [
           ]},
          {id:'holybolt-str',name:'Storm Bolt',desc:'Holy Bolt becomes a Justice Skill dealing 315% damage and Stunning for 2 seconds.',maxRank:1}
        ]},
-      {id:'clash',     name:'Clash',     angle:135, maxRank:5, type:'active', tags:['Juggernaut'],
+      {id:'clash',     name:'Clash',     angle:90, maxRank:5, type:'active', tags:['Juggernaut'],
        desc:"Strike an enemy with your weapon and shield, dealing 161% damage.",
        upgrades:[
          {id:'clash-enh',name:'Enhanced Clash',desc:"Whenever you cast Clash, gain Crusader's March for 6 seconds.",maxRank:1,
@@ -161,7 +161,7 @@ const SECTIONS = [
           ]},
          {id:'clash-sei',name:'Seize Them',desc:'Resolve empowers Clash, x8% increased damage per stack. Every 3rd strike, enemies are Pulled in.',maxRank:1}
        ]},
-      {id:'advance',   name:'Advance',   angle:225, maxRank:5, type:'active', tags:['Zealot','Mobility'],
+      {id:'advance',   name:'Advance',   angle:135, maxRank:5, type:'active', tags:['Zealot','Mobility'],
        desc:'Advance forward with your weapon, dealing 147% damage.',
        upgrades:[
          {id:'advance-enh',name:'Enhanced Advance',desc:'Casting Advance grants Unhindered for 2 seconds.',maxRank:1,
@@ -188,7 +188,7 @@ const SECTIONS = [
   {
     section:'core', hubKey:'core', color:SC.core,
     actives:[
-      {id:'zeal',         name:'Zeal',          angle:95,  maxRank:5, type:'active', tags:['Zealot'],
+      {id:'zeal',         name:'Zeal',          angle:350,  maxRank:5, type:'active', tags:['Zealot'],
        desc:'Strike with blinding speed, dealing 112% damage followed by 3 additional strikes dealing 28% each.',
        upgrades:[
          {id:'zeal-enh',name:'Enhanced Zeal',desc:'Zeal gains 2 additional strikes.',maxRank:1,
@@ -198,7 +198,7 @@ const SECTIONS = [
           ]},
          {id:'zeal-leg',name:"Zealot's Legacy",desc:'Zeal extends its assault, randomly seeking surrounding enemies and striking 4 additional times.',maxRank:1}
        ]},
-      {id:'bshield',      name:'Blessed Shield', angle:15, maxRank:5, type:'active', tags:['Judicator'],
+      {id:'bshield',      name:'Blessed Shield', angle:300, maxRank:5, type:'active', tags:['Judicator'],
        desc:'Bless and hurl your shield dealing 302% damage ricocheting up to 3 times.',
        upgrades:[
          {id:'bshield-enh',name:'Enhanced Blessed Shield',desc:'Blessed Shield deals 1% additional damage for each Armor on your shield.',maxRank:1,
@@ -208,7 +208,7 @@ const SECTIONS = [
           ]},
          {id:'bshield-ret',name:'Shield of Retribution',desc:'Blessed Shield becomes a Juggernaut Skill, pulsing Thorns damage before bursting for 378%.',maxRank:1}
        ]},
-      {id:'bhammer',      name:'Blessed Hammer', angle:295, maxRank:5, type:'active', tags:['Judicator'],
+      {id:'bhammer',      name:'Blessed Hammer', angle:260, maxRank:5, type:'active', tags:['Judicator'],
        desc:'Throw a Blessed Hammer that spirals out dealing 161% damage.',
        upgrades:[
          {id:'bhammer-enh',name:'Enhanced Blessed Hammer',desc:'Blessed Hammer now hits enemies multiple times.',maxRank:1,
@@ -218,7 +218,7 @@ const SECTIONS = [
           ]},
          {id:'bhammer-mor',name:'Mortar Combat',desc:'Blessed Hammer mortars 3 hammers to the ground, dealing 67% damage in an area.',maxRank:1}
        ]},
-      {id:'dlance',       name:'Divine Lance',   angle:215, maxRank:5, type:'active', tags:['Disciple','Mobility'],
+      {id:'dlance',       name:'Divine Lance',   angle:220, maxRank:5, type:'active', tags:['Disciple','Mobility'],
        desc:'Impale enemies with a heavenly lance, stabbing 2 times for 126% damage each.',
        upgrades:[
          {id:'dlance-enh',name:'Enhanced Divine Lance',desc:"Divine Lance's damage increased by 30% of your Movement Speed bonus.",maxRank:1,
@@ -228,7 +228,7 @@ const SECTIONS = [
           ]},
          {id:'dlance-jav',name:'Divine Javelin',desc:'Throw Divine Lance, dealing 90% damage to first enemy and bursting for 450%.',maxRank:1}
        ]},
-      {id:'sbash',        name:'Shield Bash',    angle:140, maxRank:5, type:'active', tags:['Mobility','Juggernaut'],
+      {id:'sbash',        name:'Shield Bash',    angle:180, maxRank:5, type:'active', tags:['Mobility','Juggernaut'],
        desc:'Charge at an enemy and bash in front of you, dealing 287% damage.',
        upgrades:[
          {id:'sbash-enh',name:'Enhanced Shield Bash',desc:'Hits with Shield Bash count as Blocks.',maxRank:1,
@@ -241,11 +241,11 @@ const SECTIONS = [
     ],
     // Passives: between actives at midpoint angles
     passives:[
-      {id:'discipline', name:'Discipline',  angle:55,  maxRank:3, desc:'Your Core Skills deal x18% increased damage.'},
-      {id:'en-guarde',  name:'En Guarde',   angle:335, maxRank:3, desc:'You gain +30% Armor and +15% Block Chance.'},
-      {id:'riposte',    name:'Riposte',     angle:255, maxRank:3, desc:'Blocking grants you 18% damage for 5 seconds.'},
-      {id:'parry',      name:'Parry',       angle:178, maxRank:3, desc:'Blocking restores 3 Faith.'},
-      {id:'piety',      name:'Piety',       angle:117, maxRank:3, desc:'Your Maximum Faith is increased by 15.'}
+      {id:'discipline', name:'Discipline',  angle:45,  maxRank:3, desc:'Your Core Skills deal x18% increased damage.'},
+      {id:'en-guarde',  name:'En Guarde',   angle:70, maxRank:3, desc:'You gain +30% Armor and +15% Block Chance.'},
+      {id:'riposte',    name:'Riposte',     angle:95, maxRank:3, desc:'Blocking grants you 18% damage for 5 seconds.'},
+      {id:'parry',      name:'Parry',       angle:115, maxRank:3, desc:'Blocking restores 3 Faith.'},
+      {id:'piety',      name:'Piety',       angle:135, maxRank:3, desc:'Your Maximum Faith is increased by 15.'}
     ]
   },
 
@@ -255,7 +255,7 @@ const SECTIONS = [
   {
     section:'aura', hubKey:'aura', color:SC.aura,
     actives:[
-      {id:'fan-aura', name:'Fanaticism Aura', angle:300, maxRank:5, type:'active', tags:['Zealot'], cooldown:15,
+      {id:'fan-aura', name:'Fanaticism Aura', angle:10, maxRank:5, type:'active', tags:['Zealot'], cooldown:15,
        desc:'Passive: Spending Faith grants +7% Attack Speed and +2.8% Crit Chance. Active: Weaken all Nearby enemies for 4 seconds.',
        upgrades:[
          {id:'fan-enh',name:'Enhanced Fanaticism Aura',desc:"Fanaticism Aura's passive also grants 10% Maximum Resource.",maxRank:1,
@@ -265,7 +265,7 @@ const SECTIONS = [
           ]},
          {id:'fan-red',name:'Rite of Redemption',desc:'Weakened enemies who die within radius Heal you for 0.5% and Fortify for 1% Maximum Life.',maxRank:1}
        ]},
-      {id:'def-aura', name:'Defiance Aura',   angle:180, maxRank:5, type:'active', tags:['Defensive','Juggernaut'], cooldown:20,
+      {id:'def-aura', name:'Defiance Aura',   angle:90, maxRank:5, type:'active', tags:['Defensive','Juggernaut'], cooldown:20,
        desc:"Passive: Grants you and allies 42% Armor and 42% All Resistances. Active: Become Unstoppable for 2 seconds.",
        upgrades:[
          {id:'def-enh',name:'Enhanced Defiance Aura',desc:"Passive also grants 10% Maximum Life.",maxRank:1,
@@ -275,7 +275,7 @@ const SECTIONS = [
           ]},
          {id:'def-tho',name:'Rite of Thorns',desc:'Grants 3 Thorns and increases Thorns damage by x75%. Active releases a nova of Thorns damage.',maxRank:1}
        ]},
-      {id:'hla',      name:'Holy Light Aura', angle:60,  maxRank:5, type:'active', tags:['Judicator'], cooldown:25,
+      {id:'hla',      name:'Holy Light Aura', angle:180,  maxRank:5, type:'active', tags:['Judicator'], cooldown:25,
        desc:"Passive: You and allies deal 126% damage every 2 seconds to 3 random Nearby enemies. Active: Unleash 2 bolts of light dealing 448% Holy damage.",
        upgrades:[
          {id:'hla-enh',name:'Enhanced Holy Light Aura',desc:"Holy Light's passive now targets 2 additional enemies.",maxRank:1,
@@ -287,9 +287,9 @@ const SECTIONS = [
        ]}
     ],
     passives:[
-      {id:'longevity', name:'Longevity', angle:0,   maxRank:3, desc:'You gain +30% Healing received.'},
-      {id:'anointing', name:'Anointing', angle:240, maxRank:3, desc:'Your allies Heal for +33% of the Healing you receive.'},
-      {id:'renewal',   name:'Renewal',   angle:120, maxRank:3, desc:'Blocking Fortifies you for 1.5% of your Maximum Life.'}
+      {id:'longevity', name:'Longevity', angle:240,   maxRank:3, desc:'You gain +30% Healing received.'},
+      {id:'anointing', name:'Anointing', angle:270, maxRank:3, desc:'Your allies Heal for +33% of the Healing you receive.'},
+      {id:'renewal',   name:'Renewal',   angle:310, maxRank:3, desc:'Blocking Fortifies you for 1.5% of your Maximum Life.'}
     ]
   },
 
@@ -300,7 +300,7 @@ const SECTIONS = [
   {
     section:'valor', hubKey:'valor', color:SC.valor,
     actives:[
-      {id:'sc',     name:'Shield Charge', angle:70,  maxRank:5, type:'active', tags:['Mobility','Juggernaut'], cooldown:10,
+      {id:'sc',     name:'Shield Charge', angle:350,  maxRank:5, type:'active', tags:['Mobility','Juggernaut'], cooldown:10,
        desc:'Charge with your shield pushing enemies Back, granting 14% Damage Reduction and dealing 126% damage while Channeling.',
        upgrades:[
          {id:'sc-enh',name:'Enhanced Shield Charge',desc:'Shield Charge grants 1 Resolve whenever it hits an enemy.',maxRank:1,
@@ -310,7 +310,7 @@ const SECTIONS = [
           ]},
          {id:'sc-pha',name:'Phalanx Charge',desc:'Shield Charge surges forward in a wave of energy Knocking enemies Back, dealing 157% damage.',maxRank:1}
        ]},
-      {id:'aegis',  name:'Aegis',         angle:340, maxRank:5, type:'active', tags:['Defensive','Juggernaut'], cooldown:16,
+      {id:'aegis',  name:'Aegis',         angle:300, maxRank:5, type:'active', tags:['Defensive','Juggernaut'], cooldown:16,
        desc:'Surround yourself with shields of the Light, Taunting Close enemies and gaining 100% Block Chance for 4 seconds.',
        upgrades:[
          {id:'aegis-enh',name:'Enhanced Aegis',desc:'Casting Aegis grants Unstoppable for 4 seconds.',maxRank:1,
@@ -320,7 +320,7 @@ const SECTIONS = [
           ]},
          {id:'aegis-imp',name:'Impunity',desc:'While Aegis is active, you gain 40% Thorns and Retribution Chance.',maxRank:1}
        ]},
-      {id:'fstar',  name:'Falling Star',  angle:250, maxRank:5, type:'active', tags:['Disciple','Mobility'], cooldown:12,
+      {id:'fstar',  name:'Falling Star',  angle:240, maxRank:5, type:'active', tags:['Disciple','Mobility'], cooldown:12,
        desc:'Soar into the air and dive down, dealing 112% on liftoff and 336% damage on impact.',
        upgrades:[
          {id:'fstar-enh',name:'Enhanced Falling Star',desc:'Killing a Vulnerable enemy reduces Falling Star cooldown by 1 second.',maxRank:1,
@@ -330,7 +330,7 @@ const SECTIONS = [
           ]},
          {id:'fstar-ftl',name:'Faster Than Light',desc:'Falling Star cuts through the battlefield, creating a fissure dealing 180% damage before erupting for 60%.',maxRank:1}
        ]},
-      {id:'rally',  name:'Rally',         angle:160, maxRank:5, type:'active', tags:['Zealot'], charges:3, chargeCooldown:16,
+      {id:'rally',  name:'Rally',         angle:180, maxRank:5, type:'active', tags:['Zealot'], charges:3, chargeCooldown:16,
        desc:'Rally forth, gaining 20% Movement Speed for 8 seconds and generating 30 Faith.',
        upgrades:[
          {id:'rally-enh',name:'Enhanced Rally',desc:'Rally increases Movement Speed by additional 10% and generates 5 additional Faith.',maxRank:1,
@@ -342,14 +342,14 @@ const SECTIONS = [
        ]}
     ],
     passives:[
-      {id:'resolute',   name:'Resolute',           angle:30,  maxRank:3, desc:'Gaining a stack of Resolve Heals for 1.5% of your Maximum Life.'},
-      {id:'conviction', name:'Conviction',         angle:10,  maxRank:3, desc:'Gain +0.9% Attack Speed for each stack of Resolve, up to 9%.'},
-      {id:'attenuate',  name:'Attenuate',          angle:305, maxRank:3, desc:'Gain +3% Resource Cost Reduction for every stack of Resolve, up to 15%.'},
-      {id:'courage',    name:'Courage',            angle:295, maxRank:3, desc:'You gain 1 Resolve every 5 seconds an Elite enemy is Nearby.'},
-      {id:'best-off',   name:'Best Offense',       angle:205, maxRank:3, desc:'You deal x18% increased damage while Fortified.'},
-      {id:'fortitude',  name:'Fortitude',          angle:195, maxRank:3, desc:'Gain x18% Critical Strike Damage while Fortified.'},
-      {id:'thorns-thi', name:'Thorns & Thistles',  angle:115, maxRank:3, desc:'Gain Thorns and your total Thorns damage is increased by x45%.'},
-      {id:'repentance', name:'Repentance',         angle:125, maxRank:3, desc:'Gain +18% Retribution chance.'}
+      {id:'resolute',   name:'Resolute',           angle:40,  maxRank:3, desc:'Gaining a stack of Resolve Heals for 1.5% of your Maximum Life.'},
+      {id:'conviction', name:'Conviction',         angle:60,  maxRank:3, desc:'Gain +0.9% Attack Speed for each stack of Resolve, up to 9%.'},
+      {id:'attenuate',  name:'Attenuate',          angle:80, maxRank:3, desc:'Gain +3% Resource Cost Reduction for every stack of Resolve, up to 15%.'},
+      {id:'courage',    name:'Courage',            angle:100, maxRank:3, desc:'You gain 1 Resolve every 5 seconds an Elite enemy is Nearby.'},
+      {id:'best-off',   name:'Best Offense',       angle:115, maxRank:3, desc:'You deal x18% increased damage while Fortified.'},
+      {id:'fortitude',  name:'Fortitude',          angle:130, maxRank:3, desc:'Gain x18% Critical Strike Damage while Fortified.'},
+      {id:'thorns-thi', name:'Thorns & Thistles',  angle:145, maxRank:3, desc:'Gain Thorns and your total Thorns damage is increased by x45%.'},
+      {id:'repentance', name:'Repentance',         angle:155, maxRank:3, desc:'Gain +18% Retribution chance.'}
     ]
   },
 
@@ -359,7 +359,7 @@ const SECTIONS = [
   {
     section:'justice', hubKey:'justice', color:SC.justice,
     actives:[
-      {id:'purify',  name:'Purify',               angle:320, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:10,
+      {id:'purify',  name:'Purify',               angle:350, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:10,
        desc:'Enshroud your enemies in the Light, Dazing them for 2 seconds.',
        upgrades:[
          {id:'pur-enh',name:'Enhanced Purify',desc:'Purify generates 10 Faith for each enemy affected.',maxRank:1,
@@ -369,7 +369,7 @@ const SECTIONS = [
           ]},
          {id:'pur-abs',name:'Absolution',desc:'Purify deals 380% damage and Weakens enemies for 4 seconds.',maxRank:1}
        ]},
-      {id:'consec',  name:'Consecration',         angle:220, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:18,
+      {id:'consec',  name:'Consecration',         angle:90, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:18,
        desc:'Bathe in the Light for 6 seconds, Healing for 5.6% Maximum Life per second and dealing 105% damage per second.',
        upgrades:[
          {id:'con-enh',name:'Enhanced Consecration',desc:'While inside Consecration, you and allies deal x15% additional damage.',maxRank:1,
@@ -379,7 +379,7 @@ const SECTIONS = [
           ]},
          {id:'con-san',name:'Sanctify',desc:'Consecration lasts 3 seconds increasing damage and Healing by 20% each second, then detonates.',maxRank:1}
        ]},
-      {id:'condemn', name:'Condemn',               angle:155, maxRank:5, type:'active', tags:['Disciple'], cooldown:15,
+      {id:'condemn', name:'Condemn',              angle:135, maxRank:5, type:'active', tags:['Disciple'], cooldown:15,
        desc:'Harness the Light and Pull enemies in after 1.5 seconds, briefly Stunning them and dealing 336% damage.',
        upgrades:[
          {id:'cnd-enh',name:'Enhanced Condemn',desc:'While Casting Condemn, become Unhindered for 1.5 seconds.',maxRank:1,
@@ -389,7 +389,7 @@ const SECTIONS = [
           ]},
          {id:'cnd-she',name:'Shepard the Flock',desc:'Condemn marks all enemies and drags them to your location after it Casts.',maxRank:1}
        ]},
-      {id:'sph',     name:'Spear of the Heavens',  angle:55,  maxRank:5, type:'active', tags:['Judicator'], cooldown:14,
+      {id:'sph',     name:'Spear of the Heavens', angle:180,  maxRank:5, type:'active', tags:['Judicator'], cooldown:14,
        desc:'Rain down 4 heavenly spears dealing 224% damage and Knocking Down for 1.5 seconds. After 1.5 seconds spears burst for 168%.',
        upgrades:[
          {id:'sph-enh',name:'Enhanced Spear of the Heavens',desc:'Consuming Judgement reduces Spear of the Heavens cooldown by 0.5 seconds.',maxRank:1,
@@ -402,15 +402,15 @@ const SECTIONS = [
     ],
     passives:[
       {id:'crack-armor', name:'Crack in the Armor',  angle:285, maxRank:3, desc:'You deal x18% increased damage to Vulnerable enemies.'},
-      {id:'high-charity',name:'High Charity',         angle:250, maxRank:3, desc:'You gain 12% Cooldown Reduction.'},
-      {id:'iron-sharp',  name:'Iron Sharpens Iron',   angle:190, maxRank:3, desc:'You gain +18% Critical Strike Damage.'},
-      {id:'break-line',  name:'Break the Line',         angle:175, maxRank:3, desc:'You have +6% Critical Strike Chance and deal x15% increased Damage to Weakened enemies.'},
-      {id:'press-adv',   name:'Press the Advantage',  angle:110, maxRank:3, desc:'Critically Striking grants you 9% Damage Reduction for 5 seconds.'},
-      {id:'heavyweight', name:'Heavyweight',           angle:100, maxRank:3, desc:'You deal x18% Critical Strike Damage while Healthy.'},
-      {id:'pacify',      name:'Pacify',               angle:20,  maxRank:3, desc:'You gain +45% increased Crowd Control duration.'},
-      {id:'dizzying',    name:'Dizzying Blow',         angle:355, maxRank:3, desc:'You deal x21% increased damage to Crowd Controlled enemies.'},
-      {id:'righteous',   name:'Righteousness',         angle:340, maxRank:3, desc:'You deal x18% increased Holy and Fire damage.'},
-      {id:'leave-luck',  name:'Leave Luck to Heaven',  angle:5,   maxRank:3, desc:'You gain 9% Lucky Hit Chance.'}
+      {id:'high-charity',name:'High Charity',        angle:255, maxRank:3, desc:'You gain 12% Cooldown Reduction.'},
+      {id:'iron-sharp',  name:'Iron Sharpens Iron',  angle:240, maxRank:3, desc:'You gain +18% Critical Strike Damage.'},
+      {id:'break-line',  name:'Break the Line',     angle:260, maxRank:3, desc:'You have +6% Critical Strike Chance and deal x15% increased Damage to Weakened enemies.'},
+      {id:'press-adv',   name:'Press the Advantage', angle:275, maxRank:3, desc:'Critically Striking grants you 9% Damage Reduction for 5 seconds.'},
+      {id:'heavyweight', name:'Heavyweight',         angle:290, maxRank:3, desc:'You deal x18% Critical Strike Damage while Healthy.'},
+      {id:'pacify',      name:'Pacify',              angle:305,  maxRank:3, desc:'You gain +45% increased Crowd Control duration.'},
+      {id:'dizzying',    name:'Dizzying Blow',       angle:315, maxRank:3, desc:'You deal x21% increased damage to Crowd Controlled enemies.'},
+      {id:'righteous',   name:'Righteousness',       angle:215, maxRank:3, desc:'You deal x18% increased Holy and Fire damage.'},
+      {id:'leave-luck',  name:'Leave Luck to Heaven',angle:225,   maxRank:3, desc:'You gain 9% Lucky Hit Chance.'}
     ]
   },
 
@@ -420,7 +420,7 @@ const SECTIONS = [
   {
     section:'ultimate', hubKey:'ultimate', color:SC.ultimate,
     actives:[
-      {id:'hfury',   name:"Heaven's Fury",      angle:75,  maxRank:5, type:'ultimate', tags:['Judicator'], cooldown:30,
+      {id:'hfury',   name:"Heaven's Fury",      angle:350,  maxRank:5, type:'ultimate', tags:['Judicator'], cooldown:30,
        desc:'Grasp the Light, dealing 200% damage per second before releasing it to seek Nearby enemies dealing 126% damage per hit for 7 seconds.',
        upgrades:[
          {id:'hf-enh',name:"Enhanced Heaven's Fury",desc:"Heaven's Fury's light Judges enemies.",maxRank:1,
@@ -430,7 +430,7 @@ const SECTIONS = [
           ]},
          {id:'hf-tri',name:'Triplicate',desc:"Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds.",maxRank:1}
        ]},
-      {id:'fortress',name:'Fortress',            angle:340, maxRank:5, type:'ultimate', tags:['Defensive','Juggernaut'], cooldown:60,
+      {id:'fortress',name:'Fortress',            angle:300, maxRank:5, type:'ultimate', tags:['Defensive','Juggernaut'], cooldown:60,
        desc:'Make your stand, becoming Immune for 3 seconds and create a defensive area for 13.5 seconds.',
        upgrades:[
          {id:'for-enh',name:'Enhanced Fortress',desc:"While inside Fortress your Skills are free to Cast and you gain x4% damage per stack of Resolve.",maxRank:1,
@@ -440,7 +440,7 @@ const SECTIONS = [
           ]},
          {id:'for-ram',name:'Rampart of Thorns',desc:'Enemies inside Fortress are Slowed by 50% and take 500% of your Thorns damage per second.',maxRank:1}
        ]},
-      {id:'zenith',  name:'Zenith',              angle:235, maxRank:5, type:'ultimate', tags:['Zealot'], cooldown:25,
+      {id:'zenith',  name:'Zenith',              angle:240, maxRank:5, type:'ultimate', tags:['Zealot'], cooldown:25,
        desc:'Summon a divine sword that cleaves the battlefield for 630% damage. Casting Zenith again cuts through for 560% damage and Knocks Down enemies for 2 seconds.',
        upgrades:[
          {id:'zen-enh',name:'Enhanced Zenith',desc:'While Zenith is active, you are Unstoppable.',maxRank:1,
@@ -450,7 +450,7 @@ const SECTIONS = [
           ]},
          {id:'zen-sun',name:'Sunder',desc:'Zenith sunders a rift, Knocking Down enemies and dealing 900% damage. After 1 second the rift detonates for 675%.',maxRank:1}
        ]},
-      {id:'arbiter', name:'Arbiter of Justice',  angle:140, maxRank:5, type:'ultimate', tags:['Disciple','Mobility'], cooldown:98,
+      {id:'arbiter', name:'Arbiter of Justice',  angle:180, maxRank:5, type:'ultimate', tags:['Disciple','Mobility'], cooldown:98,
        desc:'Ascend to the heavens and crash upon the battlefield as an Arbiter for 20 seconds, dealing 840% damage upon landing.',
        upgrades:[
          {id:'arb-enh',name:'Enhanced Arbiter of Justice',desc:"Arbiter form's Wing Strikes recast time is reduced by 0.5 seconds.",maxRank:1,
@@ -462,15 +462,15 @@ const SECTIONS = [
        ]}
     ],
     passives:[
-      {id:'shining-armor', name:'Shining Armor',       angle:20,  maxRank:3, desc:'Unique Weapon/Shield: x15% Damage. Unique Helmet/Chest/Pants: +15% Armor.'},
-      {id:'giant-slayer',  name:'Giant Slayer',         angle:10,  maxRank:3, desc:'You deal x15% increased damage to Elites and x24% to Healthy enemies.'},
-      {id:'sacred-arms',   name:'Sacred Arms',          angle:295, maxRank:3, desc:'Two Handed: x15% Critical Strike Damage. One Handed and Shield: 15% chance to ignore damage.'},
-      {id:'master-craft',  name:'Master Craftwork',     angle:285, maxRank:3, desc:"Your Armor is increased by 150% of your Shield's Block Chance."},
-      {id:'shake-off',     name:'Shake It Off',         angle:195, maxRank:3, desc:'You have 24% chance to become Unstoppable for 1 second after being hit by a Crowd Control Effect.'},
-      {id:'coat-arms',     name:'Coat of Arms',         angle:185, maxRank:3, desc:'Your damage is increased by 75% of your Armor Percent and 50% of your Block Chance.'},
-      {id:'path-pen',      name:'Path of the Penitent', angle:105, maxRank:3, desc:'Zealot Skills cost 100% more Faith, but grants all Skills +6% Resource Cost Reduction and x10% increased damage.'},
-      {id:'exaltation',    name:'Exaltation',           angle:115, maxRank:3, desc:'During Arbiter your damage is increased by x85% and Wing Strikes strike 1 additional time.'},
-      {id:'judgement-day', name:'Judgement Day',        angle:95,  maxRank:3, desc:'Consuming Judgement increases your damage by x6% for 5 seconds, up to x90%. Judgement now spreads to nearby targets.'}
+      {id:'shining-armor', name:'Shining Armor',       angle:40,  maxRank:3, desc:'Unique Weapon/Shield: x15% Damage. Unique Helmet/Chest/Pants: +15% Armor.'},
+      {id:'giant-slayer',  name:'Giant Slayer',         angle:60,  maxRank:3, desc:'You deal x15% increased damage to Elites and x24% to Healthy enemies.'},
+      {id:'sacred-arms',   name:'Sacred Arms',          angle:80, maxRank:3, desc:'Two Handed: x15% Critical Strike Damage. One Handed and Shield: 15% chance to ignore damage.'},
+      {id:'master-craft',  name:'Master Craftwork',     angle:100, maxRank:3, desc:"Your Armor is increased by 150% of your Shield's Block Chance."},
+      {id:'shake-off',     name:'Shake It Off',         angle:115, maxRank:3, desc:'You have 24% chance to become Unstoppable for 1 second after being hit by a Crowd Control Effect.'},
+      {id:'coat-arms',     name:'Coat of Arms',         angle:130, maxRank:3, desc:'Your damage is increased by 75% of your Armor Percent and 50% of your Block Chance.'},
+      {id:'path-pen',      name:'Path of the Penitent', angle:145, maxRank:3, desc:'Zealot Skills cost 100% more Faith, but grants all Skills +6% Resource Cost Reduction and x10% increased damage.'},
+      {id:'exaltation',    name:'Exaltation',           angle:155, maxRank:3, desc:'During Arbiter your damage is increased by x85% and Wing Strikes strike 1 additional time.'},
+      {id:'judgement-day', name:'Judgement Day',        angle:165,  maxRank:3, desc:'Consuming Judgement increases your damage by x6% for 5 seconds, up to x90%. Judgement now spreads to nearby targets.'}
     ]
   },
 
@@ -480,9 +480,9 @@ const SECTIONS = [
   {
     section:'keys', hubKey:'keys', color:SC.keys,
     actives:[
-      {id:'kp-zealot',    name:'Zealot',    angle:315, maxRank:1, type:'key-passive', tags:['Key Passive'],
+      {id:'kp-zealot',    name:'Zealot',    angle:270, maxRank:1, type:'key-passive', tags:['Key Passive'],
        desc:'Casting Zealot Skills grants Fervor for 4 seconds. Critically Striking with these Skills echoes the attack for 47% of the damage per stack of Fervor.', upgrades:[]},
-      {id:'kp-jugg',      name:'Juggernaut',angle:45,  maxRank:1, type:'key-passive', tags:['Key Passive'],
+      {id:'kp-jugg',      name:'Juggernaut',angle:90,  maxRank:1, type:'key-passive', tags:['Key Passive'],
        desc:'Casting a Juggernaut Skill Consumes 8 stacks of Resolve, giving Juggernaut Skills x60% increased damage and 20% increased size for 5 seconds.', upgrades:[]},
       {id:'kp-judic',     name:'Judicator', angle:135, maxRank:1, type:'key-passive', tags:['Key Passive'],
        desc:"Your Basic Skills now apply Judgement. Each time you Judge an enemy, increase the damage they take from you by x8%, up to x80%.", upgrades:[]},
