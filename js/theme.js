@@ -3,68 +3,97 @@
 // Brightness applies a global filter to the whole app.
 
 const THEMES = {
-  abyss: {
-    name: 'Abyss',
-    bg: '#0a0a0f',
-    panelBg: '#12122a',
-    pattern: `radial-gradient(ellipse at 20% 50%, rgba(40,20,60,.4) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 20%, rgba(20,10,40,.5) 0%, transparent 50%),
-              repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(80,60,120,.03) 40px, rgba(80,60,120,.03) 41px)`,
-    overlay: 'rgba(10,10,20,.92)',
+  bloodFury: {
+    name: 'Blood Fury',
+    cls: 'Barbarian',
+    bg: '#0e0604',
+    panelBg: '#160a06',
+    pattern: `radial-gradient(ellipse at 30% 60%, rgba(140,20,10,.5) 0%, transparent 55%),
+              radial-gradient(ellipse at 80% 20%, rgba(100,15,5,.4) 0%, transparent 45%),
+              repeating-linear-gradient(75deg, transparent, transparent 30px, rgba(160,30,10,.04) 30px, rgba(160,30,10,.04) 31px),
+              repeating-linear-gradient(-15deg, transparent, transparent 50px, rgba(120,20,5,.03) 50px, rgba(120,20,5,.03) 51px)`,
+    overlay: 'rgba(14,6,4,.90)',
   },
-  infernal: {
-    name: 'Infernal',
-    bg: '#0f0806',
-    panelBg: '#1a100a',
-    pattern: `radial-gradient(ellipse at 30% 70%, rgba(120,30,10,.45) 0%, transparent 55%),
-              radial-gradient(ellipse at 75% 25%, rgba(80,20,5,.4) 0%, transparent 50%),
-              repeating-linear-gradient(-30deg, transparent, transparent 50px, rgba(150,40,10,.04) 50px, rgba(150,40,10,.04) 51px),
-              repeating-linear-gradient(60deg, transparent, transparent 30px, rgba(100,20,5,.03) 30px, rgba(100,20,5,.03) 31px)`,
-    overlay: 'rgba(15,8,6,.91)',
+  wildHeart: {
+    name: 'Wild Heart',
+    cls: 'Druid',
+    bg: '#050e06',
+    panelBg: '#081208',
+    pattern: `radial-gradient(ellipse at 40% 70%, rgba(20,80,20,.5) 0%, transparent 55%),
+              radial-gradient(ellipse at 75% 30%, rgba(10,60,15,.4) 0%, transparent 50%),
+              repeating-linear-gradient(20deg, transparent, transparent 60px, rgba(20,80,20,.04) 60px, rgba(20,80,20,.04) 61px),
+              repeating-linear-gradient(110deg, transparent, transparent 40px, rgba(10,50,10,.03) 40px, rgba(10,50,10,.03) 41px)`,
+    overlay: 'rgba(5,14,6,.91)',
   },
-  celestial: {
-    name: 'Celestial',
-    bg: '#060810',
-    panelBg: '#0a0e1e',
-    pattern: `radial-gradient(ellipse at 50% 0%, rgba(20,40,120,.5) 0%, transparent 60%),
-              radial-gradient(ellipse at 10% 80%, rgba(10,20,80,.4) 0%, transparent 50%),
-              radial-gradient(ellipse at 90% 60%, rgba(30,10,80,.3) 0%, transparent 40%),
-              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ccircle cx='20' cy='40' r='0.8' fill='rgba(200,210,255,0.4)'/%3E%3Ccircle cx='80' cy='15' r='0.6' fill='rgba(200,210,255,0.3)'/%3E%3Ccircle cx='150' cy='60' r='1' fill='rgba(200,210,255,0.5)'/%3E%3Ccircle cx='40' cy='120' r='0.7' fill='rgba(200,210,255,0.3)'/%3E%3Ccircle cx='120' cy='100' r='0.9' fill='rgba(200,210,255,0.4)'/%3E%3Ccircle cx='170' cy='150' r='0.6' fill='rgba(200,210,255,0.3)'/%3E%3Ccircle cx='60' cy='170' r='0.8' fill='rgba(200,210,255,0.35)'/%3E%3Ccircle cx='190' cy='30' r='0.5' fill='rgba(200,210,255,0.25)'/%3E%3C/svg%3E")`,
-    overlay: 'rgba(6,8,16,.90)',
+  boneWitch: {
+    name: 'Bone Witch',
+    cls: 'Necromancer',
+    bg: '#050810',
+    panelBg: '#080c18',
+    pattern: `radial-gradient(ellipse at 50% 40%, rgba(20,80,90,.45) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(10,50,70,.4) 0%, transparent 50%),
+              repeating-linear-gradient(0deg, transparent, transparent 44px, rgba(20,80,90,.04) 44px, rgba(20,80,90,.04) 45px),
+              repeating-linear-gradient(90deg, transparent, transparent 44px, rgba(10,60,80,.03) 44px, rgba(10,60,80,.03) 45px)`,
+    overlay: 'rgba(5,8,16,.91)',
   },
-  sanctuary: {
-    name: 'Sanctuary',
-    bg: '#0d0b08',
-    panelBg: '#161208',
-    pattern: `radial-gradient(ellipse at 60% 40%, rgba(80,60,20,.4) 0%, transparent 55%),
-              radial-gradient(ellipse at 20% 70%, rgba(60,40,15,.35) 0%, transparent 50%),
-              repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(100,80,30,.04) 60px, rgba(100,80,30,.04) 61px),
-              repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(80,60,20,.03) 80px, rgba(80,60,20,.03) 81px)`,
-    overlay: 'rgba(13,11,8,.91)',
+  shadowStep: {
+    name: 'Shadow Step',
+    cls: 'Rogue',
+    bg: '#060606',
+    panelBg: '#0c0c0e',
+    pattern: `radial-gradient(ellipse at 70% 30%, rgba(40,30,60,.4) 0%, transparent 50%),
+              radial-gradient(ellipse at 20% 70%, rgba(30,20,50,.35) 0%, transparent 45%),
+              repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(60,50,80,.04) 35px, rgba(60,50,80,.04) 36px),
+              repeating-linear-gradient(45deg, transparent, transparent 55px, rgba(40,30,60,.03) 55px, rgba(40,30,60,.03) 56px)`,
+    overlay: 'rgba(6,6,6,.93)',
   },
-  void: {
-    name: 'Void',
-    bg: '#050508',
-    panelBg: '#0c0c14',
-    pattern: `radial-gradient(ellipse at 50% 50%, rgba(20,20,60,.6) 0%, transparent 70%),
-              repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(30,20,60,.04) 1deg, transparent 2deg, transparent 20deg),
-              linear-gradient(180deg, rgba(10,5,30,.3) 0%, transparent 100%)`,
-    overlay: 'rgba(5,5,8,.93)',
+  voidArcanist: {
+    name: 'Void Arcanist',
+    cls: 'Sorcerer',
+    bg: '#05060f',
+    panelBg: '#08091a',
+    pattern: `radial-gradient(ellipse at 50% 30%, rgba(30,20,120,.5) 0%, transparent 55%),
+              radial-gradient(ellipse at 15% 70%, rgba(20,10,100,.4) 0%, transparent 50%),
+              radial-gradient(ellipse at 85% 80%, rgba(40,10,80,.3) 0%, transparent 40%),
+              repeating-conic-gradient(from 30deg at 50% 50%, transparent 0deg, rgba(40,20,120,.04) 1deg, transparent 2deg, transparent 15deg)`,
+    overlay: 'rgba(5,6,15,.91)',
+  },
+  spiritWarden: {
+    name: 'Spirit Warden',
+    cls: 'Spiritborn',
+    bg: '#0c0900',
+    panelBg: '#140e00',
+    pattern: `radial-gradient(ellipse at 60% 40%, rgba(120,90,10,.45) 0%, transparent 55%),
+              radial-gradient(ellipse at 25% 65%, rgba(100,70,5,.4) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(140,100,20,.25) 0%, transparent 35%),
+              repeating-linear-gradient(30deg, transparent, transparent 50px, rgba(120,90,10,.04) 50px, rgba(120,90,10,.04) 51px)`,
+    overlay: 'rgba(12,9,0,.91)',
+  },
+  sacredOath: {
+    name: 'Sacred Oath',
+    cls: 'Paladin',
+    bg: '#0a0a08',
+    panelBg: '#121208',
+    pattern: `radial-gradient(ellipse at 50% 0%, rgba(160,140,40,.35) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 100%, rgba(100,90,20,.25) 0%, transparent 40%),
+              repeating-linear-gradient(90deg, transparent, transparent 70px, rgba(160,140,40,.03) 70px, rgba(160,140,40,.03) 71px),
+              repeating-linear-gradient(0deg, transparent, transparent 70px, rgba(140,120,30,.025) 70px, rgba(140,120,30,.025) 71px)`,
+    overlay: 'rgba(10,10,8,.91)',
   },
 };
 
 const ACCENTS = {
-  gold:    { name: 'Gold',    color: '#c9a84c', rgb: '201,168,76',  glow: 'rgba(201,168,76,.35)',  dark: '#1a1408', mid: '#8a6020' },
-  blood:   { name: 'Blood',   color: '#c03535', rgb: '192,53,53',   glow: 'rgba(192,53,53,.35)',   dark: '#180808', mid: '#802020' },
-  frost:   { name: 'Frost',   color: '#4090c8', rgb: '64,144,200',  glow: 'rgba(64,144,200,.35)',  dark: '#081018', mid: '#205880' },
-  void:    { name: 'Void',    color: '#9040c8', rgb: '144,64,200',  glow: 'rgba(144,64,200,.35)',  dark: '#100818', mid: '#602090' },
-  emerald: { name: 'Emerald', color: '#30a860', rgb: '48,168,96',   glow: 'rgba(48,168,96,.35)',   dark: '#081408', mid: '#1a6035' },
-  bone:    { name: 'Bone',    color: '#d0c8a8', rgb: '208,200,168', glow: 'rgba(208,200,168,.25)', dark: '#181810', mid: '#908870' },
-  silver:  { name: 'Silver',  color: '#a0b0c0', rgb: '160,176,192', glow: 'rgba(160,176,192,.25)', dark: '#0c1018', mid: '#607080' },
+  blood:    { name: 'Blood',   color: '#c03535', rgb: '192,53,53',   glow: 'rgba(192,53,53,.35)',   dark: '#180808', mid: '#802020' },
+  moss:     { name: 'Moss',    color: '#4a9040', rgb: '74,144,64',   glow: 'rgba(74,144,64,.35)',   dark: '#081008', mid: '#2a6020' },
+  death:    { name: 'Death',   color: '#30a8a0', rgb: '48,168,160',  glow: 'rgba(48,168,160,.35)',  dark: '#041414', mid: '#1a7070' },
+  shadow:   { name: 'Shadow',  color: '#8870c0', rgb: '136,112,192', glow: 'rgba(136,112,192,.35)', dark: '#0c0818', mid: '#504080' },
+  arc:      { name: 'Arc',     color: '#4070d8', rgb: '64,112,216',  glow: 'rgba(64,112,216,.35)',  dark: '#040818', mid: '#203080' },
+  spirit:   { name: 'Spirit',  color: '#c89030', rgb: '200,144,48',  glow: 'rgba(200,144,48,.35)',  dark: '#140c00', mid: '#806010' },
+  holy:     { name: 'Holy',    color: '#c9a84c', rgb: '201,168,76',  glow: 'rgba(201,168,76,.35)',  dark: '#1a1408', mid: '#8a6020' },
 };
 
-let currentTheme = 'abyss';
-let currentAccent = 'gold';
+let currentTheme = 'sacredOath';
+let currentAccent = 'holy';
 let currentBrightness = 100;
 let currentFontSize = 100;
 
@@ -134,7 +163,7 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
 function loadTheme() {
   try {
     const saved = JSON.parse(localStorage.getItem('d4v_theme') || '{}');
-    applyTheme(saved.theme || 'abyss', saved.accent || 'gold', saved.brightness ?? 100, saved.fontSize ?? 100);
+    applyTheme(saved.theme || 'sacredOath', saved.accent || 'holy', saved.brightness ?? 100, saved.fontSize ?? 100);
   // Reset if saved value was in old narrow range
 
   } catch(e) {
@@ -180,8 +209,9 @@ function buildThemePanel() {
     <div class="theme-card ${key === currentTheme ? 'active' : ''}" data-theme="${key}"
       onclick="applyTheme('${key}')"
       style="background:${t.bg};background-image:${t.pattern};">
-      <div class="theme-card-overlay" style="background:${t.overlay};">
+      <div class="theme-card-overlay">
         <span class="theme-card-name">${t.name}</span>
+        <span class="theme-card-cls">${t.cls}</span>
       </div>
     </div>
   `).join('');
