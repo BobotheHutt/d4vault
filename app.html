@@ -74,7 +74,10 @@
           </div>
           <!-- Right: Skill progress snapshot -->
           <div class="two-col-right">
-            <div class="spp-label">Skill Progress</div>
+            <div class="spp-label" style="display:flex;align-items:center;justify-content:space-between;">
+              <span>Skill Progress</span>
+              <span id="progressVariantLabel" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;color:rgba(201,168,76,.7);letter-spacing:.06em;"></span>
+            </div>
             <iframe id="skillTreeProgress"
               src="skill-tree.html?mode=progress&buildId=default&variantIdx=0"
               class="skill-tree-frame skill-tree-frame--progress"
