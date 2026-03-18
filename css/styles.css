@@ -944,13 +944,13 @@ body {
 }
 
 .skill-tree-frame--progress {
-  height: 500px;
-  min-height: 500px;
+  height: 1000px;
+  min-height: 1000px;
 }
 
 .skill-tree-frame--guide {
   height: calc(100vh - 160px);
-  min-height: 850px;
+  min-height: 1700px;
 }
 
 .skill-progress-panel,
@@ -982,7 +982,7 @@ body {
 }
 
 .gear-preview-area {
-  min-height: 400px;
+  min-height: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
