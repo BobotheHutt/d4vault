@@ -1269,8 +1269,13 @@ body::before {
 .two-col-left,
 .two-col-right,
 .skill-tree-frame {
-  background: #12122a !important;
+  background: var(--panel-bg, #12122a) !important;
   isolation: isolate;
+}
+
+/* Gear preview area matches theme */
+.gear-preview-area {
+  background: var(--panel-bg, #12122a);
 }
 
 /* Make sure section panels have solid bg too */
