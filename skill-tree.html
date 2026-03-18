@@ -52,9 +52,7 @@ body{display:flex;flex-direction:column;}
     <button class="zb" onclick="DZ(.8)">−</button>
     <button class="zb" onclick="RV()">⌂</button>
   </div>
-  <div class="sep"></div>
-  <button class="mb" onclick="resetMode('guide')" style="color:#c9a84c;border-color:rgba(201,168,76,.4)">Reset Guide</button>
-  <button class="mb" onclick="resetMode('progress')" style="color:#3edc81;border-color:rgba(62,220,129,.4)">Reset Progress</button>
+
   <span style="font-size:12px;color:#55506a;margin-left:4px;min-width:40px" id="zl">55%</span>
   <div style="margin-left:auto"></div>
   <button class="zb" id="settingsBtn" onclick="toggleSettings()" title="Settings" style="width:32px;height:32px;font-size:16px;">⚙</button>
@@ -874,7 +872,8 @@ function DZ(f,cx,cy){const w=document.getElementById('wrap');cx=cx??w.clientWidt
 function RV(){
   sc=.55;
   const wrap=document.getElementById('wrap');
-  px=Math.max((wrap.clientWidth-cv.width*sc)/2,40);
+  const ww=wrap.clientWidth||800; // fallback if not laid out yet
+  px=Math.max((ww-cv.width*sc)/2,40);
   py=30;
   AX();
 }
@@ -1023,14 +1022,12 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   if(urlMode==='progress'){
     document.getElementById('bEditToggle').style.display='none';
     // Hide guide reset button in progress mode
-    const gr=document.querySelector('[onclick="resetMode('guide')"]');
-    if(gr) gr.style.display='none';
+    // reset buttons removed from toolbar
     mode='progress';
   } else if(urlMode==='guide'){
     document.getElementById('bEditToggle').style.display='';
     // Hide progress reset button in guide mode  
-    const pr=document.querySelector('[onclick="resetMode('progress')"]');
-    if(pr) pr.style.display='none';
+    // reset buttons removed from toolbar
     mode='guide';
   } else {
     document.getElementById('bEditToggle').style.display='';
@@ -1044,7 +1041,10 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   if(!sb||!sbt) return;
   let dragging=false,startY=0,startPy=0;
 
-  function getViewH(){ return document.getElementById('treeContainer').clientHeight||window.innerHeight-52; }
+  function getViewH(){ 
+    const tc=document.getElementById('treeContainer');
+    return (tc && tc.clientHeight>0) ? tc.clientHeight : window.innerHeight-52; 
+  }
 
   sbt.addEventListener('mousedown',e=>{
     dragging=true; startY=e.clientY; startPy=py;
@@ -1121,7 +1121,12 @@ function setBgBrightness(val){
 }
 // Override background fill in draw to use dynamic color
 window._bgColor='#1a1a35';
-LV();RV();draw();
+LV();
+// Wait for layout then center and draw
+if(document.readyState==='complete'){RV();draw();}
+else{window.addEventListener('load',()=>{RV();draw();});}
+// Also redraw on resize
+window.addEventListener('resize',()=>{RV();draw();});
 </script>
 </body>
 </html>
