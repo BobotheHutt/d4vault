@@ -51,9 +51,22 @@ body{display:flex;flex-direction:column;}
     <button class="zb" onclick="DZ(.8)">−</button>
     <button class="zb" onclick="RV()">⌂</button>
   </div>
+  <div class="sep"></div>
+  <button class="mb" onclick="resetMode('guide')" style="color:#c9a84c;border-color:rgba(201,168,76,.4)">Reset Guide</button>
+  <button class="mb" onclick="resetMode('progress')" style="color:#3edc81;border-color:rgba(62,220,129,.4)">Reset Progress</button>
   <span style="font-size:12px;color:#55506a;margin-left:4px;min-width:40px" id="zl">55%</span>
 </div>
 <div id="wrap"><canvas id="cv"></canvas></div>
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center;">
+  <div style="background:#1c1c3a;border:1px solid rgba(150,140,220,.5);border-radius:8px;padding:28px 32px;max-width:340px;text-align:center;">
+    <div id="modal-title" style="font-family:'Cinzel',serif;font-size:15px;color:#e8c97a;margin-bottom:10px;"></div>
+    <div id="modal-msg" style="font-size:13px;color:#9a9080;margin-bottom:22px;line-height:1.6;"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="mb" onclick="modalConfirm()" id="modal-ok" style="padding:8px 22px;font-size:12px;">Confirm</button>
+      <button class="mb" onclick="modalCancel()" style="padding:8px 22px;font-size:12px;">Cancel</button>
+    </div>
+  </div>
+</div>
 <div id="tip">
   <div class="tn" id="tN"></div>
   <div class="tgs" id="tT"></div>
@@ -93,6 +106,15 @@ const H={
 
 const ARM=240, UPG=85, UPC=68, PAR=170, PPC=95;
 
+// Find intersection point on diamond edge between point (x1,y1) and diamond center (dx,dy)
+function diamondEdge(x1,y1,dx,dy,h){
+  const ax=x1-dx, ay=y1-dy;
+  if(ax===0&&ay===0) return {x:dx,y:dy};
+  // Diamond edge: |x|/h + |y|/h = 1 → |x|+|y| = h
+  // Parametric: x=ax*t, y=ay*t, find t where |ax*t|+|ay*t|=h
+  const t = h / (Math.abs(ax)+Math.abs(ay));
+  return {x:dx+ax*t, y:dy+ay*t};
+}
 function P(cx,cy,r,deg){const a=(deg-90)*D2R;return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
 
 const N=[];
@@ -169,7 +191,6 @@ act('basic','advance','Advance',false,130,5,['Zealot','Mobility'],'Advance forwa
 // Passives: 3 direct to hub (45°,90°,135°), middle (EnGuarde@90°) has Riposte+Parry off it
 act('core','zeal','Zeal',false,350,5,['Zealot'],'Strike with blinding speed, dealing 112% damage followed by 3 strikes dealing 28% each.',null,null,[
   {id:'ze-enh',name:'Enhanced Zeal',desc:'Zeal gains 2 additional strikes.',ca:{id:'ze-cul',name:'Cull the Wicked',desc:"Zeal's cleave is larger, 2 additional strikes, x25% damage to Weakened."},cb:{id:'ze-dog',name:'Death or Glory',desc:'Zeal costs x10% Maximum Life instead of Faith, strikes around you in a circle.'},cc:{id:'ze-leg',name:"Zealot's Legacy",desc:'Zeal extends its assault, seeking surrounding enemies and striking 4 additional times.'}},
-  {id:'ze-leg',name:"Zealot's Legacy",desc:'Zeal extends its assault, seeking surrounding enemies and striking 4 additional times.'}
 ],{fill:"#180a08",border:"#c04020",node:"#d05030"});
 act('core','bshield','Blessed Shield',false,300,5,['Judicator'],'Bless and hurl your shield dealing 302% damage ricocheting up to 3 times.',null,null,[
   {id:'bs-enh',name:'Enhanced Blessed Shield',desc:'Blessed Shield deals 1% additional damage for each Armor on your shield.',ca:{id:'bs-jus',name:'Shield of Justice',desc:'Blessed Shield detonates Judgement and ricochets 5 additional times.'},cb:{id:'bs-rev',name:'Shield of the Revenant',desc:'Blessed Shield boomerangs and pierces, dealing 270% damage.'},cc:{id:'bs-ret',name:'Shield of Retribution',desc:'Blessed Shield becomes a Juggernaut Skill, pulsing Thorns damage before bursting for 378%.'}},
@@ -201,7 +222,6 @@ act('aura','def-aura','Defiance Aura',false,80,5,['Defensive','Juggernaut'],"Pas
 ],{fill:"#080818",border:"#3050c0",node:"#4060d8"});
 act('aura','hla','Holy Light Aura',false,160,5,['Judicator'],"Passive: You and allies deal 126% damage every 2 seconds to 3 random Nearby enemies. Active: Unleash 2 bolts of light dealing 448% Holy damage.",25,null,[
   {id:'hl-enh',name:'Enhanced Holy Light Aura',desc:"Holy Light's passive now targets 2 additional enemies.",ca:{id:'hl-jud',name:'Rite of Judgement',desc:"Holy Light's active instead Judges enemies and Cooldown is reduced per rank."},cb:{id:'hl-mer',name:'Rite of Mercy',desc:"Holy Light's active chains 2 more times and Fortifies you and allies for 4% Maximum Life."},cc:{id:'hl-sub',name:'Rite of Submission',desc:"Holy Light's active now Stuns enemies for 3 seconds and deals 182% damage."}},
-  {id:'hl-sub',name:'Rite of Submission',desc:"Holy Light's active now Stuns enemies for 3 seconds and deals 182% damage."}
 ],{fill:"#181010",border:"#c03030",node:"#d84040"});
 pass('aura',[
   {id:'longevity',name:'Longevity',mr:3,parentId:null,       dx:140,dy:0,   desc:'You gain +30% Healing received.'},
@@ -275,7 +295,6 @@ pass('justice',[
 // Passives RIGHT: 3 direct to hub (50°,90°,130°), middle has 2 children
 act('ultimate','hfury',"Heaven's Fury",true,350,5,['Judicator'],"Grasp the Light, dealing 200% damage per second before releasing it to seek Nearby enemies dealing 126% damage per hit for 7 seconds.",30,null,[
   {id:'hf-enh',name:"Enhanced Heaven's Fury",desc:"Heaven's Fury's light Judges enemies.",ca:{id:'hf-fin',name:'Final Justice',desc:"Heaven's Fury can Cast anywhere, concentrating as it grows and Pulls enemies in before erupting for 1,260% damage."},cb:{id:'hf-wal',name:'Walk With The Light',desc:"Heaven's Fury splits into 5 orbiting beams, dealing 78% damage each hit for 7 seconds."},cc:{id:'hf-tri',name:'Triplicate',desc:"Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds."}},
-  {id:'hf-tri',name:'Triplicate',desc:"Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds."}
 ],{fill:"#1a1808",border:"#d0a820",node:"#e8c030"});
 act('ultimate','fortress','Fortress',true,300,5,['Defensive','Juggernaut'],'Make your stand, becoming Immune for 3 seconds and create a defensive area for 13.5 seconds. Standing in Fortress grants you and allies 2 Resolve stacks every 0.5 seconds.',60,null,[
   {id:'fo-enh',name:'Enhanced Fortress',desc:"While inside Fortress your Skills are free to Cast and you gain x4% damage per stack of Resolve.",ca:{id:'fo-ent',name:'Entrench',desc:"While inside of Fortress your Life cannot be reduced below 1."},cb:{id:'fo-bar',name:'Barricade',desc:'Killing enemies inside Fortress extends its duration by 0.5 seconds up to 20 seconds.'},cc:{id:'fo-ram',name:'Rampart of Thorns',desc:'Enemies inside Fortress are Slowed by 50% and take 500% of your Thorns damage per second.'}},
@@ -285,7 +304,6 @@ act('ultimate','zenith','Zenith',true,240,5,['Zealot'],'Summon a divine sword th
 ],{fill:"#180c08",border:"#c05020",node:"#d86030"});
 act('ultimate','arbiter','Arbiter of Justice',true,185,5,['Disciple','Mobility'],'Ascend to the heavens and crash upon the battlefield as an Arbiter for 20 seconds, dealing 840% damage upon landing.',98,null,[
   {id:'ar-enh',name:'Enhanced Arbiter',desc:"Arbiter form's Wing Strikes recast time is reduced by 0.5 seconds.",ca:{id:'ar-div',name:'Divine Intervention',desc:'Ascends for 2 extra seconds and rains 10 additional Blessed Spears on landing.'},cb:{id:'ar-rea',name:'Reach of the Law',desc:"Arbiter's Wing Strikes now apply Judgement to enemies."},cc:{id:'ar-ser',name:"Seraph's Wings",desc:'Arbiter form gains 100% Movement Speed, Wing Strikes deal x200% increased damage, makes Nearby enemies Vulnerable.'}},
-  {id:'ar-ser',name:"Seraph's Wings",desc:"Arbiter form gains 100% Movement Speed, Wing Strikes deal x200% increased damage, makes Nearby enemies Vulnerable."}
 ],{fill:"#081410",border:"#30a070",node:"#40c088"});
 pass('ultimate',[
   // LEFT OUTSIDE: 3 passives in Y-shape between Fortress(300°) and Zenith(240°) → ~270°
@@ -321,19 +339,109 @@ function draw(){
   ctx.clearRect(0,0,cv.width,cv.height);
   drawSpine();drawLines();
   for(const n of N)drawNode(n);
+  drawSpineDiamonds();
   updPts();
 }
 
+function drawSpineDiamonds(){
+  const spent = totalSpent();
+  const guideSpent = Object.values(gR).reduce((s,v)=>s+v,0);
+  const progSpent  = Object.values(pR).reduce((s,v)=>s+v,0);
+  for(const [key,hub] of Object.entries(H)){
+    const req=SECTION_REQ[key]??0;
+    const guideUnlocked=guideSpent>=req;
+    const progUnlocked=progSpent>=req;
+    const unlocked=mode==='guide'?guideUnlocked:(guideUnlocked||progUnlocked);
+    const sz=28;
+    ctx.save();ctx.translate(hub.x,hub.y);ctx.rotate(Math.PI/4);
+    if(progUnlocked&&mode==='progress'){ctx.shadowColor='rgba(62,220,129,.7)';ctx.shadowBlur=16;}
+    else if(guideUnlocked){ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=16;}
+    else{ctx.shadowBlur=0;}
+    ctx.fillStyle=unlocked?'#2a2010':'rgba(20,18,40,.95)';
+    ctx.fillRect(-sz/2,-sz/2,sz,sz);
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=progUnlocked&&mode==='progress'?'rgba(62,220,129,.9)':guideUnlocked?'rgba(201,168,76,.9)':'rgba(100,90,160,.35)';
+    ctx.lineWidth=unlocked?2.5:1;
+    ctx.strokeRect(-sz/2,-sz/2,sz,sz);
+    ctx.restore();
+  }
+}
 function drawSpine(){
-  const keys=['basic','core','aura','valor','justice','ultimate','keys'];
-  ctx.strokeStyle='rgba(100,90,160,.3)';ctx.lineWidth=1.5;ctx.lineCap='round';ctx.lineJoin='round';
-  ctx.beginPath();ctx.moveTo(H.basic.x,H.basic.y);
-  for(const k of keys.slice(1))ctx.lineTo(H[k].x,H[k].y);
-  ctx.stroke();
-  for(const hub of Object.values(H)){
-    const sz=14;ctx.save();ctx.translate(hub.x,hub.y);ctx.rotate(Math.PI/4);
-    ctx.fillStyle='rgba(26,26,52,.95)';ctx.fillRect(-sz/2,-sz/2,sz,sz);
-    ctx.strokeStyle='rgba(120,110,190,.5)';ctx.lineWidth=1;ctx.strokeRect(-sz/2,-sz/2,sz,sz);
+  const spent = totalSpent();
+  // Spine segments: [fromHub, toHub, pointsNeeded, pointsStart]
+  const segs = [
+    {from:'basic',  to:'core',     start:0,  need:1},
+    {from:'core',   to:'aura',     start:1,  need:1},
+    {from:'aura',   to:'valor',    start:2,  need:9},
+    {from:'valor',  to:'justice',  start:11, need:5},
+    {from:'justice',to:'ultimate', start:16, need:7},
+    {from:'ultimate',to:'keys',    start:23, need:10},
+  ];
+
+  // In progress mode, also compute guide fractions
+  const guideSpent = Object.values(gR).reduce((s,v)=>s+v,0);
+  const progSpent  = Object.values(pR).reduce((s,v)=>s+v,0);
+
+  for(const seg of segs){
+    const p1=H[seg.from], p2=H[seg.to];
+    const guideFrac = Math.min(Math.max((guideSpent-seg.start)/seg.need,0),1);
+    const progFrac  = Math.min(Math.max((progSpent -seg.start)/seg.need,0),1);
+    const frac = mode==='guide' ? guideFrac : progFrac;
+
+    // Draw unlit background line
+    ctx.strokeStyle='rgba(80,70,140,.3)';
+    ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+
+    // In progress mode: draw guide progress as dashed gold underneath
+    if(mode==='progress'&&guideFrac>0){
+      const glx=p1.x+(p2.x-p1.x)*guideFrac;
+      const gly=p1.y+(p2.y-p1.y)*guideFrac;
+      ctx.setLineDash([6,4]);
+      ctx.strokeStyle='rgba(201,168,76,.85)';
+      ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(glx,gly);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Draw current mode lit portion
+    if(frac>0){
+      const lx=p1.x+(p2.x-p1.x)*frac;
+      const ly=p1.y+(p2.y-p1.y)*frac;
+      // Glow
+      ctx.strokeStyle=mode==='guide'?'rgba(201,168,76,.25)':'rgba(62,220,129,.2)';
+      ctx.lineWidth=8;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(lx,ly);ctx.stroke();
+      // Main lit line
+      ctx.strokeStyle=mode==='guide'
+        ?(frac>=1?'rgba(201,168,76,.95)':'rgba(201,168,76,.7)')
+        :(frac>=1?'rgba(62,220,129,.95)':'rgba(62,220,129,.75)');
+      ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(lx,ly);ctx.stroke();
+    }
+  }
+
+  // Hub diamonds — glow when guide unlocked, bright when progress also unlocked
+  for(const [key,hub] of Object.entries(H)){
+    const req=SECTION_REQ[key]??0;
+    const guideUnlocked=guideSpent>=req;
+    const progUnlocked=progSpent>=req;
+    const unlocked=mode==='guide'?guideUnlocked:(guideUnlocked||progUnlocked);
+    const sz=28;
+    ctx.save();ctx.translate(hub.x,hub.y);ctx.rotate(Math.PI/4);
+    if(progUnlocked&&mode==='progress'){
+      ctx.shadowColor='rgba(62,220,129,.7)';ctx.shadowBlur=16;
+    } else if(guideUnlocked){
+      ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=16;
+    } else {
+      ctx.shadowBlur=0;
+    }
+    ctx.fillStyle=unlocked?'#2a2010':'rgba(20,18,40,.95)';
+    ctx.fillRect(-sz/2,-sz/2,sz,sz);
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=progUnlocked&&mode==='progress'?'rgba(62,220,129,.9)':guideUnlocked?'rgba(201,168,76,.9)':'rgba(100,90,160,.35)';
+    ctx.lineWidth=unlocked?2.5:1;
+    ctx.strokeRect(-sz/2,-sz/2,sz,sz);
     ctx.restore();
   }
 }
@@ -355,93 +463,231 @@ function drawLines(){
   for(const n of N){
     let x2,y2;
     if(n.parentId){const par=N.find(x=>x.id===n.parentId);if(!par)continue;x2=par.x;y2=par.y;}
-    else{const hub=H[n.sec];if(!hub)continue;x2=hub.x;y2=hub.y;}
+    else{
+      const hub=H[n.sec];if(!hub)continue;
+      // Connect to diamond edge, not center
+      const edge=diamondEdge(n.x,n.y,hub.x,hub.y,14);
+      x2=edge.x;y2=edge.y;
+    }
     const gr=gR[n.id]||0,pr=pR[n.id]||0;
     const pgr=n.parentId?(gR[n.parentId]||0):1,ppr=n.parentId?(pR[n.parentId]||0):1;
     const altgr=n.altParentId?(gR[n.altParentId]||0):0,altpr=n.altParentId?(pR[n.altParentId]||0):0;
-    const plit=mode==='guide'?(pgr>0||altgr>0):(ppr>0||altpr>0);
-    const lit=mode==='guide'?(gr>0&&plit):(pr>0&&plit);
-    if(lit){ctx.strokeStyle=mode==='guide'?(n.c?.border||'#c9a84c'):'#3edc81';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;}
-    else{ctx.strokeStyle=n.c?.border||'#8080a0';ctx.lineWidth=1;ctx.globalAlpha=0.3;}
+    const guideLit=(gr>0)&&(pgr>0||altgr>0);
+    // Progress lit only if this node AND its parent both have progress (no orphans)
+    const progParentOk=n.parentId?(ppr>0||altpr>0):true;
+    const progLit=(pr>0)&&progParentOk;
+
+    if(mode==='progress'){
+      // Guide connection — always draw as dashed gold outline so you see the plan
+      if(guideLit){
+        ctx.setLineDash([5,3]);
+        ctx.strokeStyle=n.c?.border||'#c9a84c';ctx.lineWidth=2;ctx.globalAlpha=0.85;
+        ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(n.x,n.y);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      // Progress connection — solid green on top
+      if(progLit){ctx.strokeStyle='#3edc81';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;}
+      else{ctx.strokeStyle=n.c?.border||'#8080a0';ctx.lineWidth=1;ctx.globalAlpha=0.2;}
+    } else {
+      // Guide mode — solid colored line
+      if(guideLit){ctx.strokeStyle=n.c?.border||'#c9a84c';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;}
+      else{ctx.strokeStyle=n.c?.border||'#8080a0';ctx.lineWidth=1;ctx.globalAlpha=0.3;}
+    }
     ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(n.x,n.y);ctx.stroke();ctx.globalAlpha=1;
   }
 }
 
 function drawNode(n){
-  const gr=gR[n.id]||0,pr=pR[n.id]||0,rank=mode==='guide'?gr:pr;
-  const has=rank>0,ih=hov?.id===n.id;
-  ctx.save();
+  const gr=gR[n.id]||0,pr=pR[n.id]||0;
+  // In progress mode: 'has' means guide has points (shows outline), progress rank for fill
+  const has=gr>0; // guide outline shown when guide has points
+  const rank=mode==='guide'?gr:pr;
+  const ih=hov?.id===n.id;
   if(n.type==='active'||n.type==='ultimate')drawSq(n,has,ih,rank);
   else if(n.type==='key-passive')drawKey(n,has,ih);
   else if(n.type==='passive')drawCircle(n,has,ih,rank);
   else drawDia(n,has,ih,rank,SZ.upgrade);
-  ctx.restore();
 }
 
 function drawSq(n,has,ih,rank){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
   const{x,y,type,name,maxRank,c}=n;
   const baseSz=type==='ultimate'?SZ.ultimate:SZ.active;
-  const sz=baseSz*2; // twice as big visually
+  const sz=baseSz*2;
   const h=sz/2;
-  // Shift draw center toward hub so outer edge stays fixed
   const hub=H[n.sec];
   const extra=(sz-baseSz)/2;
   const ddx=hub?hub.x-x:0,ddy=hub?hub.y-y:0;
   const dist=Math.sqrt(ddx*ddx+ddy*ddy)||1;
   const cx=x+(ddx/dist)*extra, cy=y+(ddy/dist)*extra;
-  const secLocked=!sectionUnlocked(n.sec);
-  if(has){ctx.shadowColor=mode==='guide'?c.border:'#3edc81';ctx.shadowBlur=18;}
-  else if(ih&&!secLocked){ctx.shadowColor='rgba(180,170,240,.6)';ctx.shadowBlur=10;}
-  ctx.fillStyle=secLocked?'#0e0e1e':has?(mode==='guide'?c.fill:'#0a2015'):(ih?'#1e1e3c':c.fill);
-  RR(cx-h,cy-h,sz,sz,5);ctx.fill();ctx.shadowBlur=0;
-  ctx.strokeStyle=secLocked?'rgba(80,80,120,.3)':has?(mode==='guide'?c.border:'#3edc81'):(ih?'rgba(180,170,240,.9)':c.border);
-  ctx.lineWidth=has?2.5:(ih?2:1.5);ctx.globalAlpha=secLocked?0.3:(has?1:(ih?0.9:0.6));
-  RR(cx-h,cy-h,sz,sz,5);ctx.stroke();ctx.globalAlpha=1;
-  if(mode==='progress'&&(gR[n.id]||0)>0){const f=Math.min((pR[n.id]||0)/maxRank,1);ctx.fillStyle='rgba(62,220,129,.25)';ctx.fillRect(cx-h+3,cy+h-7,(sz-6)*f,4);}
-  if(maxRank>1){ctx.font='bold 13px Rajdhani,sans-serif';ctx.fillStyle=has?(mode==='guide'?c.node:'#5eec99'):c.node;ctx.globalAlpha=has?1:0.65;ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(`${rank}/${maxRank}`,cx,cy+h-2);ctx.globalAlpha=1;}
-  // Scale font to fit box - try single line first at large size, fall back to 2 lines
+  const secUnlocked=sectionUnlocked(n.sec);
+  const guideRank=gR[n.id]||0;
+  const progRank=pR[n.id]||0;
+  const hasGuide=guideRank>0;
+  const hasProgress=progRank>0;
+
+  // Base fill
+  ctx.fillStyle=ih?'#1e1e3c':c.fill;
+  RR(cx-h,cy-h,sz,sz,5);ctx.fill();
+
+  // Progress fill
+  if(mode==='progress'&&hasProgress){
+    const f=Math.min(progRank/maxRank,1);
+    ctx.fillStyle='rgba(46,180,100,.22)';
+    RR(cx-h,cy-h,sz*f,sz,5);ctx.fill();
+  }
+
+  // Border + backlight — shadow applied to the stroke so glow radiates outward
+  if(hasGuide){
+    ctx.shadowColor='rgba(201,168,76,.6)';ctx.shadowBlur=14;
+    ctx.strokeStyle=c.border;ctx.lineWidth=3;ctx.globalAlpha=1;
+  } else if(secUnlocked){
+    ctx.shadowColor='rgba(201,168,76,.5)';ctx.shadowBlur=20;
+    ctx.strokeStyle=c.border;ctx.lineWidth=1.5;ctx.globalAlpha=0.7;
+  } else if(ih){
+    ctx.strokeStyle='rgba(180,170,240,.7)';ctx.lineWidth=1.5;ctx.globalAlpha=0.8;
+  } else {
+    ctx.strokeStyle=c.border;ctx.lineWidth=1;ctx.globalAlpha=0.4;
+  }
+  RR(cx-h,cy-h,sz,sz,5);ctx.stroke();
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // Progress outline on top
+  if(mode==='progress'&&hasProgress){
+    ctx.shadowColor='rgba(46,200,100,.6)';ctx.shadowBlur=12;
+    ctx.strokeStyle='#3edc81';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;
+    RR(cx-h,cy-h,sz,sz,5);ctx.stroke();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+  }
+
+  // Rank text
+  if(maxRank>1){
+    ctx.font='bold 13px Rajdhani,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
+    if(mode==='progress'&&hasGuide){
+      ctx.fillStyle='#3edc81';ctx.globalAlpha=hasProgress?1:0.4;
+      ctx.fillText(`${progRank}/${maxRank}`,cx,cy+h-2);
+    } else {
+      ctx.fillStyle=c.node;ctx.globalAlpha=hasGuide?1:0.65;
+      ctx.fillText(`${guideRank}/${maxRank}`,cx,cy+h-2);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // Name
   let fs=18,ls=wTxt(name,sz-16,18);
   if(ls.length>1){fs=16;ls=wTxt(name,sz-16,16);}
   if(ls.length>1){fs=14;ls=wTxt(name,sz-16,14);}
-  ctx.font=`600 ${fs}px Rajdhani,sans-serif`;ctx.fillStyle=has?'#e8e0d0':c.node;ctx.globalAlpha=has?1:0.7;ctx.textAlign='center';ctx.textBaseline='middle';
-  const lh=fs+3,sy=cy-(ls.length-1)*lh/2+(maxRank>1?-8:0);ls.forEach((l,i)=>ctx.fillText(l,cx,sy+i*lh));ctx.globalAlpha=1;
+  ctx.font=`600 ${fs}px Rajdhani,sans-serif`;
+  ctx.fillStyle=hasGuide?'#e8e0d0':c.node;
+  ctx.globalAlpha=hasGuide?1:0.7;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const lh=fs+3,sy=cy-(ls.length-1)*lh/2+(maxRank>1?-8:0);
+  ls.forEach((l,i)=>ctx.fillText(l,cx,sy+i*lh));ctx.globalAlpha=1;
 }
 
 function drawDia(n,has,ih,rank,sz){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
   const{x,y,name,maxRank,type,c}=n,h=sz/2;
-  if(has){ctx.shadowColor=mode==='guide'?c.border:'#3edc81';ctx.shadowBlur=9;}
+  const secUnlocked=sectionUnlocked(n.sec);
+  const hasGuide=(gR[n.id]||0)>0;
+  const hasProg=(pR[n.id]||0)>0;
+
+  // Base fill
   ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);
-  ctx.fillStyle=has?(mode==='guide'?c.fill:'#0a2015'):(ih?'#1e1e3c':c.fill);ctx.fillRect(-h,-h,sz,sz);
-  ctx.shadowBlur=0;ctx.strokeStyle=has?(mode==='guide'?c.border:'#3edc81'):(ih?'rgba(180,170,240,.9)':c.border);
-  ctx.lineWidth=has?2:(ih?1.5:1);ctx.globalAlpha=has?1:(ih?0.9:0.55);ctx.strokeRect(-h,-h,sz,sz);ctx.globalAlpha=1;ctx.restore();
-  if(maxRank>1&&sz>=24){ctx.font='bold 9px Rajdhani,sans-serif';ctx.fillStyle=has?(mode==='guide'?c.node:'#5eec99'):c.node;ctx.globalAlpha=has?1:0.6;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(`${rank}/${maxRank}`,x,y);ctx.globalAlpha=1;}
-  else if(sz<24){ctx.beginPath();ctx.arc(x,y,has?3.5:2.5,0,Math.PI*2);ctx.fillStyle=has?(mode==='guide'?c.border:'#3edc81'):c.border;ctx.globalAlpha=has?1:0.55;ctx.fill();ctx.globalAlpha=1;}
-  if(type==='passive'&&sz>=24&&(has||ih)){ctx.font='500 9px Rajdhani,sans-serif';ctx.fillStyle=has?'#c8c0b0':c.node;ctx.globalAlpha=has?1:0.85;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(trunc(name,15),x+h+5,y);ctx.globalAlpha=1;}
+  ctx.fillStyle=ih?'#1e1e3c':c.fill;
+  ctx.fillRect(-h,-h,sz,sz);
+
+  // Progress fill
+  if(mode==='progress'&&hasProg){
+    ctx.fillStyle='rgba(46,180,100,.3)';
+    ctx.fillRect(-h,-h,sz,sz);
+  }
+
+  // Guide outline — always gold, regardless of mode
+  if(hasGuide){
+    ctx.shadowColor='rgba(201,168,76,.5)';ctx.shadowBlur=8;
+    ctx.strokeStyle=c.border;ctx.lineWidth=2;ctx.globalAlpha=1;
+  } else if(secUnlocked){
+    ctx.shadowColor='rgba(201,168,76,.45)';ctx.shadowBlur=12;
+    ctx.strokeStyle=c.border;ctx.lineWidth=1;ctx.globalAlpha=0.6;
+  } else if(ih){
+    ctx.strokeStyle='rgba(180,170,240,.8)';ctx.lineWidth=1.5;ctx.globalAlpha=0.8;
+  } else {
+    ctx.strokeStyle=c.border;ctx.lineWidth=1;ctx.globalAlpha=0.45;
+  }
+  ctx.strokeRect(-h,-h,sz,sz);
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // Progress outline on top — bright green
+  if(mode==='progress'&&hasProg){
+    ctx.shadowColor='rgba(46,200,100,.6)';ctx.shadowBlur=10;
+    ctx.strokeStyle='#3edc81';ctx.lineWidth=2;ctx.globalAlpha=0.9;
+    ctx.strokeRect(-h,-h,sz,sz);
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+  }
+  ctx.restore();
+
+  // Dot for small upgrade diamonds
+  if(sz<24){
+    ctx.beginPath();ctx.arc(x,y,hasGuide?3.5:2.5,0,Math.PI*2);
+    ctx.fillStyle=hasGuide?c.border:(secUnlocked?'rgba(201,168,76,.5)':c.border);
+    ctx.globalAlpha=hasGuide?1:0.5;ctx.fill();ctx.globalAlpha=1;
+  }
 }
 
 function drawCircle(n,has,ih,rank){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
   const {x,y,name,maxRank,c}=n;
   const r=SZ.passive/2;
-  if(has){ctx.shadowColor=mode==='guide'?c.border:'#3edc81';ctx.shadowBlur=9;}
+  const hasGuide=(gR[n.id]||0)>0;
+  const hasProg=(pR[n.id]||0)>0;
+  const secUnlocked=sectionUnlocked(n.sec);
+
+  // Base fill
   ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-  ctx.fillStyle=has?(mode==='guide'?c.fill:'#0a2015'):(ih?'#1e1e3c':c.fill);
-  ctx.fill();ctx.shadowBlur=0;
-  ctx.strokeStyle=has?(mode==='guide'?c.border:'#3edc81'):(ih?'rgba(180,170,240,.9)':c.border);
-  ctx.lineWidth=has?2:(ih?1.5:1);
-  ctx.globalAlpha=has?1:(ih?0.9:0.6);
+  ctx.fillStyle=ih?'#1e1e3c':c.fill;ctx.fill();
+
+  // Progress fill
+  if(mode==='progress'&&hasProg){
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle='rgba(46,180,100,.3)';ctx.fill();
+  }
+
+  // Border + backlight
+  if(hasGuide){
+    ctx.shadowColor='rgba(201,168,76,.5)';ctx.shadowBlur=10;
+    ctx.strokeStyle=c.border;ctx.lineWidth=2;ctx.globalAlpha=1;
+  } else if(secUnlocked){
+    // Force gold backlight glow regardless of passive color
+    ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=16;
+    ctx.strokeStyle='rgba(180,150,60,.8)';ctx.lineWidth=1.5;ctx.globalAlpha=0.8;
+  } else {
+    ctx.strokeStyle=ih?'rgba(180,170,240,.8)':c.border;
+    ctx.lineWidth=1;ctx.globalAlpha=ih?0.9:0.45;
+  }
   ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
-  ctx.globalAlpha=1;
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // Progress outline on top
+  if(mode==='progress'&&hasProg){
+    ctx.shadowColor='rgba(46,200,100,.5)';ctx.shadowBlur=8;
+    ctx.strokeStyle='#3edc81';ctx.lineWidth=2;ctx.globalAlpha=0.9;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+  }
+
   if(maxRank>1){
     ctx.font='bold 9px Rajdhani,sans-serif';
-    ctx.fillStyle=has?(mode==='guide'?c.node:'#5eec99'):c.node;
-    ctx.globalAlpha=has?1:0.6;
+    ctx.fillStyle=hasGuide?c.node:c.node;
+    ctx.globalAlpha=hasGuide?1:0.5;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(`${rank}/${maxRank}`,x,y);
+    ctx.fillText(mode==='progress'?`${pR[n.id]||0}/${maxRank}`:`${gR[n.id]||0}/${maxRank}`,x,y);
     ctx.globalAlpha=1;
   }
 }
 
 function drawKey(n,has,ih){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
   const{x,y,name,c}=n,r=SZ.key/2;
   if(has){ctx.shadowColor=mode==='guide'?c.border:'#3edc81';ctx.shadowBlur=22;}
   else if(ih){ctx.shadowColor='rgba(220,100,100,.5)';ctx.shadowBlur=12;}
@@ -462,13 +708,45 @@ function drawKey(n,has,ih){
 }
 
 function nAt(cx,cy){
-  for(const n of[...N].reverse()){const r=n.type==='key-passive'?SZ.key/2+8:n.type==='active'?SZ.active/2+5:n.type==='ultimate'?SZ.ultimate/2+5:n.type==='passive'?SZ.passive/2+5:SZ.upgrade/2+5;if(Math.abs(cx-n.x)<=r&&Math.abs(cy-n.y)<=r)return n;}return null;
+  for(const n of[...N].reverse()){
+    if(n.type==='active'||n.type==='ultimate'){
+      // Hit test against the shifted draw center, not the original x,y
+      const baseSz=n.type==='ultimate'?SZ.ultimate:SZ.active;
+      const sz=baseSz*2;
+      const h=sz/2;
+      const hub=H[n.sec];
+      const extra=(sz-baseSz)/2;
+      const ddx=hub?hub.x-n.x:0,ddy=hub?hub.y-n.y:0;
+      const dist=Math.sqrt(ddx*ddx+ddy*ddy)||1;
+      const dcx=n.x+(ddx/dist)*extra, dcy=n.y+(ddy/dist)*extra;
+      if(cx>=dcx-h&&cx<=dcx+h&&cy>=dcy-h&&cy<=dcy+h) return n;
+    } else {
+      const r=n.type==='key-passive'?SZ.key/2+8:n.type==='passive'?SZ.passive/2+5:SZ.upgrade/2+5;
+      if(Math.abs(cx-n.x)<=r&&Math.abs(cy-n.y)<=r) return n;
+    }
+  }
+  return null;
 }
 function s2c(sx,sy){const r=document.getElementById('wrap').getBoundingClientRect();return{x:(sx-r.left-px)/sc,y:(sy-r.top-py)/sc};}
+function parentHasPoints(n){
+  if(!n.parentId) return true; // hub-connected, always ok
+  const d=mode==='guide'?gR:pR;
+  const parPts=d[n.parentId]||0;
+  const altPts=n.altParentId?(d[n.altParentId]||0):0;
+  return parPts>0||altPts>0;
+}
 function inc(n){
   if(!sectionUnlocked(n.sec)) return;
-  const d=mode==='guide'?gR:pR;
-  d[n.id]=Math.min((d[n.id]||0)+1,n.maxRank||1);
+  if(!parentHasPoints(n)) return; // parent must be invested first
+  if(mode==='progress'){
+    const guideRank=gR[n.id]||0;
+    if(guideRank===0) return;
+    const cur=pR[n.id]||0;
+    if(cur>=guideRank) return;
+    pR[n.id]=cur+1;
+  } else {
+    gR[n.id]=Math.min((gR[n.id]||0)+1,n.maxRank||1);
+  }
   SV();draw();
 }
 function totalSpent(){
@@ -482,23 +760,33 @@ function canDec(n){
   const d=mode==='guide'?gR:pR;
   const cur=d[n.id]||0;
   if(cur<=0) return false;
-  // Only matters if removing the last point (going to 0)
+
+  // Check 1: would removing 1 point drop total below a section threshold
+  // that has invested nodes?
+  const newTotal = totalSpent() - 1;
+  const sectionOrder = ['basic','core','aura','valor','justice','ultimate','keys'];
+  for(const sec of sectionOrder){
+    const req = SECTION_REQ[sec]??0;
+    if(req===0) continue;
+    // If new total drops below this section's requirement
+    if(newTotal < req){
+      // Check if any node in this section has points invested
+      const hasInvested = N.some(x=>x.sec===sec&&(d[x.id]||0)>0);
+      if(hasInvested) return false;
+    }
+  }
+
+  // Check 2: if removing last point, check direct node dependencies
   if(cur>1) return true;
-  // Check if any other node depends on this one having points
-  // A node depends on this one if: its parentId===n.id OR its altParentId===n.id
-  // AND it currently has points
-  // AND removing this node would leave it with no valid parent
   const dependents = N.filter(x=>{
-    if((d[x.id]||0)<=0) return false; // no points, doesn't matter
+    if((d[x.id]||0)<=0) return false;
     if(x.parentId===n.id){
-      // Has another valid parent? (altParentId with points)
       if(x.altParentId && (d[x.altParentId]||0)>0) return false;
-      return true; // depends solely on n
+      return true;
     }
     if(x.altParentId===n.id){
-      // Has primary parent with points?
       if(x.parentId && (d[x.parentId]||0)>0) return false;
-      return true; // depends solely on n
+      return true;
     }
     return false;
   });
@@ -509,7 +797,37 @@ function dec(n){
   const d=mode==='guide'?gR:pR;
   d[n.id]=Math.max((d[n.id]||0)-1,0);
   if(!d[n.id])delete d[n.id];
+  // Cascade: if guide point removed, also clear progress on this node
+  // and any progress-only orphans down the chain
+  if(mode==='guide'){
+    if(!gR[n.id]) {
+      // Clear progress on this node too
+      delete pR[n.id];
+      // Cascade clear progress children that are now orphaned
+      cascadeClearProgress(n.id);
+    }
+  }
   SV();draw();
+}
+function cascadeClearProgress(parentId){
+  // Find all nodes whose only guide parent was parentId
+  const children = N.filter(x=>{
+    if(!(pR[x.id]||0)) return false;
+    if(x.parentId===parentId){
+      // Still valid if altParentId has guide points
+      if(x.altParentId&&(gR[x.altParentId]||0)>0) return false;
+      return true;
+    }
+    if(x.altParentId===parentId){
+      if(x.parentId&&(gR[x.parentId]||0)>0) return false;
+      return true;
+    }
+    return false;
+  });
+  for(const c of children){
+    delete pR[c.id];
+    cascadeClearProgress(c.id);
+  }
 }
 function updPts(){document.getElementById('gP').textContent=Object.values(gR).reduce((s,v)=>s+v,0);document.getElementById('pP').textContent=Object.values(pR).reduce((s,v)=>s+v,0);}
 function SM(m){mode=m;document.getElementById('bG').className='mb'+(m==='guide'?' mg':'');document.getElementById('bP').className='mb'+(m==='progress'?' mp':'');draw();}
@@ -530,18 +848,75 @@ function ST(n,mx,my){
   document.getElementById('tN').textContent=n.name;
   const te=document.getElementById('tT');te.innerHTML='';
   (n.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='tg';s.textContent=t;te.appendChild(s);});
-  document.getElementById('tR').textContent=`Guide: ${gr}/${n.maxRank}  ·  Progress: ${pr}/${n.maxRank}`;
+  const progMax=mode==='progress'?(gr||n.maxRank):n.maxRank;
+  document.getElementById('tR').textContent=`Guide: ${gr}/${n.maxRank}  ·  Progress: ${pr}/${progMax}`;
   document.getElementById('tD').textContent=n.desc||'';
   document.getElementById('tC').textContent=n.cooldown?`Cooldown: ${n.cooldown}s`:n.charges?`${n.charges} Charges (${n.chargeCd}s)`:'';
-  const locked=(gR[n.id]||0)>0&&!canDec(n);
   const secLock=!sectionUnlocked(n.sec);
   const req=SECTION_REQ[n.sec]??0;
-  document.getElementById('tH').textContent=secLock?`Requires ${req} points spent to unlock`:mode==='guide'?(locked?'Cannot remove — a skill depends on this':'Left click +rank · Right click −rank'):(locked?'Cannot remove — a skill depends on this':'Left click mark progress · Right click remove');
+  const hasPoints=(gR[n.id]||0)>0||(pR[n.id]||0)>0;
+  const locked=hasPoints&&!canDec(n);
+  // Figure out why locked
+  let hintText;
+  if(secLock){
+    hintText=`Requires ${req} points spent to unlock`;
+  } else if(locked){
+    // Check if it's a section threshold issue or direct dependency
+    const d=mode==='guide'?gR:pR;
+    const newTotal=totalSpent()-1;
+    const blockedSec=(['core','aura','valor','justice','ultimate','keys']).find(s=>{
+      const r=SECTION_REQ[s]??0;
+      return newTotal<r && N.some(x=>x.sec===s&&(d[x.id]||0)>0);
+    });
+    hintText=blockedSec
+      ? `Cannot remove — would lose access to ${blockedSec} section`
+      : 'Cannot remove — a skill depends on this';
+  } else if(!parentHasPoints(n)){
+    hintText=n.parentId?'Invest in the previous node first':'Cannot invest yet';
+  } else if(mode==='progress'&&(gR[n.id]||0)===0){
+    hintText='Not in guide plan — add to guide first';
+  } else if(mode==='progress'&&(pR[n.id]||0)>=(gR[n.id]||0)){
+    hintText='Progress at guide maximum';
+  } else {
+    hintText=mode==='guide'?'Left click +rank · Right click −rank':'Left click mark progress · Right click remove';
+  }
+  document.getElementById('tH').textContent=hintText;
   const tip=document.getElementById('tip');let tx=mx+16,ty=my-16;
   if(tx+295>window.innerWidth)tx=mx-311;if(ty+190>window.innerHeight)ty=my-190;
   tip.style.left=tx+'px';tip.style.top=ty+'px';tip.style.display='block';
 }
 function HT(){document.getElementById('tip').style.display='none';}
+function resetMode(m){
+  const label = m==='guide'?'Guide':'Progress';
+  const count = Object.values(m==='guide'?gR:pR).reduce((s,v)=>s+v,0);
+  if(count===0){return;}
+  showModal(
+    `Reset ${label} Mode`,
+    `This will clear all ${count} point${count!==1?'s':''} in ${label} mode. This cannot be undone.`,
+    ()=>{
+      if(m==='guide'){gR={};}else{pR={};}
+      SV();draw();
+    },
+    m==='guide'?'#c9a84c':'#3edc81'
+  );
+}
+let _modalCb=null;
+function showModal(title,msg,cb,col){
+  _modalCb=cb;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  document.getElementById('modal-ok').style.color=col||'#e8c97a';
+  document.getElementById('modal-ok').style.borderColor=(col||'#e8c97a').replace(')',', .5)').replace('rgb','rgba');
+  document.getElementById('modal').style.display='flex';
+}
+function modalConfirm(){
+  document.getElementById('modal').style.display='none';
+  if(_modalCb){_modalCb();_modalCb=null;}
+}
+function modalCancel(){
+  document.getElementById('modal').style.display='none';
+  _modalCb=null;
+}
 function SV(){localStorage.setItem('d4v_g',JSON.stringify(gR));localStorage.setItem('d4v_p',JSON.stringify(pR));}
 function LV(){try{gR=JSON.parse(localStorage.getItem('d4v_g')||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem('d4v_p')||'{}');}catch(e){pR={};}}
 function RR(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
