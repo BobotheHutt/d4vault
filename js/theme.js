@@ -93,24 +93,8 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   r.style.setProperty('--accent-dark', a.dark);
   r.style.setProperty('--accent-mid',  a.mid);
 
-  // Zoom — apply to main content wrapper, not body, to avoid scrollbar drift
-  const zoomVal = currentFontSize / 100;
-  // Try to zoom a content wrapper; fall back to body
-  const zoomTarget = document.getElementById('mainLayout') || document.getElementById('buildDetail') || document.body;
-  document.body.style.zoom = '';
-  if (zoomTarget !== document.body) {
-    // Also zoom topbar and season rail
-    ['topbar','seasonRail','buildSidebar'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.zoom = zoomVal === 1 ? '' : zoomVal;
-    });
-    zoomTarget.style.zoom = zoomVal === 1 ? '' : zoomVal;
-    // Keep theme panel outside zoom so its scrollbar doesn't drift
-    const tp = document.getElementById('themePanel');
-    if (tp) tp.style.zoom = zoomVal === 1 ? '' : (1/zoomVal);
-  } else {
-    document.body.style.zoom = zoomVal === 1 ? '' : zoomVal;
-  }
+  // Font size — scale text only via CSS custom property
+  r.style.setProperty('--font-scale', currentFontSize / 100);
 
   // Brightness — use a CSS variable + overlay approach to avoid filter breaking fixed elements
   const bv = currentBrightness / 100;
@@ -216,10 +200,10 @@ function buildThemePanel() {
       <div class="theme-cards">${themeCards}</div>
       <div class="theme-section-label" style="margin-top:14px;">Accent</div>
       <div class="accent-swatches">${accentSwatches}</div>
-      <div class="theme-section-label" style="margin-top:14px;">Zoom</div>
+      <div class="theme-section-label" style="margin-top:14px;">Font Size</div>
       <div class="brightness-row">
         <input type="range" id="zoomSlider" min="70" max="130" value="${currentFontSize}"
-          oninput="currentFontSize=parseInt(this.value);(document.getElementById('mainLayout')||document.body).style.zoom=currentFontSize/100;['topbar','seasonRail','buildSidebar'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.zoom=currentFontSize/100;});const tp=document.getElementById('themePanel');if(tp)tp.style.zoom=100/currentFontSize;document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
+          oninput="currentFontSize=parseInt(this.value);document.documentElement.style.setProperty('--font-scale',currentFontSize/100);document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="zoomLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
       </div>
