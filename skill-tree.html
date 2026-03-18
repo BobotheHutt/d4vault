@@ -66,9 +66,9 @@ body{display:flex;flex-direction:column;}
   </div>
   <div style="height:1px;background:rgba(120,110,200,.2);margin-bottom:12px;"></div>
   <div style="font-size:11px;color:#6a6050;margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase;">Reset</div>
-  <div style="display:flex;gap:8px;">
-    <button onclick="resetFromSettings('guide')" style="flex:1;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.4);border-radius:3px;color:#c9a84c;cursor:pointer;">Reset Guide</button>
-    <button onclick="resetFromSettings('progress')" style="flex:1;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;background:rgba(62,220,129,.08);border:1px solid rgba(62,220,129,.35);border-radius:3px;color:#3edc81;cursor:pointer;">Reset Progress</button>
+  <div style="display:flex;gap:8px;" id="settingsResetBtns">
+    <button id="settingsResetGuide" onclick="resetFromSettings('guide')" style="flex:1;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.4);border-radius:3px;color:#c9a84c;cursor:pointer;">Reset Guide</button>
+    <button id="settingsResetProgress" onclick="resetFromSettings('progress')" style="flex:1;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;background:rgba(62,220,129,.08);border:1px solid rgba(62,220,129,.35);border-radius:3px;color:#3edc81;cursor:pointer;">Clear Progress</button>
   </div>
 </div>
 <div id="treeContainer" style="position:relative;flex:1;overflow:hidden;"><div id="wrap" style="position:absolute;top:0;left:0;right:26px;bottom:0;overflow:hidden;cursor:grab;"><canvas id="cv"></canvas></div>
@@ -1021,16 +1021,17 @@ function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
   // and hide reset button for the other mode
   if(urlMode==='progress'){
     document.getElementById('bEditToggle').style.display='none';
-    // Hide guide reset button in progress mode
-    // reset buttons removed from toolbar
+    const gr=document.getElementById('settingsResetGuide');
+    if(gr) gr.style.display='none'; // progress only shows Clear Progress
     mode='progress';
   } else if(urlMode==='guide'){
     document.getElementById('bEditToggle').style.display='';
-    // Hide progress reset button in guide mode  
-    // reset buttons removed from toolbar
+    const pr=document.getElementById('settingsResetProgress');
+    if(pr) pr.style.display='none'; // guide only shows Reset Guide
     mode='guide';
   } else {
     document.getElementById('bEditToggle').style.display='';
+    // standalone: show both
   }
   updEditBtn();
 })();
