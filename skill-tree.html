@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0e0e14;--bg2:#16161e;
+  --bg:#12122a;--bg2:#1a1a38;--bdr:rgba(120,110,200,.25);--bdr2:rgba(160,150,220,.55);
   --gold:#c9a84c;--gold2:#e8c97a;
   --text:#d4cfc0;--text2:#9a9080;--text3:#6a6050;
   --green:#3edc81;--blue:#6dbfe8;
@@ -17,7 +17,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
-body{background:var(--bg);color:var(--text);font-family:var(--font-b);display:flex;flex-direction:column;}
+body{background:#12122a;color:var(--text);font-family:var(--font-b);display:flex;flex-direction:column;}
 #bar{height:54px;background:var(--bg2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
 .ttl{font-family:var(--font-h);font-size:15px;color:var(--gold2);letter-spacing:.1em;}
 .sep{width:1px;height:26px;background:var(--bdr);}
@@ -36,7 +36,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);display:fl
 #wrap{flex:1;overflow:hidden;position:relative;cursor:grab;}
 #wrap.g{cursor:grabbing;}
 #cv{position:absolute;top:0;left:0;transform-origin:0 0;}
-#tip{position:fixed;background:#1a1820;border:1px solid rgba(201,168,76,.5);border-radius:5px;padding:12px 16px;max-width:290px;pointer-events:none;z-index:1000;display:none;}
+#tip{position:fixed;background:#1a1a38;border:1px solid rgba(150,140,220,.5);border-radius:5px;padding:12px 16px;max-width:290px;pointer-events:none;z-index:1000;display:none;}
 .tn{font-family:var(--font-h);font-size:14px;color:var(--gold2);margin-bottom:5px;}
 .tgs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
 .tg{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);color:var(--gold);}
@@ -92,9 +92,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);display:fl
 // Passives sit at PASS_R on their own arms between actives
 // ══════════════════════════════════════════════════════════════════════════
 
-const ARM_R   = 200;  // active skill distance from hub
-const UPARM_R = 120;  // upgrade distance from active
-const PASS_R  = 160;  // passive distance from hub
+const ARM_R   = 270;  // active skill distance from hub
+const UPARM_R = 105;  // upgrade distance from active
+const PASS_R  = 190;  // passive distance from hub
 const SZ = {active:52, ultimate:58, passive:32, upgrade:24, key:60};
 const D2R = Math.PI/180;
 
@@ -188,7 +188,7 @@ const SECTIONS = [
   {
     section:'core', hubKey:'core', color:SC.core,
     actives:[
-      {id:'zeal',         name:'Zeal',          angle:60,  maxRank:5, type:'active', tags:['Zealot'],
+      {id:'zeal',         name:'Zeal',          angle:95,  maxRank:5, type:'active', tags:['Zealot'],
        desc:'Strike with blinding speed, dealing 112% damage followed by 3 additional strikes dealing 28% each.',
        upgrades:[
          {id:'zeal-enh',name:'Enhanced Zeal',desc:'Zeal gains 2 additional strikes.',maxRank:1,
@@ -198,7 +198,7 @@ const SECTIONS = [
           ]},
          {id:'zeal-leg',name:"Zealot's Legacy",desc:'Zeal extends its assault, randomly seeking surrounding enemies and striking 4 additional times.',maxRank:1}
        ]},
-      {id:'bshield',      name:'Blessed Shield', angle:350, maxRank:5, type:'active', tags:['Judicator'],
+      {id:'bshield',      name:'Blessed Shield', angle:15, maxRank:5, type:'active', tags:['Judicator'],
        desc:'Bless and hurl your shield dealing 302% damage ricocheting up to 3 times.',
        upgrades:[
          {id:'bshield-enh',name:'Enhanced Blessed Shield',desc:'Blessed Shield deals 1% additional damage for each Armor on your shield.',maxRank:1,
@@ -208,7 +208,7 @@ const SECTIONS = [
           ]},
          {id:'bshield-ret',name:'Shield of Retribution',desc:'Blessed Shield becomes a Juggernaut Skill, pulsing Thorns damage before bursting for 378%.',maxRank:1}
        ]},
-      {id:'bhammer',      name:'Blessed Hammer', angle:290, maxRank:5, type:'active', tags:['Judicator'],
+      {id:'bhammer',      name:'Blessed Hammer', angle:295, maxRank:5, type:'active', tags:['Judicator'],
        desc:'Throw a Blessed Hammer that spirals out dealing 161% damage.',
        upgrades:[
          {id:'bhammer-enh',name:'Enhanced Blessed Hammer',desc:'Blessed Hammer now hits enemies multiple times.',maxRank:1,
@@ -218,7 +218,7 @@ const SECTIONS = [
           ]},
          {id:'bhammer-mor',name:'Mortar Combat',desc:'Blessed Hammer mortars 3 hammers to the ground, dealing 67% damage in an area.',maxRank:1}
        ]},
-      {id:'dlance',       name:'Divine Lance',   angle:230, maxRank:5, type:'active', tags:['Disciple','Mobility'],
+      {id:'dlance',       name:'Divine Lance',   angle:215, maxRank:5, type:'active', tags:['Disciple','Mobility'],
        desc:'Impale enemies with a heavenly lance, stabbing 2 times for 126% damage each.',
        upgrades:[
          {id:'dlance-enh',name:'Enhanced Divine Lance',desc:"Divine Lance's damage increased by 30% of your Movement Speed bonus.",maxRank:1,
@@ -228,7 +228,7 @@ const SECTIONS = [
           ]},
          {id:'dlance-jav',name:'Divine Javelin',desc:'Throw Divine Lance, dealing 90% damage to first enemy and bursting for 450%.',maxRank:1}
        ]},
-      {id:'sbash',        name:'Shield Bash',    angle:170, maxRank:5, type:'active', tags:['Mobility','Juggernaut'],
+      {id:'sbash',        name:'Shield Bash',    angle:140, maxRank:5, type:'active', tags:['Mobility','Juggernaut'],
        desc:'Charge at an enemy and bash in front of you, dealing 287% damage.',
        upgrades:[
          {id:'sbash-enh',name:'Enhanced Shield Bash',desc:'Hits with Shield Bash count as Blocks.',maxRank:1,
@@ -241,11 +241,11 @@ const SECTIONS = [
     ],
     // Passives: between actives at midpoint angles
     passives:[
-      {id:'discipline', name:'Discipline',  angle:20,  maxRank:3, desc:'Your Core Skills deal x18% increased damage.'},
-      {id:'en-guarde',  name:'En Guarde',   angle:320, maxRank:3, desc:'You gain +30% Armor and +15% Block Chance.'},
-      {id:'riposte',    name:'Riposte',     angle:260, maxRank:3, desc:'Blocking grants you 18% damage for 5 seconds.'},
-      {id:'parry',      name:'Parry',       angle:200, maxRank:3, desc:'Blocking restores 3 Faith.'},
-      {id:'piety',      name:'Piety',       angle:115, maxRank:3, desc:'Your Maximum Faith is increased by 15.'}
+      {id:'discipline', name:'Discipline',  angle:55,  maxRank:3, desc:'Your Core Skills deal x18% increased damage.'},
+      {id:'en-guarde',  name:'En Guarde',   angle:335, maxRank:3, desc:'You gain +30% Armor and +15% Block Chance.'},
+      {id:'riposte',    name:'Riposte',     angle:255, maxRank:3, desc:'Blocking grants you 18% damage for 5 seconds.'},
+      {id:'parry',      name:'Parry',       angle:178, maxRank:3, desc:'Blocking restores 3 Faith.'},
+      {id:'piety',      name:'Piety',       angle:117, maxRank:3, desc:'Your Maximum Faith is increased by 15.'}
     ]
   },
 
@@ -359,7 +359,7 @@ const SECTIONS = [
   {
     section:'justice', hubKey:'justice', color:SC.justice,
     actives:[
-      {id:'purify',  name:'Purify',               angle:310, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:10,
+      {id:'purify',  name:'Purify',               angle:320, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:10,
        desc:'Enshroud your enemies in the Light, Dazing them for 2 seconds.',
        upgrades:[
          {id:'pur-enh',name:'Enhanced Purify',desc:'Purify generates 10 Faith for each enemy affected.',maxRank:1,
@@ -369,7 +369,7 @@ const SECTIONS = [
           ]},
          {id:'pur-abs',name:'Absolution',desc:'Purify deals 380% damage and Weakens enemies for 4 seconds.',maxRank:1}
        ]},
-      {id:'consec',  name:'Consecration',         angle:215, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:18,
+      {id:'consec',  name:'Consecration',         angle:220, maxRank:5, type:'active', tags:['Defensive','Judicator'], cooldown:18,
        desc:'Bathe in the Light for 6 seconds, Healing for 5.6% Maximum Life per second and dealing 105% damage per second.',
        upgrades:[
          {id:'con-enh',name:'Enhanced Consecration',desc:'While inside Consecration, you and allies deal x15% additional damage.',maxRank:1,
@@ -379,7 +379,7 @@ const SECTIONS = [
           ]},
          {id:'con-san',name:'Sanctify',desc:'Consecration lasts 3 seconds increasing damage and Healing by 20% each second, then detonates.',maxRank:1}
        ]},
-      {id:'condemn', name:'Condemn',               angle:165, maxRank:5, type:'active', tags:['Disciple'], cooldown:15,
+      {id:'condemn', name:'Condemn',               angle:155, maxRank:5, type:'active', tags:['Disciple'], cooldown:15,
        desc:'Harness the Light and Pull enemies in after 1.5 seconds, briefly Stunning them and dealing 336% damage.',
        upgrades:[
          {id:'cnd-enh',name:'Enhanced Condemn',desc:'While Casting Condemn, become Unhindered for 1.5 seconds.',maxRank:1,
@@ -401,14 +401,14 @@ const SECTIONS = [
        ]}
     ],
     passives:[
-      {id:'crack-armor', name:'Crack in the Armor',  angle:275, maxRank:3, desc:'You deal x18% increased damage to Vulnerable enemies.'},
-      {id:'high-charity',name:'High Charity',         angle:260, maxRank:3, desc:'You gain 12% Cooldown Reduction.'},
-      {id:'iron-sharp',  name:'Iron Sharpens Iron',   angle:195, maxRank:3, desc:'You gain +18% Critical Strike Damage.'},
-      {id:'break-line',  name:'Break the Line',       angle:180, maxRank:3, desc:'You have +6% Critical Strike Chance and deal x15% increased Damage to Weakened enemies.'},
-      {id:'press-adv',   name:'Press the Advantage',  angle:120, maxRank:3, desc:'Critically Striking grants you 9% Damage Reduction for 5 seconds.'},
-      {id:'heavyweight', name:'Heavyweight',           angle:105, maxRank:3, desc:'You deal x18% Critical Strike Damage while Healthy.'},
-      {id:'pacify',      name:'Pacify',               angle:15,  maxRank:3, desc:'You gain +45% increased Crowd Control duration.'},
-      {id:'dizzying',    name:'Dizzying Blow',         angle:350, maxRank:3, desc:'You deal x21% increased damage to Crowd Controlled enemies.'},
+      {id:'crack-armor', name:'Crack in the Armor',  angle:285, maxRank:3, desc:'You deal x18% increased damage to Vulnerable enemies.'},
+      {id:'high-charity',name:'High Charity',         angle:250, maxRank:3, desc:'You gain 12% Cooldown Reduction.'},
+      {id:'iron-sharp',  name:'Iron Sharpens Iron',   angle:190, maxRank:3, desc:'You gain +18% Critical Strike Damage.'},
+      {id:'break-line',  name:'Break the Line',         angle:175, maxRank:3, desc:'You have +6% Critical Strike Chance and deal x15% increased Damage to Weakened enemies.'},
+      {id:'press-adv',   name:'Press the Advantage',  angle:110, maxRank:3, desc:'Critically Striking grants you 9% Damage Reduction for 5 seconds.'},
+      {id:'heavyweight', name:'Heavyweight',           angle:100, maxRank:3, desc:'You deal x18% Critical Strike Damage while Healthy.'},
+      {id:'pacify',      name:'Pacify',               angle:20,  maxRank:3, desc:'You gain +45% increased Crowd Control duration.'},
+      {id:'dizzying',    name:'Dizzying Blow',         angle:355, maxRank:3, desc:'You deal x21% increased damage to Crowd Controlled enemies.'},
       {id:'righteous',   name:'Righteousness',         angle:340, maxRank:3, desc:'You deal x18% increased Holy and Fire damage.'},
       {id:'leave-luck',  name:'Leave Luck to Heaven',  angle:5,   maxRank:3, desc:'You gain 9% Lucky Hit Chance.'}
     ]
@@ -420,7 +420,7 @@ const SECTIONS = [
   {
     section:'ultimate', hubKey:'ultimate', color:SC.ultimate,
     actives:[
-      {id:'hfury',   name:"Heaven's Fury",      angle:60,  maxRank:5, type:'ultimate', tags:['Judicator'], cooldown:30,
+      {id:'hfury',   name:"Heaven's Fury",      angle:75,  maxRank:5, type:'ultimate', tags:['Judicator'], cooldown:30,
        desc:'Grasp the Light, dealing 200% damage per second before releasing it to seek Nearby enemies dealing 126% damage per hit for 7 seconds.',
        upgrades:[
          {id:'hf-enh',name:"Enhanced Heaven's Fury",desc:"Heaven's Fury's light Judges enemies.",maxRank:1,
@@ -430,7 +430,7 @@ const SECTIONS = [
           ]},
          {id:'hf-tri',name:'Triplicate',desc:"Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds.",maxRank:1}
        ]},
-      {id:'fortress',name:'Fortress',            angle:330, maxRank:5, type:'ultimate', tags:['Defensive','Juggernaut'], cooldown:60,
+      {id:'fortress',name:'Fortress',            angle:340, maxRank:5, type:'ultimate', tags:['Defensive','Juggernaut'], cooldown:60,
        desc:'Make your stand, becoming Immune for 3 seconds and create a defensive area for 13.5 seconds.',
        upgrades:[
          {id:'for-enh',name:'Enhanced Fortress',desc:"While inside Fortress your Skills are free to Cast and you gain x4% damage per stack of Resolve.",maxRank:1,
@@ -440,7 +440,7 @@ const SECTIONS = [
           ]},
          {id:'for-ram',name:'Rampart of Thorns',desc:'Enemies inside Fortress are Slowed by 50% and take 500% of your Thorns damage per second.',maxRank:1}
        ]},
-      {id:'zenith',  name:'Zenith',              angle:240, maxRank:5, type:'ultimate', tags:['Zealot'], cooldown:25,
+      {id:'zenith',  name:'Zenith',              angle:235, maxRank:5, type:'ultimate', tags:['Zealot'], cooldown:25,
        desc:'Summon a divine sword that cleaves the battlefield for 630% damage. Casting Zenith again cuts through for 560% damage and Knocks Down enemies for 2 seconds.',
        upgrades:[
          {id:'zen-enh',name:'Enhanced Zenith',desc:'While Zenith is active, you are Unstoppable.',maxRank:1,
@@ -450,7 +450,7 @@ const SECTIONS = [
           ]},
          {id:'zen-sun',name:'Sunder',desc:'Zenith sunders a rift, Knocking Down enemies and dealing 900% damage. After 1 second the rift detonates for 675%.',maxRank:1}
        ]},
-      {id:'arbiter', name:'Arbiter of Justice',  angle:150, maxRank:5, type:'ultimate', tags:['Disciple','Mobility'], cooldown:98,
+      {id:'arbiter', name:'Arbiter of Justice',  angle:140, maxRank:5, type:'ultimate', tags:['Disciple','Mobility'], cooldown:98,
        desc:'Ascend to the heavens and crash upon the battlefield as an Arbiter for 20 seconds, dealing 840% damage upon landing.',
        upgrades:[
          {id:'arb-enh',name:'Enhanced Arbiter of Justice',desc:"Arbiter form's Wing Strikes recast time is reduced by 0.5 seconds.",maxRank:1,
@@ -524,7 +524,8 @@ function buildAll() {
 
     // Actives + upgrades
     for (const act of sec.actives) {
-      const apos = polar(hub.x, hub.y, ARM_R, act.angle);
+      const thisARM = act.type==='key-passive' ? ARM_R * 1.6 : ARM_R;
+      const apos = polar(hub.x, hub.y, thisARM, act.angle);
       ALL.push({id:act.id, name:act.name, type:act.type, maxRank:act.maxRank,
         tags:act.tags||[], desc:act.desc, cooldown:act.cooldown,
         charges:act.charges, chargeCooldown:act.chargeCooldown,
@@ -599,35 +600,25 @@ function draw() {
 
 // ── SPINE ────────────────────────────────────────────────────────────────
 function drawSpine() {
-  // Glow
-  ctx.strokeStyle='rgba(200,60,60,.2)';
-  ctx.lineWidth=18; ctx.lineCap='round'; ctx.lineJoin='round';
-  ctx.beginPath();
   const hkeys = ['basic','core','aura','valor','justice','ultimate','keys'];
-  ctx.moveTo(HUBS.basic.x, HUBS.basic.y);
-  for (const k of hkeys.slice(1)) ctx.lineTo(HUBS[k].x, HUBS[k].y);
-  ctx.stroke();
-  // Main line
-  ctx.strokeStyle='rgba(200,60,60,.75)';
-  ctx.lineWidth=6;
+  // Subtle dashed spine only
+  ctx.strokeStyle='rgba(100,100,180,.2)';
+  ctx.lineWidth=1.5; ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.setLineDash([5,7]);
   ctx.beginPath();
   ctx.moveTo(HUBS.basic.x, HUBS.basic.y);
   for (const k of hkeys.slice(1)) ctx.lineTo(HUBS[k].x, HUBS[k].y);
   ctx.stroke();
-
-  // Hub diamonds
+  ctx.setLineDash([]);
+  // Hub diamonds - small subtle markers
   for (const [key, hub] of Object.entries(HUBS)) {
-    const sec = SECTIONS.find(s=>s.hubKey===key);
-    const col = sec ? sec.color : '#888';
-    const sz  = 24;
+    const sz = 18;
     ctx.save();
     ctx.translate(hub.x, hub.y);
     ctx.rotate(Math.PI/4);
-    ctx.shadowColor=col; ctx.shadowBlur=14;
-    ctx.fillStyle='#1a1510';
+    ctx.fillStyle='rgba(30,30,60,.9)';
     ctx.fillRect(-sz/2,-sz/2,sz,sz);
-    ctx.shadowBlur=0;
-    ctx.strokeStyle=col; ctx.lineWidth=2.5;
+    ctx.strokeStyle='rgba(140,130,200,.45)'; ctx.lineWidth=1;
     ctx.strokeRect(-sz/2,-sz/2,sz,sz);
     ctx.restore();
   }
@@ -656,7 +647,7 @@ function drawConnections() {
       ctx.strokeStyle=mode==='guide'?(n.col||'rgba(201,168,76,.9)'):'rgba(62,220,129,.9)';
       ctx.lineWidth=2.5; ctx.setLineDash([]);
     } else {
-      ctx.strokeStyle='rgba(110,90,55,.45)';
+      ctx.strokeStyle='rgba(70,70,130,.4)';
       ctx.lineWidth=1; ctx.setLineDash([4,4]);
     }
     ctx.stroke(); ctx.setLineDash([]);
@@ -687,17 +678,17 @@ function drawSq(n,has,ih,gr,pr,col) {
   if (has) { ctx.shadowColor=mode==='guide'?col||'#c9a84c':'#3edc81'; ctx.shadowBlur=16; }
   else if (ih) { ctx.shadowColor='rgba(201,168,76,.45)'; ctx.shadowBlur=8; }
 
-  ctx.fillStyle=has?(mode==='guide'?'#282010':'#0c2018'):(ih?'#201c12':'#18130a');
+  ctx.fillStyle=has?(mode==='guide'?'#2a2010':'#0c2a1a'):(ih?'#1e1e38':'#16162e');
   RR(x-h,y-h,sz,sz,5); ctx.fill();
   ctx.shadowBlur=0;
 
-  ctx.strokeStyle=has?(mode==='guide'?col||'#c9a84c':'#3edc81'):(ih?'rgba(201,168,76,.7)':'rgba(160,130,65,.5)');
+  ctx.strokeStyle=has?(mode==='guide'?col||'#c9a84c':'#3edc81'):(ih?'rgba(160,150,220,.8)':'rgba(90,90,160,.5)');
   ctx.lineWidth=has?2.5:(ih?1.5:1);
   RR(x-h,y-h,sz,sz,5); ctx.stroke();
 
   // Corner marks when inactive
   if (!has&&!ih) {
-    ctx.strokeStyle='rgba(160,130,65,.35)'; ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(90,90,160,.4)'; ctx.lineWidth=1;
     const a=9;
     [[x-h+2,y-h+a,x-h+2,y-h+2,x-h+a,y-h+2],
      [x+h-2,y-h+a,x+h-2,y-h+2,x+h-a,y-h+2],
@@ -724,7 +715,7 @@ function drawSq(n,has,ih,gr,pr,col) {
   }
   const ls=wrapTxt(name,sz-6,11);
   ctx.font='600 11px Rajdhani,sans-serif';
-  ctx.fillStyle=has?'#e0d8c8':(ih?'#b0a888':'#806a40');
+  ctx.fillStyle=has?'#e0d8c8':(ih?'#a0a0d0':'#6060a0');
   ctx.textAlign='center'; ctx.textBaseline='middle';
   const lh2=13, sy=y-(ls.length-1)*lh2/2+(maxRank>1?-6:0);
   ls.forEach((l,i)=>ctx.fillText(l,x,sy+i*lh2));
@@ -737,11 +728,11 @@ function drawDia(n,has,ih,sz,col) {
   if (has) { ctx.shadowColor=mode==='guide'?col||'#c9a84c':'#3edc81'; ctx.shadowBlur=9; }
   ctx.save();
   ctx.translate(x,y); ctx.rotate(Math.PI/4);
-  ctx.fillStyle=has?(mode==='guide'?'#281e08':'#0c2010'):(ih?'#1c1810':'#120e08');
+  ctx.fillStyle=has?(mode==='guide'?'#281e08':'#0c2010'):(ih?'#1e1e38':'#14142a');
   ctx.fillRect(-h,-h,sz,sz);
   ctx.shadowBlur=0;
   ctx.strokeStyle=has?(mode==='guide'?col||'#c9a84c':'#3edc81')
-    :(ih?'rgba(201,168,76,.6)':type==='passive'?'rgba(90,130,180,.5)':'rgba(130,100,50,.5)');
+    :(ih?'rgba(160,150,220,.7)':type==='passive'?'rgba(90,120,200,.5)':'rgba(90,90,160,.45)');
   ctx.lineWidth=has?2:(ih?1.5:1);
   ctx.strokeRect(-h,-h,sz,sz);
   ctx.restore();
