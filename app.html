@@ -83,6 +83,19 @@
           </div>
         </section>
 
+        <!-- Paragon -->
+        <section class="build-section" id="sectionParagon">
+          <div class="section-header">
+            <h2 class="section-title">Paragon Boards</h2>
+            <div class="section-actions">
+              <button class="sec-btn toggle-active" id="tooltipToggle" onclick="toggleTooltips()">Node Info: ON</button>
+              <button class="sec-btn" onclick="openAddBoardModal()">+ Add Board</button>
+            </div>
+          </div>
+          <div class="board-tabs" id="boardTabs"></div>
+          <div id="boardCanvas"></div>
+        </section>
+
         <!-- ── SECTION 2: BUILD DETAIL (tabbed, editable) ───────────── -->
         <!-- Variant tabs across the top, then two columns below -->
         <section class="build-section two-col-section" id="sectionDetail">
@@ -110,18 +123,6 @@
           </div>
         </section>
 
-        <!-- Paragon -->
-        <section class="build-section" id="sectionParagon">
-          <div class="section-header">
-            <h2 class="section-title">Paragon Boards</h2>
-            <div class="section-actions">
-              <button class="sec-btn toggle-active" id="tooltipToggle" onclick="toggleTooltips()">Node Info: ON</button>
-              <button class="sec-btn" onclick="openAddBoardModal()">+ Add Board</button>
-            </div>
-          </div>
-          <div class="board-tabs" id="boardTabs"></div>
-          <div id="boardCanvas"></div>
-        </section>
 
         <!-- Notes -->
         <section class="build-section" id="sectionNotes">
