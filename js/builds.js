@@ -36,6 +36,7 @@ function selectBuild(id) {
   state.activeBoard = 0;
   renderBuilds();
   renderBuildDetail();
+  syncSkillTreeFrames(id, 0);
 }
 
 // ── ADD BUILD MODAL ────────────────────────────────────────────────────────
@@ -192,17 +193,39 @@ function renderBuildDetail() {
   renderNotesSection(build);
 }
 
+// ── SYNC SKILL TREE IFRAMES ───────────────────────────────────────────────
+function syncSkillTreeFrames(buildId, variantIdx) {
+  const msg = { type: 'variantChange', buildId: buildId || 'default', variantIdx: variantIdx || 0 };
+  const progress = document.getElementById('skillTreeProgress');
+  const guide    = document.getElementById('skillTreeGuide');
+  if (progress?.contentWindow) progress.contentWindow.postMessage(msg, '*');
+  if (guide?.contentWindow)    guide.contentWindow.postMessage(msg, '*');
+  // Also update src params for fresh loads
+  if (progress) {
+    const u = new URL(progress.src, window.location.href);
+    u.searchParams.set('buildId', msg.buildId);
+    u.searchParams.set('variantIdx', msg.variantIdx);
+    if (progress.src !== u.href) progress.src = u.href;
+  }
+  if (guide) {
+    const u = new URL(guide.src, window.location.href);
+    u.searchParams.set('buildId', msg.buildId);
+    u.searchParams.set('variantIdx', msg.variantIdx);
+    if (guide.src !== u.href) guide.src = u.href;
+  }
+}
+
 // ── VARIANT BAR ───────────────────────────────────────────────────────────
 function renderVariantBar(build) {
   const bar = document.getElementById('variantBar');
   const affects = document.getElementById('variantAffects');
   bar.innerHTML = '';
 
-  if (!build.variants || build.variants.length <= 1) {
-    document.getElementById('variantSection').style.display = 'none';
-    return;
-  }
-  document.getElementById('variantSection').style.display = 'block';
+  // Always show variant bar (even with 1 variant so user can add more)
+  const vs = document.getElementById('variantSection');
+  if(vs) vs.style.display = 'block';
+  const dtabs = document.getElementById('detail-tabs-row') || document.querySelector('.detail-tabs-row');
+  if(dtabs) dtabs.style.display = 'block';
 
   build.variants.forEach((v, i) => {
     const btn = document.createElement('button');
@@ -216,9 +239,28 @@ function renderVariantBar(build) {
       renderSkillSection(build, variant);
       renderGearSection(variant);
       renderParagonSection(build, variant);
+      syncSkillTreeFrames(build.id, i);
     });
     bar.appendChild(btn);
   });
+
+  // Add variant button (max 5)
+  if (build.variants.length < 5) {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'variant-btn variant-add-btn';
+    addBtn.textContent = '+ Variant';
+    addBtn.addEventListener('click', () => {
+      const data = getData();
+      const b = data.builds.find(x => x.id === build.id);
+      if (!b || b.variants.length >= 5) return;
+      b.variants.push({ name: `Variant ${b.variants.length + 1}`, skills: [], gear: [], paragonBoards: [], levelingSteps: [] });
+      saveData(data);
+      state.activeVariant = b.variants.length - 1;
+      renderBuildDetail();
+      syncSkillTreeFrames(b.id, state.activeVariant);
+    });
+    bar.appendChild(addBtn);
+  }
 
   // Show what changes across variants
   const v = build.variants[state.activeVariant];
