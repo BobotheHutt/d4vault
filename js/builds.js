@@ -326,10 +326,22 @@ function renderVariantBar(build) {
             if (!confirm(`Copy "${o.name}" into "${v.name}"? This will overwrite current data.`)) return;
             const data = getData();
             const b = data.builds.find(x => x.id === build.id);
+            // Copy variant object (gear, paragon etc)
             const src = JSON.parse(JSON.stringify(b.variants[o.idx]));
-            src.name = b.variants[i].name; // keep current name
+            src.name = b.variants[i].name; // keep destination name
             b.variants[i] = src;
             saveData(data);
+            // Also copy skill tree localStorage keys
+            const srcGKey = `d4v_g_${b.id}_${o.idx}`;
+            const srcPKey = `d4v_p_${b.id}_${o.idx}`;
+            const dstGKey = `d4v_g_${b.id}_${i}`;
+            const dstPKey = `d4v_p_${b.id}_${i}`;
+            const gData = localStorage.getItem(srcGKey);
+            const pData = localStorage.getItem(srcPKey);
+            if (gData) localStorage.setItem(dstGKey, gData);
+            else localStorage.removeItem(dstGKey);
+            if (pData) localStorage.setItem(dstPKey, pData);
+            else localStorage.removeItem(dstPKey);
             dd.remove();
             syncSkillTreeFrames(b.id, i);
             renderBuildDetail();
