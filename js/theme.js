@@ -139,9 +139,9 @@ function updateThemeUI() {
   if (bSlider) bSlider.value = currentBrightness;
   const bLabel = document.getElementById('brightnessLabel');
   if (bLabel) bLabel.textContent = currentBrightness + '%';
-  const fSlider = document.getElementById('fontSizeSlider');
+  const fSlider = document.getElementById('zoomSlider');
   if (fSlider) fSlider.value = currentFontSize;
-  const fLabel = document.getElementById('fontSizeLabel');
+  const fLabel = document.getElementById('zoomLabel');
   if (fLabel) fLabel.textContent = currentFontSize + '%';
 }
 
@@ -182,12 +182,12 @@ function buildThemePanel() {
       <div class="theme-cards">${themeCards}</div>
       <div class="theme-section-label" style="margin-top:14px;">Accent</div>
       <div class="accent-swatches">${accentSwatches}</div>
-      <div class="theme-section-label" style="margin-top:14px;">Font Size</div>
+      <div class="theme-section-label" style="margin-top:14px;">Zoom</div>
       <div class="brightness-row">
-        <input type="range" id="fontSizeSlider" min="70" max="130" value="${currentFontSize}"
-          oninput="currentFontSize=parseInt(this.value);document.body.style.zoom=currentFontSize/100;document.getElementById('fontSizeLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
+        <input type="range" id="zoomSlider" min="70" max="130" value="${currentFontSize}"
+          oninput="currentFontSize=parseInt(this.value);document.body.style.zoom=currentFontSize/100;document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
-        <span id="fontSizeLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
+        <span id="zoomLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
       </div>
       <div class="theme-section-label" style="margin-top:14px;">Brightness</div>
       <div class="brightness-row">
