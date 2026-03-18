@@ -3,245 +3,945 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D4 Vault</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+<title>D4 Vault — Paladin Skill Tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:#12122a;color:#d4cfc0;font-family:'Rajdhani',sans-serif;}
+body{display:flex;flex-direction:column;}
+#bar{height:52px;background:#1a1a38;border-bottom:1px solid rgba(120,110,200,.3);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0;}
+.ttl{font-family:'Cinzel',serif;font-size:14px;color:#e8c97a;letter-spacing:.1em;}
+.sep{width:1px;height:24px;background:rgba(120,110,200,.3);}
+.mb{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:3px;border:1px solid rgba(120,110,200,.35);background:transparent;color:#7070a0;cursor:pointer;transition:all .15s;}
+.mb:hover{border-color:rgba(160,150,220,.7);color:#b0b0e0;}
+.mg{background:rgba(201,168,76,.2);border-color:#e8c97a;color:#e8c97a;}
+.mp{background:rgba(62,220,129,.14);border-color:rgba(62,220,129,.65);color:#3edc81;}
+.pts{display:flex;gap:14px;font-size:12px;}
+.pi{display:flex;align-items:center;gap:5px;}
+.pd{width:8px;height:8px;border-radius:50%;}
+.zb{width:28px;height:28px;font-size:16px;border:1px solid rgba(120,110,200,.35);border-radius:3px;background:transparent;color:#8080b0;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.zb:hover{border-color:rgba(160,150,220,.7);color:#c0c0f0;}
+#wrap{flex:1;overflow:hidden;position:relative;cursor:grab;}
+#wrap.g{cursor:grabbing;}
+#cv{position:absolute;top:0;left:0;transform-origin:0 0;}
+#tip{position:fixed;background:#1c1c3a;border:1px solid rgba(150,140,220,.55);border-radius:5px;padding:11px 14px;max-width:285px;pointer-events:none;z-index:1000;display:none;}
+.tn{font-family:'Cinzel',serif;font-size:13px;color:#e8c97a;margin-bottom:4px;}
+.tgs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px;}
+.tg{font-size:9px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:2px;background:rgba(201,168,76,.14);border:1px solid rgba(201,168,76,.4);color:#c9a84c;}
+.tr{font-size:11px;color:#c9a84c;margin-bottom:3px;font-weight:600;}
+.td{font-size:11px;color:#9a9080;line-height:1.55;}
+.tc{font-size:11px;color:#6dbfe8;margin-top:3px;}
+.th{font-size:10px;color:#55506a;margin-top:4px;font-style:italic;}
+</style>
 </head>
 <body>
-
-<!-- TOP BAR -->
-<header id="topbar">
-  <div class="brand">D4 VAULT</div>
-  <div class="topbar-right">
-    <span class="username-label" id="usernameLabel"></span>
-    <button class="btn-signout" onclick="signOut()">Sign Out</button>
+<div id="bar">
+  <span class="ttl">Paladin — Skill Tree</span>
+  <div class="sep"></div>
+  <button class="mb mg" id="bG" onclick="SM('guide')">Guide Mode</button>
+  <button class="mb"    id="bP" onclick="SM('progress')">Progress Mode</button>
+  <div class="sep"></div>
+  <div class="pts">
+    <div class="pi"><div class="pd" style="background:#c9a84c"></div><span style="color:#6a6050">Guide</span><span id="gP" style="font-weight:600;color:#d4cfc0">0</span><span style="color:#5a5070">/71</span></div>
+    <div class="pi"><div class="pd" style="background:#3edc81"></div><span style="color:#6a6050">Progress</span><span id="pP" style="font-weight:600;color:#d4cfc0">0</span><span style="color:#5a5070">/71</span></div>
   </div>
-</header>
-
-<!-- SEASON RAIL -->
-<nav id="seasonRail">
-  <div class="season-tabs" id="seasonTabs"></div>
-  <button class="season-add-btn" onclick="openSeasonModal()" title="Add season">+</button>
-</nav>
-
-<!-- MAIN LAYOUT -->
-<div id="mainLayout">
-
-  <!-- BUILD SIDEBAR -->
-  <aside id="buildSidebar">
-    <div id="buildIcons"></div>
-    <button class="build-add-btn" onclick="openAddBuildModal()" id="addBuildBtn" title="Add build">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10" y1="4" x2="10" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </button>
-  </aside>
-
-  <!-- BUILD DETAIL -->
-  <main id="buildDetail">
-    <div id="emptyState" class="empty-state">
-      <div class="empty-icon">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="24" y1="16" x2="24" y2="32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <h3>No builds yet</h3>
-      <p>Add a build using the + button on the left,<br>or select a season to get started.</p>
-    </div>
-    <div id="buildContent" style="display:none">
-      <!-- Build Header -->
-      <div id="buildHeader">
-        <div class="build-title-row">
-          <h1 id="buildName" class="build-name"></h1>
-          <button class="rename-btn" onclick="renameBuild()" title="Rename">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10 2L12 4L5 11H3V9L10 2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-            Rename
-          </button>
-        </div>
-        <div class="build-meta" id="buildMeta"></div>
-        <a class="source-link" id="buildSourceLink" href="#" target="_blank" rel="noopener"></a>
-      </div>
-
-      <!-- Variant Bar -->
-      <div id="variantSection">
-        <div class="variant-bar" id="variantBar"></div>
-        <div class="variant-affects" id="variantAffects"></div>
-      </div>
-
-      <!-- Build Sections -->
-      <div id="buildSections">
-
-        <!-- Skills -->
-        <section class="build-section" id="sectionSkills">
-          <div class="section-header">
-            <h2 class="section-title">Skill Tree</h2>
-            <div class="section-actions">
-              <button class="sec-btn" onclick="toggleLevelingGuide()">Leveling Guide</button>
-            </div>
-          </div>
-          <div id="skillTreeArea">
-            <div id="skillTreeImage" class="skill-tree-img-area"></div>
-            <div id="levelingGuide" class="leveling-guide" style="display:none"></div>
-          </div>
-          <div id="skillsList" class="skills-list"></div>
-        </section>
-
-        <!-- Gear -->
-        <section class="build-section" id="sectionGear">
-          <div class="section-header">
-            <h2 class="section-title">Gear &amp; Stats</h2>
-          </div>
-          <div id="gearList" class="gear-grid"></div>
-        </section>
-
-        <!-- Paragon -->
-        <section class="build-section" id="sectionParagon">
-          <div class="section-header">
-            <h2 class="section-title">Paragon Boards</h2>
-            <div class="section-actions">
-              <button class="sec-btn toggle-active" id="tooltipToggle" onclick="toggleTooltips()">Node Info: ON</button>
-              <button class="sec-btn" onclick="openAddBoardModal()">+ Add Board</button>
-            </div>
-          </div>
-          <div class="board-tabs" id="boardTabs"></div>
-          <div id="boardCanvas"></div>
-        </section>
-
-        <!-- Notes -->
-        <section class="build-section" id="sectionNotes">
-          <div class="section-header">
-            <h2 class="section-title">Notes &amp; Playstyle</h2>
-          </div>
-          <div id="notesContent"></div>
-        </section>
-
-      </div>
-    </div>
-  </main>
+  <div class="sep"></div>
+  <div style="display:flex;gap:4px">
+    <button class="zb" onclick="DZ(1.2)">+</button>
+    <button class="zb" onclick="DZ(.8)">−</button>
+    <button class="zb" onclick="RV()">⌂</button>
+  </div>
+  <div class="sep"></div>
+  <button class="mb" onclick="resetMode('guide')" style="color:#c9a84c;border-color:rgba(201,168,76,.4)">Reset Guide</button>
+  <button class="mb" onclick="resetMode('progress')" style="color:#3edc81;border-color:rgba(62,220,129,.4)">Reset Progress</button>
+  <span style="font-size:12px;color:#55506a;margin-left:4px;min-width:40px" id="zl">55%</span>
 </div>
-
-<!-- ═══════════════════════════════════════════════════ MODALS ═══ -->
-
-<!-- Add Season Modal -->
-<div class="modal-overlay" id="seasonModal">
-  <div class="modal">
-    <h3>Add Season</h3>
-    <div class="field">
-      <label>Select Season</label>
-      <select id="seasonSelect"></select>
-    </div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('seasonModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="addSeason()">Add Season</button>
+<div id="wrap"><canvas id="cv"></canvas></div>
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center;">
+  <div style="background:#1c1c3a;border:1px solid rgba(150,140,220,.5);border-radius:8px;padding:28px 32px;max-width:340px;text-align:center;">
+    <div id="modal-title" style="font-family:'Cinzel',serif;font-size:15px;color:#e8c97a;margin-bottom:10px;"></div>
+    <div id="modal-msg" style="font-size:13px;color:#9a9080;margin-bottom:22px;line-height:1.6;"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="mb" onclick="modalConfirm()" id="modal-ok" style="padding:8px 22px;font-size:12px;">Confirm</button>
+      <button class="mb" onclick="modalCancel()" style="padding:8px 22px;font-size:12px;">Cancel</button>
     </div>
   </div>
 </div>
-
-<!-- Delete Season Confirm -->
-<div class="modal-overlay" id="deleteSeasonModal">
-  <div class="modal">
-    <h3>Delete Season</h3>
-    <p class="modal-body-text" id="deleteSeasonText"></p>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('deleteSeasonModal')">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmDeleteSeason()">Delete Season &amp; All Builds</button>
-    </div>
-  </div>
+<div id="tip">
+  <div class="tn" id="tN"></div>
+  <div class="tgs" id="tT"></div>
+  <div class="tr"  id="tR"></div>
+  <div class="td"  id="tD"></div>
+  <div class="tc"  id="tC"></div>
+  <div class="th"  id="tH"></div>
 </div>
+<script>
+const D2R=Math.PI/180;
+const SZ={active:50,ultimate:56,passive:26,upgrade:20,key:116};
+const SECTION_REQ={basic:0,core:1,aura:2,valor:11,justice:16,ultimate:23,keys:33};
 
-<!-- Add Build Modal -->
-<div class="modal-overlay" id="addBuildModal">
-  <div class="modal modal-wide">
-    <h3>Add Build</h3>
-    <div class="field">
-      <label>Build URL</label>
-      <div class="url-input-row">
-        <input type="text" id="buildUrl" placeholder="Paste a D4Builds, Maxroll, or Mobalytics URL..." oninput="detectBuildSite(this.value)"/>
-        <div class="site-pill hidden" id="buildSitePill"></div>
-      </div>
-    </div>
-    <div class="field">
-      <label>Build Name <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(you can rename later)</span></label>
-      <input type="text" id="buildNameInput" placeholder="e.g. Blight Corpse Necro"/>
-    </div>
-    <div class="field">
-      <label>Class</label>
-      <select id="buildClassInput">
-        <option>Barbarian</option><option>Druid</option><option>Necromancer</option>
-        <option>Rogue</option><option>Sorcerer</option><option>Spiritborn</option><option>Paladin</option>
-      </select>
-    </div>
-    <div class="import-status hidden" id="importStatus"></div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('addBuildModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="addBuild()">Import &amp; Add Build</button>
-    </div>
-  </div>
-</div>
+// Passive color — consistent brownish neutral
+const PASSCOL={fill:'#1a1208',border:'#907040',node:'#b08850'};
 
-<!-- Rename Build Modal -->
-<div class="modal-overlay" id="renameBuildModal">
-  <div class="modal">
-    <h3>Rename Build</h3>
-    <div class="field">
-      <label>New Name</label>
-      <input type="text" id="renameInput" onkeydown="if(event.key==='Enter')confirmRename()"/>
-    </div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('renameBuildModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmRename()">Rename</button>
-    </div>
-  </div>
-</div>
+// Section colors — medium brightness, icon-representative
+const COL={
+  basic:   {fill:'#221808',border:'#c89038',node:'#d4a048'},
+  core:    {fill:'#1e1a06',border:'#c8a028',node:'#d4b038'},
+  aura:    {fill:'#221408',border:'#c86828',node:'#d47838'},
+  valor:   {fill:'#0a1c0a',border:'#4a9840',node:'#5ab050'},
+  justice: {fill:'#180828',border:'#9040c0',node:'#a858d8'},
+  ultimate:{fill:'#260808',border:'#c03535',node:'#d04545'},
+  keys:    {fill:'#2e0606',border:'#d03535',node:'#e04545'},
+};
 
-<!-- Add Paragon Board Modal -->
-<div class="modal-overlay" id="addBoardModal">
-  <div class="modal">
-    <h3>Add Paragon Board</h3>
-    <div class="field">
-      <label>Board</label>
-      <select id="boardSelect"></select>
-    </div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('addBoardModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmAddBoard()">Add Board</button>
-    </div>
-  </div>
-</div>
+const H={
+  basic:   {x:780, y:480},
+  core:    {x:460, y:1020},
+  aura:    {x:960, y:1580},
+  valor:   {x:460, y:2140},
+  justice: {x:960, y:2700},
+  ultimate:{x:460, y:3260},
+  keys:    {x:780, y:3820},
+};
 
-<!-- Skill Tree Upload -->
-<div class="modal-overlay" id="skillImageModal">
-  <div class="modal modal-wide">
-    <h3>Skill Tree Image</h3>
-    <p class="modal-body-text">Paste an image URL or drag &amp; drop a screenshot below.</p>
-    <div class="field">
-      <label>Image URL</label>
-      <input type="text" id="skillImageUrl" placeholder="https://..."/>
-    </div>
-    <div class="drop-zone" id="skillDropZone">
-      <span>Drag &amp; drop screenshot here</span>
-    </div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('skillImageModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="setSkillImage()">Set Image</button>
-    </div>
-  </div>
-</div>
+const ARM=240, UPG=85, UPC=68, PAR=170, PPC=95;
 
-<!-- Delete Build Confirm -->
-<div class="modal-overlay" id="deleteBuildModal">
-  <div class="modal">
-    <h3>Delete Build</h3>
-    <p class="modal-body-text" id="deleteBuildText"></p>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('deleteBuildModal')">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmDeleteBuild()">Delete Build</button>
-    </div>
-  </div>
-</div>
+// Find intersection point on diamond edge between point (x1,y1) and diamond center (dx,dy)
+function diamondEdge(x1,y1,dx,dy,h){
+  const ax=x1-dx, ay=y1-dy;
+  if(ax===0&&ay===0) return {x:dx,y:dy};
+  // Diamond edge: |x|/h + |y|/h = 1 → |x|+|y| = h
+  // Parametric: x=ax*t, y=ay*t, find t where |ax*t|+|ay*t|=h
+  const t = h / (Math.abs(ax)+Math.abs(ay));
+  return {x:dx+ax*t, y:dy+ay*t};
+}
+function P(cx,cy,r,deg){const a=(deg-90)*D2R;return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
 
-<script src="js/auth.js"></script>
-<script src="js/app.js"></script>
-<script src="js/seasons.js"></script>
-<script src="js/builds.js"></script>
-<script src="js/paragon.js"></script>
-<script src="js/parsers.js"></script>
+const N=[];
+
+function act(sec,id,name,isUlt,deg,mr,tags,desc,cd,extra,upgs,skillCol){
+  const secC=COL[sec];
+  const c=skillCol?{fill:skillCol.fill,border:skillCol.border,node:skillCol.node}:secC;
+  const hub=H[sec],p=P(hub.x,hub.y,ARM,deg);
+  N.push({id,name,type:isUlt?'ultimate':'active',maxRank:mr,x:p.x,y:p.y,sec,parentId:null,c,tags,desc,cooldown:cd,charges:extra?.ch,chargeCd:extra?.ccd});
+  if(!upgs?.length)return;
+  // Enhanced goes straight out from active in same direction
+  const e=upgs[0],ep=P(p.x,p.y,UPG,deg);
+  N.push({id:e.id,name:e.name,type:'upgrade',maxRank:1,x:ep.x,y:ep.y,sec,parentId:id,c,tags:[],desc:e.desc});
+  // Three choices all branch off Enhanced
+  // They fan out perpendicular to the arm direction (left, straight, right of outward)
+  // This ensures nothing crosses back over the spine
+  const perp = 32; // angular spread for choices
+  if(e.ca){const ca=P(ep.x,ep.y,UPC,deg-perp);N.push({id:e.ca.id,name:e.ca.name,type:'upgrade',maxRank:1,x:ca.x,y:ca.y,sec,parentId:e.id,c,tags:[],desc:e.ca.desc});}
+  if(e.cb){const cb=P(ep.x,ep.y,UPC,deg);N.push({id:e.cb.id,name:e.cb.name,type:'upgrade',maxRank:1,x:cb.x,y:cb.y,sec,parentId:e.id,c,tags:[],desc:e.cb.desc});}
+  if(e.cc){const cc=P(ep.x,ep.y,UPC,deg+perp);N.push({id:e.cc.id,name:e.cc.name,type:'upgrade',maxRank:1,x:cc.x,y:cc.y,sec,parentId:e.id,c,tags:[],desc:e.cc.desc});}
+}
+
+// LEFT hubs (core,valor,ultimate) at x~420: passives go RIGHT toward spine
+// RIGHT hubs (aura,justice) at x~900: passives go LEFT toward spine
+// keys hub: no passives
+// Passive positioning uses fixed dx/dy offsets, not polar angles
+// This ensures they never cross the spine
+function pass(sec,items){
+  const c=COL[sec],hub=H[sec];
+  const isLeft = hub.x < 600;
+  const dir = isLeft ? 1 : -1;
+  for(const it of items){
+    let x,y;
+    // Absolute position override
+    if(it.ax !== undefined){ x=it.ax; y=it.ay; }
+    else if(!it.parentId){
+      if(it.deg !== undefined){
+        const pos = P(hub.x,hub.y,it.pDist||PAR,it.deg);
+        x=pos.x; y=pos.y;
+      } else {
+        x = hub.x + dir*(it.dx??PAR);
+        y = hub.y + (it.dy??0);
+      }
+    } else {
+      const par=N.find(n=>n.id===it.parentId);
+      if(!par){x=hub.x;y=hub.y;}
+      else if(it.deg !== undefined){
+        const pos = P(par.x,par.y,it.pDist||PPC,it.deg);
+        x=pos.x; y=pos.y;
+      } else {
+        x = par.x + dir*(it.dx??PPC);
+        y = par.y + (it.dy??0);
+      }
+    }
+    N.push({id:it.id,name:it.name,type:'passive',maxRank:it.mr||3,x,y,sec,parentId:it.parentId||null,altParentId:it.altParentId||null,c:PASSCOL,tags:[],desc:it.desc,extraLine:it.extraLine||null});
+  }
+}
+
+// ── BASIC (CW, top hub, no passives) ──────────────────────────────
+act('basic','brandish','Brandish',false,330,5,['Juggernaut'],'Brandish the Light, unleashing an arc that deals 105% damage.',null,null,[
+  {id:'br-enh',name:'Enhanced Brandish',desc:'Brandish now pierces.',ca:{id:'br-ret',name:'Returning Light',desc:"Brandish's light returns dealing 52% damage."},cb:{id:'br-swd',name:'Sword of Mastery',desc:'While Healthy, Brandish deals 128% damage and travels 100% faster.'},cc:{id:'br-crs',name:'Cross Strike',desc:'Brandish unleashes 2 additional arcs dealing 120% damage, applying Vulnerable.'}},
+],{fill:"#1a1408",border:"#c8a830",node:"#e0c040"});
+act('basic','holybolt','Holy Bolt',false,30,5,['Judicator'],'Throw a Holy hammer, dealing 126% damage.',null,null,[
+  {id:'hb-enh',name:'Enhanced Holy Bolt',desc:'Holy Bolt now applies Judgement.',ca:{id:'hb-ric',name:'Ricocheting Bolt',desc:'Holy Bolt deals 135% damage and ricochets 3 times.'},cb:{id:'hb-div',name:'Divine Bolt',desc:'Holy Bolt becomes a Disciple Skill, pierces, deals 120% damage, applies Vulnerable.'},cc:{id:'hb-str',name:'Storm Bolt',desc:'Holy Bolt becomes a Justice Skill dealing 315% damage and Stunning for 2 seconds.'}},
+],{fill:"#0a1020",border:"#4080d0",node:"#60a0e8"});
+act('basic','clash','Clash',false,90,5,['Juggernaut'],"Strike an enemy with your weapon and shield, dealing 161% damage.",null,null,[
+  {id:'cl-enh',name:'Enhanced Clash',desc:"Whenever you cast Clash, gain Crusader's March for 6 seconds.",ca:{id:'cl-pun',name:'Punishment',desc:"Emboldened during Crusader's March: 30% Retribution, 3 Thorns, x20% Thorns damage."},cb:{id:'cl-ski',name:'Skirmish',desc:'Clash becomes a Zealot Skill, cleaving in an area for 155% damage.'},cc:{id:'cl-sei',name:'Seize Them',desc:'Resolve empowers Clash, x8% increased damage per stack. Every 3rd strike, enemies are Pulled in.'}},
+],{fill:"#181008",border:"#b07030",node:"#c88040"});
+act('basic','advance','Advance',false,130,5,['Zealot','Mobility'],'Advance forward with your weapon, dealing 147% damage.',null,null,[
+  {id:'ad-enh',name:'Enhanced Advance',desc:'Casting Advance grants Unhindered for 2 seconds.',ca:{id:'ad-van',name:"Vanguard's Rush",desc:'Advance rushes into enemies, granting 1 Fervor on each strike.'},cb:{id:'ad-wav',name:'Wave Dash',desc:'Advance becomes a Juggernaut Skill, waves out dealing 136% damage.'},cc:{id:'ad-fla',name:'Flash of the Blade',desc:'Advance becomes a Disciple Skill with 10s cooldown, dealing 230% damage and applying Vulnerable.'}},
+],{fill:"#100810",border:"#9060b0",node:"#a870c8"});
+
+// ── CORE (CCW, left hub) ───────────────────────────────────────────
+// Passives: 3 direct to hub (45°,90°,135°), middle (EnGuarde@90°) has Riposte+Parry off it
+act('core','zeal','Zeal',false,350,5,['Zealot'],'Strike with blinding speed, dealing 112% damage followed by 3 strikes dealing 28% each.',null,null,[
+  {id:'ze-enh',name:'Enhanced Zeal',desc:'Zeal gains 2 additional strikes.',ca:{id:'ze-cul',name:'Cull the Wicked',desc:"Zeal's cleave is larger, 2 additional strikes, x25% damage to Weakened."},cb:{id:'ze-dog',name:'Death or Glory',desc:'Zeal costs x10% Maximum Life instead of Faith, strikes around you in a circle.'},cc:{id:'ze-leg',name:"Zealot's Legacy",desc:'Zeal extends its assault, seeking surrounding enemies and striking 4 additional times.'}},
+],{fill:"#180a08",border:"#c04020",node:"#d05030"});
+act('core','bshield','Blessed Shield',false,300,5,['Judicator'],'Bless and hurl your shield dealing 302% damage ricocheting up to 3 times.',null,null,[
+  {id:'bs-enh',name:'Enhanced Blessed Shield',desc:'Blessed Shield deals 1% additional damage for each Armor on your shield.',ca:{id:'bs-jus',name:'Shield of Justice',desc:'Blessed Shield detonates Judgement and ricochets 5 additional times.'},cb:{id:'bs-rev',name:'Shield of the Revenant',desc:'Blessed Shield boomerangs and pierces, dealing 270% damage.'},cc:{id:'bs-ret',name:'Shield of Retribution',desc:'Blessed Shield becomes a Juggernaut Skill, pulsing Thorns damage before bursting for 378%.'}},
+],{fill:"#101810",border:"#50a050",node:"#60c060"});
+act('core','bhammer','Blessed Hammer',false,260,5,['Judicator'],'Throw a Blessed Hammer that spirals out dealing 161% damage.',null,null,[
+  {id:'bh-enh',name:'Enhanced Blessed Hammer',desc:'Blessed Hammer now hits enemies multiple times.',ca:{id:'bh-sht',name:'Shattering Blow',desc:'Blessed Hammer deals 115% and shatters into 3 small explosions on impact.'},cb:{id:'bh-dis',name:"Disciple's Halo",desc:'Becomes a Disciple Skill orbiting around you.'},cc:{id:'bh-mor',name:'Mortar Combat',desc:'Blessed Hammer mortars 3 hammers to the ground, dealing 67% damage in an area.'}},
+],{fill:"#101808",border:"#80a030",node:"#90b840"});
+act('core','dlance','Divine Lance',false,220,5,['Disciple','Mobility'],'Impale enemies with a heavenly lance, stabbing 2 times for 126% damage each.',null,null,[
+  {id:'dl-enh',name:'Enhanced Divine Lance',desc:"Divine Lance's damage increased by 30% of your Movement Speed bonus.",ca:{id:'dl-tip',name:'Tip of the Spear',desc:'Divine Lance flurries, stabbing 2 additional times.'},cb:{id:'dl-jou',name:'Zealous Joust',desc:'Becomes a Zealot Skill, stabbing with 2 additional spears.'},cc:{id:'dl-jav',name:'Divine Javelin',desc:'Throw Divine Lance, dealing 90% damage to first enemy and bursting for 450%.'}},
+],{fill:"#08101a",border:"#3070c0",node:"#4080d8"});
+act('core','sbash','Shield Bash',false,180,5,['Mobility','Juggernaut'],'Charge at an enemy and bash in front of you, dealing 287% damage.',null,null,[
+  {id:'sb-enh',name:'Enhanced Shield Bash',desc:'Hits with Shield Bash count as Blocks.',ca:{id:'sb-bre',name:'Breach',desc:'Shield Bash grants 10% Retribution Chance for 5 seconds, stacking up to 5 times.'},cb:{id:'sb-smi',name:'Smite',desc:'Shield Bash smites first enemy hit, dealing 287% damage and Stunning for 1 second.'},cc:{id:'sb-lay',name:'Lay Siege',desc:'Whenever you have Resolve, Shield Bash increases impact size by x50% and deals 246% damage.'}},
+],{fill:"#181008",border:"#b06020",node:"#c87030"});
+pass('core',[
+  {id:'piety',     name:'Piety',      mr:3,parentId:null,       dx:140,dy:-70, desc:'Your Maximum Faith is increased by 15.'},
+  {id:'en-guarde', name:'En Guarde',  mr:3,parentId:null,       dx:140,dy:0,    desc:'You gain +30% Armor and +15% Block Chance.'},
+  {id:'discipline',name:'Discipline', mr:3,parentId:null,       dx:140,dy:70,  desc:'Your Core Skills deal x18% increased damage.'},
+  {id:'parry',     name:'Parry',      mr:3,parentId:'en-guarde',dx:100,dy:-35,  desc:'Blocking restores 3 Faith.'},
+  {id:'riposte',   name:'Riposte',    mr:3,parentId:'en-guarde',dx:100,dy:35,   desc:'Blocking grants you 18% damage for 5 seconds.'},
+]);
+
+// ── AURA (CW, right hub) ───────────────────────────────────────────
+// Passives LEFT: 3 direct to hub (240°,270°,310°), middle (Longevity@270°) has Anointing+Renewal
+act('aura','fan-aura','Fanaticism Aura',false,350,5,['Zealot'],'Passive: Spending Faith grants +7% Attack Speed. Active: Weaken all Nearby enemies.',15,null,[
+  {id:'fa-enh',name:'Enhanced Fanaticism Aura',desc:"Passive also grants 10% Maximum Resource.",ca:{id:'fa-ven',name:'Rite of Vengeance',desc:"Passive increases Critical Strike Damage by x15%. Critical Strikes trigger Fanaticism's Passive."},cb:{id:'fa-hum',name:'Rite of Humility',desc:"Active instead makes Nearby enemies Vulnerable for 4 seconds."},cc:{id:'fa-red',name:'Rite of Redemption',desc:'Weakened enemies who die within radius Heal you for 0.5% and Fortify for 1% Maximum Life.'}},
+],{fill:"#181808",border:"#c0a020",node:"#d8b830"});
+act('aura','def-aura','Defiance Aura',false,80,5,['Defensive','Juggernaut'],"Passive: Grants you and allies 42% Armor and 42% All Resistances. Active: Become Unstoppable for 2 seconds.",20,null,[
+  {id:'da-enh',name:'Enhanced Defiance Aura',desc:"Passive also grants 10% Maximum Life.",ca:{id:'da-mig',name:'Rite of Might',desc:'Increases your damage by x10% for 4 seconds whenever you gain Resolve.'},cb:{id:'da-pra',name:'Rite of Prayer',desc:'Passive Heals you and allies for 2% Maximum Life per second.'},cc:{id:'da-tho',name:'Rite of Thorns',desc:'Grants 3 Thorns and increases Thorns damage by x75%. Active releases a nova of Thorns damage.'}},
+],{fill:"#080818",border:"#3050c0",node:"#4060d8"});
+act('aura','hla','Holy Light Aura',false,160,5,['Judicator'],"Passive: You and allies deal 126% damage every 2 seconds to 3 random Nearby enemies. Active: Unleash 2 bolts of light dealing 448% Holy damage.",25,null,[
+  {id:'hl-enh',name:'Enhanced Holy Light Aura',desc:"Holy Light's passive now targets 2 additional enemies.",ca:{id:'hl-jud',name:'Rite of Judgement',desc:"Holy Light's active instead Judges enemies and Cooldown is reduced per rank."},cb:{id:'hl-mer',name:'Rite of Mercy',desc:"Holy Light's active chains 2 more times and Fortifies you and allies for 4% Maximum Life."},cc:{id:'hl-sub',name:'Rite of Submission',desc:"Holy Light's active now Stuns enemies for 3 seconds and deals 182% damage."}},
+],{fill:"#181010",border:"#c03030",node:"#d84040"});
+pass('aura',[
+  {id:'longevity',name:'Longevity',mr:3,parentId:null,       dx:140,dy:0,   desc:'You gain +30% Healing received.'},
+  {id:'renewal',  name:'Renewal',  mr:3,parentId:'longevity',dx:100,dy:-40, desc:'Blocking Fortifies you for 1.5% of your Maximum Life.'},
+  {id:'anointing',name:'Anointing',mr:3,parentId:'longevity',dx:100,dy:40,  desc:'Your allies Heal for +33% of the Healing you receive.'},
+]);
+
+// ── VALOR (CCW, left hub) ──────────────────────────────────────────
+// Passives RIGHT: 3 direct to hub (50°,90°,135°), middle (Resolute@90°) has Conviction+Attenuate
+act('valor','sc','Shield Charge',false,350,5,['Mobility','Juggernaut'],'Charge with your shield pushing enemies Back, granting 14% Damage Reduction and dealing 126% damage.',10,null,[
+  {id:'sc-enh',name:'Enhanced Shield Charge',desc:'Shield Charge grants 1 Resolve whenever it hits an enemy.',ca:{id:'sc-rel',name:'Relentless Charge',desc:'Shield Charge becomes a Core Skill costing 20 Faith plus 1 Faith per second.'},cb:{id:'sc-vir',name:'Virtuous Charge',desc:'Shield Charge becomes a Judicator Skill consuming Judgement on impact.'},cc:{id:'sc-pha',name:'Phalanx Charge',desc:'Shield Charge surges forward in a wave of energy Knocking enemies Back, dealing 157% damage.'}},
+],{fill:"#101818",border:"#30a0a0",node:"#40b8b8"});
+act('valor','aegis','Aegis',false,300,5,['Defensive','Juggernaut'],'Surround yourself with shields of the Light, Taunting Close enemies and gaining 100% Block Chance for 4 seconds.',16,null,[
+  {id:'ag-enh',name:'Enhanced Aegis',desc:'Casting Aegis grants Unstoppable for 4 seconds.',ca:{id:'ag-res',name:'Stay Resolute',desc:'Passive: Gaining or spending Resolve has 4% chance to trigger a free Aegis.'},cb:{id:'ag-fai',name:'Faith Is My Shield',desc:'Aegis now applies Judgement instead of Taunting enemies.'},cc:{id:'ag-imp',name:'Impunity',desc:'While Aegis is active, you gain 40% Thorns and Retribution Chance.'}},
+],{fill:"#101018",border:"#5050c0",node:"#6060d8"});
+act('valor','fstar','Falling Star',false,240,5,['Disciple','Mobility'],'Soar into the air and dive down, dealing 112% on liftoff and 336% damage on impact.',12,null,[
+  {id:'fs-enh',name:'Enhanced Falling Star',desc:'Killing a Vulnerable enemy reduces Falling Star cooldown by 1 second.',ca:{id:'fs-fre',name:'Freefall',desc:'Falling Star has 1 additional charge.'},cb:{id:'fs-fan',name:'Fanatic Descent',desc:'Becomes a Zealot skill, dealing 560% damage on landing and Weakening enemies for 4 seconds.'},cc:{id:'fs-ftl',name:'Faster Than Light',desc:'Falling Star cuts through the battlefield, creating a fissure dealing 180% damage before erupting for 60%.'}},
+],{fill:"#080818",border:"#4040d0",node:"#5050e8"});
+act('valor','rally','Rally',false,180,5,['Zealot'],'Rally forth, gaining 20% Movement Speed for 8 seconds and generating 30 Faith.',null,{ch:3,ccd:16},[
+  {id:'ra-enh',name:'Enhanced Rally',desc:'Rally increases Movement Speed by additional 10% and generates 5 additional Faith.',ca:{id:'ra-sac',name:'Words of Sacrifice',desc:'Rally now costs 15% of your Maximum Life and can stack.'},cb:{id:'ra-ins',name:'Words of Inspiration',desc:'Rally spends all Charges, reducing all active Justice Skill Cooldowns by 3 seconds per Charge.'},cc:{id:'ra-rej',name:'Words of Rejuvenation',desc:'Rally generates 20 more Faith and gains 1 additional Charge.'}},
+],{fill:"#181808",border:"#a0a020",node:"#c0c030"});
+pass('valor',[
+  // OUTSIDE LEFT: true diamond
+  // Resolute connects to hub
+  {id:'resolute',  name:'Resolute',    mr:3,parentId:null,       dx:-210,dy:0,  desc:'Gaining a stack of Resolve Heals for 1.5% of your Maximum Life.'},
+  // Conviction and Attenuate both connect to Resolute
+  {id:'conviction',name:'Conviction',  mr:3,parentId:'resolute', dx:-80, dy:-55,desc:'Gain +0.9% Attack Speed for each stack of Resolve, up to 9%.'},
+  {id:'attenuate', name:'Attenuate',   mr:3,parentId:'resolute', dx:-80, dy:55, desc:'Gain +3% Resource Cost Reduction for every stack of Resolve, up to 15%.'},
+  // Courage connects to Conviction (parentId), but also visually to Attenuate (extraLine)
+  {id:'courage',   name:'Courage',     mr:3,parentId:'conviction',altParentId:'attenuate',dx:-80,dy:55, desc:'You gain 1 Resolve every 5 seconds an Elite enemy is Nearby.',extraLine:'attenuate'},
+  // INSIDE RIGHT: 2 hub-connected, each with 1 child
+  {id:'thorns-t',  name:'Thorns',      mr:3,parentId:null,       dx:140,dy:-60, desc:'Gain Thorns and your total Thorns damage is increased by x45%.'},
+  {id:'repentance',name:'Repentance',  mr:3,parentId:'thorns-t', dx:100,dy:-35, desc:'Gain +18% Retribution chance.'},
+  {id:'best-off',  name:'Best Offense',mr:3,parentId:null,       dx:140,dy:60,  desc:'You deal x18% increased damage while Fortified.'},
+  {id:'fortitude', name:'Fortitude',   mr:3,parentId:'best-off', dx:100,dy:35,  desc:'Gain x18% Critical Strike Damage while Fortified.'},
+]);
+
+// ── JUSTICE (CW, right hub) ────────────────────────────────────────
+// Passives LEFT: 3 direct to hub (240°,270°,310°), middle has 2 children
+act('justice','purify','Purify',false,350,5,['Defensive','Judicator'],'Enshroud your enemies in the Light, Dazing them for 2 seconds.',10,null,[
+  {id:'pu-enh',name:'Enhanced Purify',desc:'Purify generates 10 Faith for each enemy affected.',ca:{id:'pu-sen',name:'Sentence',desc:'Purify also Judges enemies and cooldown is reduced by 4 seconds.'},cb:{id:'pu-sur',name:'Surrender',desc:'Purify now Stuns for 4 seconds.'},cc:{id:'pu-abs',name:'Absolution',desc:'Purify deals 380% damage and Weakens enemies for 4 seconds.'}},
+],{fill:"#180818",border:"#c040c0",node:"#d850d8"});
+act('justice','consec','Consecration',false,65,5,['Defensive','Judicator'],'Bathe in the Light for 6 seconds, Healing for 5.6% Maximum Life per second and dealing 105% damage per second.',18,null,[
+  {id:'co-enh',name:'Enhanced Consecration',desc:'While inside Consecration, you and allies deal x15% additional damage.',ca:{id:'co-hal',name:'Hallowed Ground',desc:"Consecration's size is increased and lasts 4 seconds longer. Enemies within are Weakened."},cb:{id:'co-bas',name:'Bastion',desc:'Consecration Immobilizes enemies and can be cast anywhere.'},cc:{id:'co-san',name:'Sanctify',desc:'Consecration lasts 3 seconds increasing damage and Healing by 20% each second, then detonates.'}},
+],{fill:"#181408",border:"#c0a030",node:"#d8b840"});
+act('justice','condemn','Condemn',false,105,5,['Disciple'],'Harness the Light and Pull enemies in after 1.5 seconds, briefly Stunning them and dealing 336% damage.',15,null,[
+  {id:'cn-enh',name:'Enhanced Condemn',desc:'While Casting Condemn, become Unhindered for 1.5 seconds.',ca:{id:'cn-gui',name:'Gather the Guilty',desc:'Condemn now has 1 additional Charge and applies Vulnerable for 4 seconds.'},cb:{id:'cn-ato',name:'Atonement',desc:'Condemn Casts significantly faster instead of Pulling enemies in, dealing 420% damage.'},cc:{id:'cn-she',name:'Shepard the Flock',desc:'Condemn marks all enemies and drags them to your location after it Casts.'}},
+],{fill:"#080818",border:"#4060d0",node:"#5070e8"});
+act('justice','sph','Spear of the Heavens',false,175,5,['Judicator'],'Rain down 4 heavenly spears dealing 224% damage and Knocking Down for 1.5 seconds. After 1.5 seconds spears burst for 168%.',14,null,[
+  {id:'sp-enh',name:'Enhanced Spear',desc:'Consuming Judgement reduces Spear of the Heavens cooldown by 0.5 seconds.',ca:{id:'sp-pro',name:'Pronouncement of Heaven',desc:'First spear gains permanent Judgement mark dealing 120% damage per second for 8 seconds.'},cb:{id:'sp-par',name:'Part the Heavens',desc:'Spear of the Heavens now drops 8 spears along the path toward your target.'},cc:{id:'sp-fis',name:'Fist of the Heavens',desc:'Becomes a Core Skill. Pure Holy energy crashes from the sky dealing 386% damage breaking into 5 projectiles.'}},
+],{fill:"#181008",border:"#d08020",node:"#e09030"});
+pass('justice',[
+  // UPPER-RIGHT OUTSIDE: Crack the Armor→High Charity between Purify(350°) and Consecration(65°)
+  {id:'crack',      name:'Crack the Armor',mr:3,parentId:null,        deg:20,        desc:'You deal x18% increased damage to Vulnerable enemies.'},
+  {id:'high-char',  name:'High Charity',   mr:3,parentId:'crack',     deg:20,        desc:'You gain 12% Cooldown Reduction.'},
+  // LEFT INSIDE: two pairs toward spine
+  {id:'righteous',  name:'Righteousness',  mr:3,parentId:null,        dx:140,dy:-45, desc:'You deal x18% increased Holy and Fire damage.'},
+  {id:'leave-luck2',name:'Leave Luck',     mr:3,parentId:'righteous', dx:95, dy:-30, desc:'You gain 9% Lucky Hit Chance.'},
+  {id:'pacify',     name:'Pacify',         mr:3,parentId:null,        dx:140,dy:45,  desc:'You gain +45% increased Crowd Control duration.'},
+  {id:'dizzying',   name:'Dizzying Blow',  mr:3,parentId:'pacify',    dx:95, dy:30,  desc:'You deal x21% increased damage to Crowd Controlled enemies.'},
+  // UPPER-RIGHT: pair between Purify(350) and Consecration(50) → ~20°  (removed - crack moved to left)
+
+  // LOWER-RIGHT: diamond — Iron Sharpens→hub, Break+Press→Iron, Heavyweight→both (OR)
+  {id:'iron-sh',    name:'Iron Sharpens Iron', mr:3,parentId:null,         ax:1153,ay:2930, desc:'You gain +18% Critical Strike Damage.'},
+  {id:'break-ln',   name:'Break the Line',     mr:3,parentId:'iron-sh',    ax:1237,ay:2937, desc:'+6% Critical Strike Chance and x15% increased Damage to Weakened enemies.'},
+  {id:'press-adv',  name:'Press Advantage',    mr:3,parentId:'iron-sh',    ax:1145,ay:3014, desc:'Critically Striking grants you 9% Damage Reduction for 5 seconds.'},
+  {id:'heavyweight',name:'Heavyweight',         mr:3,parentId:'break-ln',altParentId:'press-adv',ax:1230,ay:3022, desc:'You deal x18% Critical Strike Damage while Healthy.',extraLine:'press-adv'},
+]);
+
+// ── ULTIMATE (CCW, left hub) ───────────────────────────────────────
+// Passives RIGHT: 3 direct to hub (50°,90°,130°), middle has 2 children
+act('ultimate','hfury',"Heaven's Fury",true,350,5,['Judicator'],"Grasp the Light, dealing 200% damage per second before releasing it to seek Nearby enemies dealing 126% damage per hit for 7 seconds.",30,null,[
+  {id:'hf-enh',name:"Enhanced Heaven's Fury",desc:"Heaven's Fury's light Judges enemies.",ca:{id:'hf-fin',name:'Final Justice',desc:"Heaven's Fury can Cast anywhere, concentrating as it grows and Pulls enemies in before erupting for 1,260% damage."},cb:{id:'hf-wal',name:'Walk With The Light',desc:"Heaven's Fury splits into 5 orbiting beams, dealing 78% damage each hit for 7 seconds."},cc:{id:'hf-tri',name:'Triplicate',desc:"Heaven's Fury splits into 3 beams, dealing 36% damage each hit for 7 seconds."}},
+],{fill:"#1a1808",border:"#d0a820",node:"#e8c030"});
+act('ultimate','fortress','Fortress',true,300,5,['Defensive','Juggernaut'],'Make your stand, becoming Immune for 3 seconds and create a defensive area for 13.5 seconds. Standing in Fortress grants you and allies 2 Resolve stacks every 0.5 seconds.',60,null,[
+  {id:'fo-enh',name:'Enhanced Fortress',desc:"While inside Fortress your Skills are free to Cast and you gain x4% damage per stack of Resolve.",ca:{id:'fo-ent',name:'Entrench',desc:"While inside of Fortress your Life cannot be reduced below 1."},cb:{id:'fo-bar',name:'Barricade',desc:'Killing enemies inside Fortress extends its duration by 0.5 seconds up to 20 seconds.'},cc:{id:'fo-ram',name:'Rampart of Thorns',desc:'Enemies inside Fortress are Slowed by 50% and take 500% of your Thorns damage per second.'}},
+],{fill:"#081018",border:"#4090c0",node:"#50a8d8"});
+act('ultimate','zenith','Zenith',true,240,5,['Zealot'],'Summon a divine sword that cleaves the battlefield for 630% damage. Casting Zenith again cuts through for 560% damage and Knocks Down enemies for 2 seconds.',25,null,[
+  {id:'zn-enh',name:'Enhanced Zenith',desc:'While Zenith is active, you are Unstoppable.',ca:{id:'zn-emp',name:'Empyrean Edge',desc:'Zenith is now also a Mobility Skill that Dashes to enemies, Weakens them, gains 25% Critical Strike Chance.'},cb:{id:'zn-ser',name:'Sermon of Steel',desc:'Zenith unleashes your wrath and can be cast indefinitely for 4 seconds before starting its Cooldown.'},cc:{id:'zn-sun',name:'Sunder',desc:'Zenith sunders a rift, Knocking Down enemies and dealing 900% damage. After 1 second the rift detonates for 675%.'}},
+],{fill:"#180c08",border:"#c05020",node:"#d86030"});
+act('ultimate','arbiter','Arbiter of Justice',true,185,5,['Disciple','Mobility'],'Ascend to the heavens and crash upon the battlefield as an Arbiter for 20 seconds, dealing 840% damage upon landing.',98,null,[
+  {id:'ar-enh',name:'Enhanced Arbiter',desc:"Arbiter form's Wing Strikes recast time is reduced by 0.5 seconds.",ca:{id:'ar-div',name:'Divine Intervention',desc:'Ascends for 2 extra seconds and rains 10 additional Blessed Spears on landing.'},cb:{id:'ar-rea',name:'Reach of the Law',desc:"Arbiter's Wing Strikes now apply Judgement to enemies."},cc:{id:'ar-ser',name:"Seraph's Wings",desc:'Arbiter form gains 100% Movement Speed, Wing Strikes deal x200% increased damage, makes Nearby enemies Vulnerable.'}},
+],{fill:"#081410",border:"#30a070",node:"#40c088"});
+pass('ultimate',[
+  // LEFT OUTSIDE: 3 passives in Y-shape between Fortress(300°) and Zenith(240°) → ~270°
+  {id:'shin-arm', name:'Shining Armor',   mr:3,parentId:null,       deg:270,pDist:270,desc:'Unique Weapon/Shield: x15% Damage. Unique Helmet/Chest/Pants: +15% Armor.'},
+  {id:'sacred-ar',name:'Sacred Arms',     mr:3,parentId:'shin-arm', deg:235,desc:'Two Handed: x15% Critical Strike Damage. One Handed and Shield: 15% chance to ignore damage.'},
+  {id:'giant-sl', name:'Giant Slayer',    mr:3,parentId:'shin-arm', deg:305,desc:'You deal x15% increased damage to Elites and x24% to Healthy enemies.'},
+  // RIGHT INSIDE: 2 passives in chain toward spine
+  {id:'mast-cft', name:'Master Craftwork',mr:3,parentId:null,       dx:140,dy:0,  desc:"Your Armor is increased by 150% of your Shield's Block Chance."},
+  {id:'shake-off',name:'Shake It Off',    mr:3,parentId:'mast-cft', dx:95, dy:-35,desc:'You have 24% chance to become Unstoppable for 1 second after being hit by a Crowd Control Effect.'},
+]);
+
+// ── KEY PASSIVES ───────────────────────────────────────────────────
+const kh=H.keys, KR=ARM*0.75;
+[
+  {id:'kp-zealot',   name:'Coat of Arms',deg:270,col:{fill:"#1a1408",border:"#c8a020",node:"#e0b830"},desc:"Your damage is increased by 75% of your Armor Percent and 50% of your Block Chance."},
+  {id:'kp-jugg',     name:'Judgement Day',deg:90, col:{fill:"#181008",border:"#b06020",node:"#c87030"},desc:"Consuming Judgement increases your damage by x6% for 5 seconds, up to x90%. Judgement now spreads to nearby targets."},
+  {id:'kp-judic',    name:'Exaltation', deg:150,col:{fill:"#100818",border:"#8040c0",node:"#9850d8"},desc:"During Arbiter your damage is increased by x85% and Wing Strikes strike 1 additional time."},
+  {id:'kp-disc',     name:'Path of the Penitent',deg:210,col:{fill:"#081410",border:"#30a070",node:"#40c088"},desc:"Zealot Skills cost 100% more Faith, but grants all Skills +6% Resource Cost Reduction and x10% increased damage, up to 10 times."}
+].forEach(k=>{const p=P(kh.x,kh.y,KR,k.deg);N.push({id:k.id,name:k.name,type:'key-passive',maxRank:1,x:p.x,y:p.y,sec:'keys',parentId:null,c:k.col,tags:['Key Passive'],desc:k.desc});});
+
+// ══════════════════════════════════════════════════════════════════
+// CANVAS + RENDER
+// ══════════════════════════════════════════════════════════════════
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const maxX=Math.max(...N.map(n=>n.x),...Object.values(H).map(h=>h.x))+250;
+const maxY=Math.max(...N.map(n=>n.y),...Object.values(H).map(h=>h.y))+250;
+cv.width=maxX;cv.height=maxY;
+
+let mode='guide',gR={},pR={};
+let sc=0.55,px=80,py=30,pan=false,lm={x:0,y:0},hov=null,cn=null,cs=null;
+
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  drawSpine();drawLines();
+  for(const n of N)drawNode(n);
+  drawSpineDiamonds();
+  updPts();
+}
+
+function drawSpineDiamonds(){
+  const spent = totalSpent();
+  const guideSpent = Object.values(gR).reduce((s,v)=>s+v,0);
+  const progSpent  = Object.values(pR).reduce((s,v)=>s+v,0);
+  for(const [key,hub] of Object.entries(H)){
+    const req=SECTION_REQ[key]??0;
+    const guideUnlocked=guideSpent>=req;
+    const progUnlocked=progSpent>=req;
+    const unlocked=mode==='guide'?guideUnlocked:(guideUnlocked||progUnlocked);
+    const sz=28;
+    ctx.save();ctx.translate(hub.x,hub.y);ctx.rotate(Math.PI/4);
+    if(progUnlocked&&mode==='progress'){ctx.shadowColor='rgba(62,220,129,.7)';ctx.shadowBlur=16;}
+    else if(guideUnlocked){ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=16;}
+    else{ctx.shadowBlur=0;}
+    ctx.fillStyle=unlocked?'#2a2010':'rgba(20,18,40,.95)';
+    ctx.fillRect(-sz/2,-sz/2,sz,sz);
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=progUnlocked&&mode==='progress'?'rgba(62,220,129,.9)':guideUnlocked?'rgba(201,168,76,.9)':'rgba(100,90,160,.35)';
+    ctx.lineWidth=unlocked?2.5:1;
+    ctx.strokeRect(-sz/2,-sz/2,sz,sz);
+    ctx.restore();
+  }
+}
+function drawSpine(){
+  const spent = totalSpent();
+  // Spine segments: [fromHub, toHub, pointsNeeded, pointsStart]
+  const segs = [
+    {from:'basic',  to:'core',     start:0,  need:1},
+    {from:'core',   to:'aura',     start:1,  need:1},
+    {from:'aura',   to:'valor',    start:2,  need:9},
+    {from:'valor',  to:'justice',  start:11, need:5},
+    {from:'justice',to:'ultimate', start:16, need:7},
+    {from:'ultimate',to:'keys',    start:23, need:10},
+  ];
+
+  // In progress mode, also compute guide fractions
+  const guideSpent = Object.values(gR).reduce((s,v)=>s+v,0);
+  const progSpent  = Object.values(pR).reduce((s,v)=>s+v,0);
+
+  for(const seg of segs){
+    const p1=H[seg.from], p2=H[seg.to];
+    const guideFrac = Math.min(Math.max((guideSpent-seg.start)/seg.need,0),1);
+    const progFrac  = Math.min(Math.max((progSpent -seg.start)/seg.need,0),1);
+    const frac = mode==='guide' ? guideFrac : progFrac;
+
+    // Draw unlit background line
+    ctx.strokeStyle='rgba(80,70,140,.3)';
+    ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+
+    // In progress mode: draw guide progress as dashed gold underneath
+    if(mode==='progress'&&guideFrac>0){
+      const glx=p1.x+(p2.x-p1.x)*guideFrac;
+      const gly=p1.y+(p2.y-p1.y)*guideFrac;
+      ctx.setLineDash([6,4]);
+      ctx.strokeStyle='rgba(201,168,76,.85)';
+      ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(glx,gly);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Draw current mode lit portion
+    if(frac>0){
+      const lx=p1.x+(p2.x-p1.x)*frac;
+      const ly=p1.y+(p2.y-p1.y)*frac;
+      // Glow
+      ctx.strokeStyle=mode==='guide'?'rgba(201,168,76,.25)':'rgba(62,220,129,.2)';
+      ctx.lineWidth=8;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(lx,ly);ctx.stroke();
+      // Main lit line
+      ctx.strokeStyle=mode==='guide'
+        ?(frac>=1?'rgba(201,168,76,.95)':'rgba(201,168,76,.7)')
+        :(frac>=1?'rgba(62,220,129,.95)':'rgba(62,220,129,.75)');
+      ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(lx,ly);ctx.stroke();
+    }
+  }
+
+  // Hub diamonds — glow when guide unlocked, bright when progress also unlocked
+  for(const [key,hub] of Object.entries(H)){
+    const req=SECTION_REQ[key]??0;
+    const guideUnlocked=guideSpent>=req;
+    const progUnlocked=progSpent>=req;
+    const unlocked=mode==='guide'?guideUnlocked:(guideUnlocked||progUnlocked);
+    const sz=28;
+    ctx.save();ctx.translate(hub.x,hub.y);ctx.rotate(Math.PI/4);
+    if(progUnlocked&&mode==='progress'){
+      ctx.shadowColor='rgba(62,220,129,.7)';ctx.shadowBlur=16;
+    } else if(guideUnlocked){
+      ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=16;
+    } else {
+      ctx.shadowBlur=0;
+    }
+    ctx.fillStyle=unlocked?'#2a2010':'rgba(20,18,40,.95)';
+    ctx.fillRect(-sz/2,-sz/2,sz,sz);
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=progUnlocked&&mode==='progress'?'rgba(62,220,129,.9)':guideUnlocked?'rgba(201,168,76,.9)':'rgba(100,90,160,.35)';
+    ctx.lineWidth=unlocked?2.5:1;
+    ctx.strokeRect(-sz/2,-sz/2,sz,sz);
+    ctx.restore();
+  }
+}
+
+function drawLines(){
+  // Draw extra lines for diamond connections (nodes with extraLine property)
+  for(const n of N){
+    if(!n.extraLine) continue;
+    const other = N.find(x=>x.id===n.extraLine);
+    if(!other) continue;
+    const lit = mode==='guide'
+      ? ((gR[n.id]||0)>0 && (gR[other.id]||0)>0)
+      : ((pR[n.id]||0)>0 && (pR[other.id]||0)>0);
+    ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(other.x,other.y);
+    if(lit){ctx.strokeStyle=mode==='guide'?(n.c?.border||'#c9a84c'):'#3edc81';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;}
+    else{ctx.strokeStyle=n.c?.border||'#8080a0';ctx.lineWidth=1;ctx.globalAlpha=0.3;}
+    ctx.stroke(); ctx.globalAlpha=1;
+  }
+  for(const n of N){
+    let x2,y2;
+    if(n.parentId){const par=N.find(x=>x.id===n.parentId);if(!par)continue;x2=par.x;y2=par.y;}
+    else{
+      const hub=H[n.sec];if(!hub)continue;
+      // Connect to diamond edge, not center
+      const edge=diamondEdge(n.x,n.y,hub.x,hub.y,14);
+      x2=edge.x;y2=edge.y;
+    }
+    const gr=gR[n.id]||0,pr=pR[n.id]||0;
+    const pgr=n.parentId?(gR[n.parentId]||0):1,ppr=n.parentId?(pR[n.parentId]||0):1;
+    const altgr=n.altParentId?(gR[n.altParentId]||0):0,altpr=n.altParentId?(pR[n.altParentId]||0):0;
+    const guideLit=(gr>0)&&(pgr>0||altgr>0);
+    // Progress lit only if this node AND its parent both have progress (no orphans)
+    const progParentOk=n.parentId?(ppr>0||altpr>0):true;
+    const progLit=(pr>0)&&progParentOk;
+
+    if(mode==='progress'){
+      // Guide connection — always draw as dashed gold outline so you see the plan
+      if(guideLit){
+        ctx.setLineDash([5,3]);
+        ctx.strokeStyle=n.c?.border||'#c9a84c';ctx.lineWidth=2;ctx.globalAlpha=0.85;
+        ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(n.x,n.y);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      // Progress connection — solid green on top
+      if(progLit){ctx.strokeStyle='#3edc81';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;}
+      else{ctx.strokeStyle=n.c?.border||'#8080a0';ctx.lineWidth=1;ctx.globalAlpha=0.2;}
+    } else {
+      // Guide mode — solid colored line
+      if(guideLit){ctx.strokeStyle=n.c?.border||'#c9a84c';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;}
+      else{ctx.strokeStyle=n.c?.border||'#8080a0';ctx.lineWidth=1;ctx.globalAlpha=0.3;}
+    }
+    ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(n.x,n.y);ctx.stroke();ctx.globalAlpha=1;
+  }
+}
+
+function drawNode(n){
+  const gr=gR[n.id]||0,pr=pR[n.id]||0;
+  // In progress mode: 'has' means guide has points (shows outline), progress rank for fill
+  const has=gr>0; // guide outline shown when guide has points
+  const rank=mode==='guide'?gr:pr;
+  const ih=hov?.id===n.id;
+  if(n.type==='active'||n.type==='ultimate')drawSq(n,has,ih,rank);
+  else if(n.type==='key-passive')drawKey(n,has,ih);
+  else if(n.type==='passive')drawCircle(n,has,ih,rank);
+  else drawDia(n,has,ih,rank,SZ.upgrade);
+}
+
+function drawSq(n,has,ih,rank){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
+  const{x,y,type,name,maxRank,c}=n;
+  const baseSz=type==='ultimate'?SZ.ultimate:SZ.active;
+  const sz=baseSz*2;
+  const h=sz/2;
+  const hub=H[n.sec];
+  const extra=(sz-baseSz)/2;
+  const ddx=hub?hub.x-x:0,ddy=hub?hub.y-y:0;
+  const dist=Math.sqrt(ddx*ddx+ddy*ddy)||1;
+  const cx=x+(ddx/dist)*extra, cy=y+(ddy/dist)*extra;
+  const secUnlocked=sectionUnlocked(n.sec);
+  const guideRank=gR[n.id]||0;
+  const progRank=pR[n.id]||0;
+  const hasGuide=guideRank>0;
+  const hasProgress=progRank>0;
+
+  // Base fill
+  ctx.fillStyle=ih?'#1e1e3c':c.fill;
+  RR(cx-h,cy-h,sz,sz,5);ctx.fill();
+
+  // Progress fill
+  if(mode==='progress'&&hasProgress){
+    const f=Math.min(progRank/maxRank,1);
+    ctx.fillStyle='rgba(46,180,100,.22)';
+    RR(cx-h,cy-h,sz*f,sz,5);ctx.fill();
+  }
+
+  // Border + backlight — shadow applied to the stroke so glow radiates outward
+  if(hasGuide){
+    ctx.shadowColor='rgba(201,168,76,.6)';ctx.shadowBlur=14;
+    ctx.strokeStyle=c.border;ctx.lineWidth=3;ctx.globalAlpha=1;
+  } else if(secUnlocked){
+    ctx.shadowColor='rgba(201,168,76,.5)';ctx.shadowBlur=20;
+    ctx.strokeStyle=c.border;ctx.lineWidth=1.5;ctx.globalAlpha=0.7;
+  } else if(ih){
+    ctx.strokeStyle='rgba(180,170,240,.7)';ctx.lineWidth=1.5;ctx.globalAlpha=0.8;
+  } else {
+    ctx.strokeStyle=c.border;ctx.lineWidth=1;ctx.globalAlpha=0.4;
+  }
+  RR(cx-h,cy-h,sz,sz,5);ctx.stroke();
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // Progress outline on top
+  if(mode==='progress'&&hasProgress){
+    ctx.shadowColor='rgba(46,200,100,.6)';ctx.shadowBlur=12;
+    ctx.strokeStyle='#3edc81';ctx.lineWidth=2.5;ctx.globalAlpha=0.9;
+    RR(cx-h,cy-h,sz,sz,5);ctx.stroke();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+  }
+
+  // Rank text
+  if(maxRank>1){
+    ctx.font='bold 13px Rajdhani,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
+    if(mode==='progress'&&hasGuide){
+      ctx.fillStyle='#3edc81';ctx.globalAlpha=hasProgress?1:0.4;
+      ctx.fillText(`${progRank}/${maxRank}`,cx,cy+h-2);
+    } else {
+      ctx.fillStyle=c.node;ctx.globalAlpha=hasGuide?1:0.65;
+      ctx.fillText(`${guideRank}/${maxRank}`,cx,cy+h-2);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // Name
+  let fs=18,ls=wTxt(name,sz-16,18);
+  if(ls.length>1){fs=16;ls=wTxt(name,sz-16,16);}
+  if(ls.length>1){fs=14;ls=wTxt(name,sz-16,14);}
+  ctx.font=`600 ${fs}px Rajdhani,sans-serif`;
+  ctx.fillStyle=hasGuide?'#e8e0d0':c.node;
+  ctx.globalAlpha=hasGuide?1:0.7;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const lh=fs+3,sy=cy-(ls.length-1)*lh/2+(maxRank>1?-8:0);
+  ls.forEach((l,i)=>ctx.fillText(l,cx,sy+i*lh));ctx.globalAlpha=1;
+}
+
+function drawDia(n,has,ih,rank,sz){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
+  const{x,y,name,maxRank,type,c}=n,h=sz/2;
+  const secUnlocked=sectionUnlocked(n.sec);
+  const hasGuide=(gR[n.id]||0)>0;
+  const hasProg=(pR[n.id]||0)>0;
+
+  // Base fill
+  ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);
+  ctx.fillStyle=ih?'#1e1e3c':c.fill;
+  ctx.fillRect(-h,-h,sz,sz);
+
+  // Progress fill
+  if(mode==='progress'&&hasProg){
+    ctx.fillStyle='rgba(46,180,100,.3)';
+    ctx.fillRect(-h,-h,sz,sz);
+  }
+
+  // Guide outline — always gold, regardless of mode
+  if(hasGuide){
+    ctx.shadowColor='rgba(201,168,76,.5)';ctx.shadowBlur=8;
+    ctx.strokeStyle=c.border;ctx.lineWidth=2;ctx.globalAlpha=1;
+  } else if(secUnlocked){
+    ctx.shadowColor='rgba(201,168,76,.45)';ctx.shadowBlur=12;
+    ctx.strokeStyle=c.border;ctx.lineWidth=1;ctx.globalAlpha=0.6;
+  } else if(ih){
+    ctx.strokeStyle='rgba(180,170,240,.8)';ctx.lineWidth=1.5;ctx.globalAlpha=0.8;
+  } else {
+    ctx.strokeStyle=c.border;ctx.lineWidth=1;ctx.globalAlpha=0.45;
+  }
+  ctx.strokeRect(-h,-h,sz,sz);
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // Progress outline on top — bright green
+  if(mode==='progress'&&hasProg){
+    ctx.shadowColor='rgba(46,200,100,.6)';ctx.shadowBlur=10;
+    ctx.strokeStyle='#3edc81';ctx.lineWidth=2;ctx.globalAlpha=0.9;
+    ctx.strokeRect(-h,-h,sz,sz);
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+  }
+  ctx.restore();
+
+  // Dot for small upgrade diamonds
+  if(sz<24){
+    ctx.beginPath();ctx.arc(x,y,hasGuide?3.5:2.5,0,Math.PI*2);
+    ctx.fillStyle=hasGuide?c.border:(secUnlocked?'rgba(201,168,76,.5)':c.border);
+    ctx.globalAlpha=hasGuide?1:0.5;ctx.fill();ctx.globalAlpha=1;
+  }
+}
+
+function drawCircle(n,has,ih,rank){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
+  const {x,y,name,maxRank,c}=n;
+  const r=SZ.passive/2;
+  const hasGuide=(gR[n.id]||0)>0;
+  const hasProg=(pR[n.id]||0)>0;
+  const secUnlocked=sectionUnlocked(n.sec);
+
+  // Base fill
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fillStyle=ih?'#1e1e3c':c.fill;ctx.fill();
+
+  // Progress fill
+  if(mode==='progress'&&hasProg){
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle='rgba(46,180,100,.3)';ctx.fill();
+  }
+
+  // Border + backlight
+  if(hasGuide){
+    ctx.shadowColor='rgba(201,168,76,.5)';ctx.shadowBlur=10;
+    ctx.strokeStyle=c.border;ctx.lineWidth=2;ctx.globalAlpha=1;
+  } else if(secUnlocked){
+    // Force gold backlight glow regardless of passive color
+    ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=16;
+    ctx.strokeStyle='rgba(180,150,60,.8)';ctx.lineWidth=1.5;ctx.globalAlpha=0.8;
+  } else {
+    ctx.strokeStyle=ih?'rgba(180,170,240,.8)':c.border;
+    ctx.lineWidth=1;ctx.globalAlpha=ih?0.9:0.45;
+  }
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // Progress outline on top
+  if(mode==='progress'&&hasProg){
+    ctx.shadowColor='rgba(46,200,100,.5)';ctx.shadowBlur=8;
+    ctx.strokeStyle='#3edc81';ctx.lineWidth=2;ctx.globalAlpha=0.9;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+  }
+
+  if(maxRank>1){
+    ctx.font='bold 9px Rajdhani,sans-serif';
+    ctx.fillStyle=hasGuide?c.node:c.node;
+    ctx.globalAlpha=hasGuide?1:0.5;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(mode==='progress'?`${pR[n.id]||0}/${maxRank}`:`${gR[n.id]||0}/${maxRank}`,x,y);
+    ctx.globalAlpha=1;
+  }
+}
+
+function drawKey(n,has,ih){
+  ctx.shadowBlur=0;ctx.shadowColor='transparent';
+  const{x,y,name,c}=n,r=SZ.key/2;
+  if(has){ctx.shadowColor=mode==='guide'?c.border:'#3edc81';ctx.shadowBlur=22;}
+  else if(ih){ctx.shadowColor='rgba(220,100,100,.5)';ctx.shadowBlur=12;}
+  STAR(x,y,r+7,r-3,8);ctx.fillStyle=has?(mode==='guide'?c.fill:'#0a2015'):c.fill;ctx.fill();ctx.shadowBlur=0;
+  ctx.strokeStyle=has?(mode==='guide'?c.border:'#3edc81'):(ih?'rgba(220,120,120,.8)':c.border);
+  ctx.lineWidth=has?2.5:(ih?2:1.5);ctx.globalAlpha=has?1:0.65;STAR(x,y,r+7,r-3,8);ctx.stroke();ctx.globalAlpha=1;
+  ctx.beginPath();ctx.arc(x,y,r-5,0,Math.PI*2);ctx.fillStyle=has?(mode==='guide'?'#3a1010':'#0c2818'):'#1a0820';ctx.fill();
+  ctx.strokeStyle=has?c.border:c.border;ctx.lineWidth=1;ctx.globalAlpha=0.5;ctx.stroke();ctx.globalAlpha=1;
+  // Try progressively smaller font until name fits in 3 lines
+  const maxW=SZ.key*0.65;
+  let kfs=20,kls=wTxt3(name,maxW,20);
+  if(kls.length>2){kfs=16;kls=wTxt3(name,maxW,16);}
+  if(kls.length>2){kfs=13;kls=wTxt3(name,maxW,13);}
+  ctx.font=`600 ${kfs}px Rajdhani,sans-serif`;ctx.fillStyle=has?(mode==='guide'?'#ffb0b0':'#90ffcc'):c.node;
+  ctx.globalAlpha=has?1:0.7;ctx.textAlign='center';ctx.textBaseline='middle';
+  const klh=kfs+3,ksy=y-(kls.length-1)*klh/2;
+  kls.forEach((l,i)=>ctx.fillText(l,x,ksy+i*klh));ctx.globalAlpha=1;
+}
+
+function nAt(cx,cy){
+  for(const n of[...N].reverse()){
+    if(n.type==='active'||n.type==='ultimate'){
+      // Hit test against the shifted draw center, not the original x,y
+      const baseSz=n.type==='ultimate'?SZ.ultimate:SZ.active;
+      const sz=baseSz*2;
+      const h=sz/2;
+      const hub=H[n.sec];
+      const extra=(sz-baseSz)/2;
+      const ddx=hub?hub.x-n.x:0,ddy=hub?hub.y-n.y:0;
+      const dist=Math.sqrt(ddx*ddx+ddy*ddy)||1;
+      const dcx=n.x+(ddx/dist)*extra, dcy=n.y+(ddy/dist)*extra;
+      if(cx>=dcx-h&&cx<=dcx+h&&cy>=dcy-h&&cy<=dcy+h) return n;
+    } else {
+      const r=n.type==='key-passive'?SZ.key/2+8:n.type==='passive'?SZ.passive/2+5:SZ.upgrade/2+5;
+      if(Math.abs(cx-n.x)<=r&&Math.abs(cy-n.y)<=r) return n;
+    }
+  }
+  return null;
+}
+function s2c(sx,sy){const r=document.getElementById('wrap').getBoundingClientRect();return{x:(sx-r.left-px)/sc,y:(sy-r.top-py)/sc};}
+function parentHasPoints(n){
+  if(!n.parentId) return true; // hub-connected, always ok
+  const d=mode==='guide'?gR:pR;
+  const parPts=d[n.parentId]||0;
+  const altPts=n.altParentId?(d[n.altParentId]||0):0;
+  return parPts>0||altPts>0;
+}
+function inc(n){
+  if(!sectionUnlocked(n.sec)) return;
+  if(!parentHasPoints(n)) return; // parent must be invested first
+  if(mode==='progress'){
+    const guideRank=gR[n.id]||0;
+    if(guideRank===0) return;
+    const cur=pR[n.id]||0;
+    if(cur>=guideRank) return;
+    pR[n.id]=cur+1;
+  } else {
+    gR[n.id]=Math.min((gR[n.id]||0)+1,n.maxRank||1);
+  }
+  SV();draw();
+}
+function totalSpent(){
+  const d=mode==='guide'?gR:pR;
+  return Object.values(d).reduce((s,v)=>s+v,0);
+}
+function sectionUnlocked(sec){
+  return totalSpent()>=( SECTION_REQ[sec]??0);
+}
+function canDec(n){
+  const d=mode==='guide'?gR:pR;
+  const cur=d[n.id]||0;
+  if(cur<=0) return false;
+
+  // Check 1: would removing 1 point drop total below a section threshold
+  // that has invested nodes?
+  const newTotal = totalSpent() - 1;
+  const sectionOrder = ['basic','core','aura','valor','justice','ultimate','keys'];
+  for(const sec of sectionOrder){
+    const req = SECTION_REQ[sec]??0;
+    if(req===0) continue;
+    // If new total drops below this section's requirement
+    if(newTotal < req){
+      // Check if any node in this section has points invested
+      const hasInvested = N.some(x=>x.sec===sec&&(d[x.id]||0)>0);
+      if(hasInvested) return false;
+    }
+  }
+
+  // Check 2: if removing last point, check direct node dependencies
+  if(cur>1) return true;
+  const dependents = N.filter(x=>{
+    if((d[x.id]||0)<=0) return false;
+    if(x.parentId===n.id){
+      if(x.altParentId && (d[x.altParentId]||0)>0) return false;
+      return true;
+    }
+    if(x.altParentId===n.id){
+      if(x.parentId && (d[x.parentId]||0)>0) return false;
+      return true;
+    }
+    return false;
+  });
+  return dependents.length===0;
+}
+function dec(n){
+  if(!canDec(n)) return;
+  const d=mode==='guide'?gR:pR;
+  d[n.id]=Math.max((d[n.id]||0)-1,0);
+  if(!d[n.id])delete d[n.id];
+  // Cascade: if guide point removed, also clear progress on this node
+  // and any progress-only orphans down the chain
+  if(mode==='guide'){
+    if(!gR[n.id]) {
+      // Clear progress on this node too
+      delete pR[n.id];
+      // Cascade clear progress children that are now orphaned
+      cascadeClearProgress(n.id);
+    }
+  }
+  SV();draw();
+}
+function cascadeClearProgress(parentId){
+  // Find all nodes whose only guide parent was parentId
+  const children = N.filter(x=>{
+    if(!(pR[x.id]||0)) return false;
+    if(x.parentId===parentId){
+      // Still valid if altParentId has guide points
+      if(x.altParentId&&(gR[x.altParentId]||0)>0) return false;
+      return true;
+    }
+    if(x.altParentId===parentId){
+      if(x.parentId&&(gR[x.parentId]||0)>0) return false;
+      return true;
+    }
+    return false;
+  });
+  for(const c of children){
+    delete pR[c.id];
+    cascadeClearProgress(c.id);
+  }
+}
+function updPts(){document.getElementById('gP').textContent=Object.values(gR).reduce((s,v)=>s+v,0);document.getElementById('pP').textContent=Object.values(pR).reduce((s,v)=>s+v,0);}
+function SM(m){mode=m;document.getElementById('bG').className='mb'+(m==='guide'?' mg':'');document.getElementById('bP').className='mb'+(m==='progress'?' mp':'');draw();}
+function DZ(f,cx,cy){const w=document.getElementById('wrap');cx=cx??w.clientWidth/2;cy=cy??w.clientHeight/2;const ns=Math.min(Math.max(sc*f,.1),3);px=cx-(cx-px)*(ns/sc);py=cy-(cy-py)*(ns/sc);sc=ns;AX();}
+function RV(){sc=.55;px=140;py=30;AX();}
+function AX(){cv.style.transform=`translate(${px}px,${py}px) scale(${sc})`;document.getElementById('zl').textContent=Math.round(sc*100)+'%';}
+
+const wrap=document.getElementById('wrap');
+wrap.addEventListener('wheel',e=>{e.preventDefault();const r=wrap.getBoundingClientRect();DZ(e.deltaY<0?1.1:.9,e.clientX-r.left,e.clientY-r.top);},{passive:false});
+wrap.addEventListener('mousedown',e=>{pan=true;lm={x:e.clientX,y:e.clientY};wrap.classList.add('g');if(e.button===0){const p=s2c(e.clientX,e.clientY);const n=nAt(p.x,p.y);if(n){cn=n;cs={x:e.clientX,y:e.clientY};}}});
+wrap.addEventListener('mousemove',e=>{if(pan){px+=e.clientX-lm.x;py+=e.clientY-lm.y;lm={x:e.clientX,y:e.clientY};AX();if(cs&&(Math.abs(e.clientX-cs.x)+Math.abs(e.clientY-cs.y))>5)cn=null;}const p=s2c(e.clientX,e.clientY);const n=nAt(p.x,p.y);if(n!==hov){hov=n;draw();}if(n)ST(n,e.clientX,e.clientY);else HT();});
+wrap.addEventListener('mouseup',e=>{pan=false;wrap.classList.remove('g');if(cn&&e.button===0){inc(cn);cn=null;cs=null;}});
+wrap.addEventListener('contextmenu',e=>{e.preventDefault();const p=s2c(e.clientX,e.clientY);const n=nAt(p.x,p.y);if(n)dec(n);});
+wrap.addEventListener('mouseleave',()=>{pan=false;wrap.classList.remove('g');HT();hov=null;draw();});
+
+function ST(n,mx,my){
+  const gr=gR[n.id]||0,pr=pR[n.id]||0;
+  document.getElementById('tN').textContent=n.name;
+  const te=document.getElementById('tT');te.innerHTML='';
+  (n.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='tg';s.textContent=t;te.appendChild(s);});
+  const progMax=mode==='progress'?(gr||n.maxRank):n.maxRank;
+  document.getElementById('tR').textContent=`Guide: ${gr}/${n.maxRank}  ·  Progress: ${pr}/${progMax}`;
+  document.getElementById('tD').textContent=n.desc||'';
+  document.getElementById('tC').textContent=n.cooldown?`Cooldown: ${n.cooldown}s`:n.charges?`${n.charges} Charges (${n.chargeCd}s)`:'';
+  const secLock=!sectionUnlocked(n.sec);
+  const req=SECTION_REQ[n.sec]??0;
+  const hasPoints=(gR[n.id]||0)>0||(pR[n.id]||0)>0;
+  const locked=hasPoints&&!canDec(n);
+  // Figure out why locked
+  let hintText;
+  if(secLock){
+    hintText=`Requires ${req} points spent to unlock`;
+  } else if(locked){
+    // Check if it's a section threshold issue or direct dependency
+    const d=mode==='guide'?gR:pR;
+    const newTotal=totalSpent()-1;
+    const blockedSec=(['core','aura','valor','justice','ultimate','keys']).find(s=>{
+      const r=SECTION_REQ[s]??0;
+      return newTotal<r && N.some(x=>x.sec===s&&(d[x.id]||0)>0);
+    });
+    hintText=blockedSec
+      ? `Cannot remove — would lose access to ${blockedSec} section`
+      : 'Cannot remove — a skill depends on this';
+  } else if(!parentHasPoints(n)){
+    hintText=n.parentId?'Invest in the previous node first':'Cannot invest yet';
+  } else if(mode==='progress'&&(gR[n.id]||0)===0){
+    hintText='Not in guide plan — add to guide first';
+  } else if(mode==='progress'&&(pR[n.id]||0)>=(gR[n.id]||0)){
+    hintText='Progress at guide maximum';
+  } else {
+    hintText=mode==='guide'?'Left click +rank · Right click −rank':'Left click mark progress · Right click remove';
+  }
+  document.getElementById('tH').textContent=hintText;
+  const tip=document.getElementById('tip');let tx=mx+16,ty=my-16;
+  if(tx+295>window.innerWidth)tx=mx-311;if(ty+190>window.innerHeight)ty=my-190;
+  tip.style.left=tx+'px';tip.style.top=ty+'px';tip.style.display='block';
+}
+function HT(){document.getElementById('tip').style.display='none';}
+function resetMode(m){
+  const label = m==='guide'?'Guide':'Progress';
+  const count = Object.values(m==='guide'?gR:pR).reduce((s,v)=>s+v,0);
+  if(count===0){return;}
+  showModal(
+    `Reset ${label} Mode`,
+    `This will clear all ${count} point${count!==1?'s':''} in ${label} mode. This cannot be undone.`,
+    ()=>{
+      if(m==='guide'){gR={};}else{pR={};}
+      SV();draw();
+    },
+    m==='guide'?'#c9a84c':'#3edc81'
+  );
+}
+let _modalCb=null;
+function showModal(title,msg,cb,col){
+  _modalCb=cb;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  document.getElementById('modal-ok').style.color=col||'#e8c97a';
+  document.getElementById('modal-ok').style.borderColor=(col||'#e8c97a').replace(')',', .5)').replace('rgb','rgba');
+  document.getElementById('modal').style.display='flex';
+}
+function modalConfirm(){
+  document.getElementById('modal').style.display='none';
+  if(_modalCb){_modalCb();_modalCb=null;}
+}
+function modalCancel(){
+  document.getElementById('modal').style.display='none';
+  _modalCb=null;
+}
+function SV(){localStorage.setItem('d4v_g',JSON.stringify(gR));localStorage.setItem('d4v_p',JSON.stringify(pR));}
+function LV(){try{gR=JSON.parse(localStorage.getItem('d4v_g')||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem('d4v_p')||'{}');}catch(e){pR={};}}
+function RR(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function STAR(cx,cy,or,ir,pts){ctx.beginPath();for(let i=0;i<pts*2;i++){const r=i%2===0?or:ir,a=i*Math.PI/pts-Math.PI/2;if(i===0)ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));else ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}ctx.closePath();}
+function wTxt3(t,mw,fs){const cw=fs*.58,mc=Math.floor(mw/cw);if(t.length<=mc)return[t];const ws=t.split(' ');const ls=[];let c='';for(const w of ws){if((c+' '+w).trim().length>mc){if(c)ls.push(c);c=w;}else c=(c+' '+w).trim();}if(c)ls.push(c);return ls.slice(0,3);}
+function wTxt(t,mw,fs){const cw=fs*.58,mc=Math.floor(mw/cw);if(t.length<=mc)return[t];const ws=t.split(' ');const ls=[];let c='';for(const w of ws){if((c+' '+w).trim().length>mc){if(c)ls.push(c);c=w;}else c=(c+' '+w).trim();}if(c)ls.push(c);return ls.slice(0,2);}
+function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
+
+// Read URL mode param if embedded in app
+(function(){
+  const urlMode = new URLSearchParams(window.location.search).get('mode');
+  if(urlMode==='progress'||urlMode==='guide') mode=urlMode;
+  // If embedded with a specific mode, hide the other mode's button
+  // and hide reset button for the other mode
+  if(urlMode==='progress'){
+    document.getElementById('bG').style.display='none';
+    document.querySelector('[onclick="resetMode(\'guide\')"]').style.display='none';
+    SM('progress');
+  } else if(urlMode==='guide'){
+    document.getElementById('bP').style.display='none';
+    document.querySelector('[onclick="resetMode(\'progress\')"]').style.display='none';
+    SM('guide');
+  }
+})();
+LV();RV();draw();
+</script>
 </body>
 </html>
