@@ -84,9 +84,21 @@ function applyTheme(themeKey, accentKey, brightness, fontSize) {
   r.style.setProperty('--accent-dark', a.dark);
   r.style.setProperty('--accent-mid',  a.mid);
 
-  // Font size — use zoom to scale everything including px-based fonts
+  // Zoom — apply to main content wrapper, not body, to avoid scrollbar drift
   const zoomVal = currentFontSize / 100;
-  document.body.style.zoom = zoomVal === 1 ? '' : zoomVal;
+  // Try to zoom a content wrapper; fall back to body
+  const zoomTarget = document.getElementById('mainLayout') || document.getElementById('buildDetail') || document.body;
+  document.body.style.zoom = '';
+  if (zoomTarget !== document.body) {
+    // Also zoom topbar and season rail
+    ['topbar','seasonRail','buildSidebar'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.zoom = zoomVal === 1 ? '' : zoomVal;
+    });
+    zoomTarget.style.zoom = zoomVal === 1 ? '' : zoomVal;
+  } else {
+    document.body.style.zoom = zoomVal === 1 ? '' : zoomVal;
+  }
 
   // Brightness — use a CSS variable + overlay approach to avoid filter breaking fixed elements
   const bv = currentBrightness / 100;
@@ -185,7 +197,7 @@ function buildThemePanel() {
       <div class="theme-section-label" style="margin-top:14px;">Zoom</div>
       <div class="brightness-row">
         <input type="range" id="zoomSlider" min="70" max="130" value="${currentFontSize}"
-          oninput="currentFontSize=parseInt(this.value);document.body.style.zoom=currentFontSize/100;document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
+          oninput="currentFontSize=parseInt(this.value);(document.getElementById('mainLayout')||document.body).style.zoom=currentFontSize/100;['topbar','seasonRail','buildSidebar'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.zoom=currentFontSize/100;});document.getElementById('zoomLabel').textContent=this.value+'%';localStorage.setItem('d4v_theme',JSON.stringify({theme:currentTheme,accent:currentAccent,brightness:currentBrightness,fontSize:currentFontSize}))"
           style="flex:1;accent-color:var(--accent,#c9a84c);">
         <span id="zoomLabel" style="min-width:36px;text-align:right;font-size:12px;color:var(--accent,#c9a84c);">${currentFontSize}%</span>
       </div>
