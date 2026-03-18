@@ -175,7 +175,11 @@ function toggleThemePanel() {
   if (!panel) return;
   const isOpen = panel.style.display !== 'none';
   panel.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) updateThemeUI();
+  if (!isOpen) {
+    // Build panel content lazily on first open (ensures DOM is ready)
+    if (!panel.innerHTML.trim()) buildThemePanel();
+    updateThemeUI();
+  }
 }
 
 // Build the theme panel HTML
@@ -236,6 +240,4 @@ document.addEventListener('click', e => {
 
 // Apply theme immediately so no flash of unstyled content
 loadTheme();
-document.addEventListener('DOMContentLoaded', () => {
-  buildThemePanel();
-});
+// Panel built lazily on first open via toggleThemePanel()
