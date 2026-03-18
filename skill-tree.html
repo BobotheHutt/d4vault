@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;background:#1a1a35;color:#d4cfc0;font-family:'Rajdhani',sans-serif;}
+html,body{height:100%;overflow:hidden;background:var(--panel-bg,#1a1a35);color:#d4cfc0;font-family:'Rajdhani',sans-serif;}
 body{display:flex;flex-direction:column;}
 #bar{height:52px;background:#1a1a38;border-bottom:1px solid rgba(120,110,200,.3);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0;}
 .ttl{font-family:'Cinzel',serif;font-size:14px;color:#e8c97a;letter-spacing:.1em;}
@@ -355,7 +355,7 @@ let mode='guide',gR={},pR={},editing=false; // start locked — click Confirm to
 let sc=0.55,px=80,py=30,pan=false,lm={x:0,y:0},hov=null,cn=null,cs=null;
 
 function draw(){
-  ctx.fillStyle=window._bgColor||'#1a1a35';ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.fillStyle=window._bgColor||getComputedStyle(document.body).backgroundColor||'#1a1a35';ctx.fillRect(0,0,cv.width,cv.height);
   drawSpine();drawLines();
   for(const n of N)drawNode(n);
   drawSpineDiamonds();
