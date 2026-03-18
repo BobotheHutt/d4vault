@@ -8,539 +8,647 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0a0a0f; --bg2:#111118; --bg3:#18181f;
-  --border:rgba(180,140,80,.18); --border2:rgba(180,140,80,.4);
-  --gold:#c9a84c; --gold2:#e8c97a;
-  --text:#d4cfc0; --text2:#8a8070; --text3:#5a5040;
-  --green:#2ecc71; --red:#e74c3c; --blue:#5dade2;
-  --font-head:'Cinzel',serif; --font-body:'Rajdhani',sans-serif;
+  --bg:#0e0e14;--bg2:#16161e;
+  --border:rgba(180,140,80,.2);--border2:rgba(180,140,80,.5);
+  --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5e0a0;
+  --text:#d4cfc0;--text2:#9a9080;--text3:#6a6050;
+  --green:#3edc81;--red:#e74c3c;--blue:#6dbfe8;
+  --font-head:'Cinzel',serif;--font-body:'Rajdhani',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);display:flex;flex-direction:column;}
-
 #toolbar{
-  height:52px;background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:10;
+  height:54px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;
 }
-.t-title{font-family:var(--font-head);font-size:14px;color:var(--gold2);letter-spacing:.1em;margin-right:6px;}
-.t-sep{width:1px;height:24px;background:var(--border);}
-.mbtn{
-  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:6px 14px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;
-}
+.ttl{font-family:var(--font-head);font-size:15px;color:var(--gold2);letter-spacing:.1em;}
+.sep{width:1px;height:26px;background:var(--border);}
+.mbtn{font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 16px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
 .mbtn:hover{border-color:var(--border2);color:var(--text2);}
-.mbtn.mg{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2);}
-.mbtn.mp{background:rgba(46,204,113,.12);border-color:rgba(46,204,113,.5);color:var(--green);}
-.pts{display:flex;gap:14px;font-size:12px;}
-.pi{display:flex;align-items:center;gap:5px;}
-.pd{width:8px;height:8px;border-radius:50%;}
+.mbtn.mg{background:rgba(201,168,76,.2);border-color:var(--gold2);color:var(--gold2);}
+.mbtn.mp{background:rgba(62,220,129,.15);border-color:rgba(62,220,129,.6);color:var(--green);}
+.pts{display:flex;gap:16px;font-size:13px;}
+.pi{display:flex;align-items:center;gap:6px;}
+.pd{width:9px;height:9px;border-radius:50%;}
 .pl{color:var(--text3);}
 .pv{color:var(--text);font-weight:600;}
-.zbtn{
-  width:28px;height:28px;font-size:16px;line-height:1;border:1px solid var(--border);
-  border-radius:3px;background:transparent;color:var(--text2);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
+.zbtn{width:30px;height:30px;font-size:18px;line-height:1;border:1px solid var(--border);border-radius:3px;
+  background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .zbtn:hover{border-color:var(--border2);color:var(--text);}
-.zlbl{font-size:12px;color:var(--text3);}
-.ml-auto{margin-left:auto;}
-
+.zlbl{font-size:13px;color:var(--text3);min-width:40px;}
+.ml{margin-left:auto;}
 #wrap{flex:1;overflow:hidden;position:relative;cursor:grab;}
-#wrap.grabbing{cursor:grabbing;}
-#c{position:absolute;top:0;left:0;transform-origin:0 0;}
-
-#tip{
-  position:fixed;background:var(--bg2);border:1px solid var(--border2);
-  border-radius:4px;padding:10px 14px;max-width:260px;pointer-events:none;
-  z-index:1000;display:none;font-size:13px;
-}
-.tn{font-family:var(--font-head);font-size:13px;color:var(--gold2);margin-bottom:4px;letter-spacing:.05em;}
-.ttags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
-.ttag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  padding:1px 6px;border-radius:2px;background:rgba(201,168,76,.12);
-  border:1px solid rgba(201,168,76,.3);color:var(--gold);}
-.tr{font-size:11px;color:var(--gold);margin-bottom:4px;font-weight:600;}
-.td{font-size:12px;color:var(--text2);line-height:1.5;}
-.tc{font-size:11px;color:var(--blue);margin-top:4px;}
-.th{font-size:10px;color:var(--text3);margin-top:5px;font-style:italic;}
+#wrap.g{cursor:grabbing;}
+#c{position:absolute;top:0;left:0;transform-origin:0 0;image-rendering:pixelated;}
+#tip{position:fixed;background:#1a1820;border:1px solid rgba(201,168,76,.5);border-radius:5px;
+  padding:12px 16px;max-width:280px;pointer-events:none;z-index:1000;display:none;}
+.tn{font-family:var(--font-head);font-size:14px;color:var(--gold2);margin-bottom:5px;letter-spacing:.05em;}
+.ttgs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;}
+.ttg{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);color:var(--gold);}
+.tr{font-size:12px;color:var(--gold);margin-bottom:5px;font-weight:600;}
+.td{font-size:12px;color:var(--text2);line-height:1.6;}
+.tc{font-size:12px;color:var(--blue);margin-top:5px;}
+.th{font-size:11px;color:var(--text3);margin-top:6px;font-style:italic;}
 </style>
 </head>
 <body>
 <div id="toolbar">
-  <span class="t-title">Paladin — Skill Tree</span>
-  <div class="t-sep"></div>
-  <button class="mbtn mg" id="btnG" onclick="setMode('guide')">Guide Mode</button>
-  <button class="mbtn"    id="btnP" onclick="setMode('progress')">Progress Mode</button>
-  <div class="t-sep"></div>
+  <span class="ttl">Paladin — Skill Tree</span>
+  <div class="sep"></div>
+  <button class="mbtn mg" id="bG" onclick="setMode('guide')">Guide Mode</button>
+  <button class="mbtn"    id="bP" onclick="setMode('progress')">Progress Mode</button>
+  <div class="sep"></div>
   <div class="pts">
-    <div class="pi"><div class="pd" style="background:var(--gold)"></div><span class="pl">Guide</span><span class="pv" id="gPts">0</span></div>
-    <div class="pi"><div class="pd" style="background:var(--green)"></div><span class="pl">Progress</span><span class="pv" id="pPts">0</span></div>
+    <div class="pi"><div class="pd" style="background:var(--gold)"></div><span class="pl">Guide</span><span class="pv" id="gP">0</span></div>
+    <div class="pi"><div class="pd" style="background:var(--green)"></div><span class="pl">Progress</span><span class="pv" id="pP">0</span></div>
   </div>
-  <div class="t-sep"></div>
-  <div style="display:flex;gap:4px">
-    <button class="zbtn" onclick="doZoom(1.2)">+</button>
-    <button class="zbtn" onclick="doZoom(0.8)">−</button>
-    <button class="zbtn" onclick="resetView()" title="Reset">⌂</button>
+  <div class="sep"></div>
+  <div style="display:flex;gap:5px">
+    <button class="zbtn" onclick="dz(1.2)">+</button>
+    <button class="zbtn" onclick="dz(0.8)">−</button>
+    <button class="zbtn" onclick="rv()" title="Reset view">⌂</button>
   </div>
-  <span class="zlbl ml-auto" id="zlbl">65%</span>
+  <span class="zlbl ml" id="zl">65%</span>
 </div>
-
 <div id="wrap">
   <canvas id="c"></canvas>
 </div>
-
 <div id="tip">
   <div class="tn" id="tN"></div>
-  <div class="ttags" id="tT"></div>
-  <div class="tr" id="tR"></div>
-  <div class="td" id="tD"></div>
-  <div class="tc" id="tC"></div>
-  <div class="th" id="tH"></div>
+  <div class="ttgs" id="tT"></div>
+  <div class="tr"  id="tR"></div>
+  <div class="td"  id="tD"></div>
+  <div class="tc"  id="tC"></div>
+  <div class="th"  id="tH"></div>
 </div>
-
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────
-const SZ = { active:42, ultimate:50, passive:26, upgrade:20, key:54 };
-const SPINE_COLOR = 'rgba(180,50,50,0.55)';
-const SPINE_W     = 6;
+// ── LAYOUT ENGINE ─────────────────────────────────────────────────────────
+// The Paladin tree is a vertical zigzag spine.
+// We define the spine hubs and manually place each section's skills
+// branching OUT from their hub in a cross pattern.
+// Basic skills at top fan upward, then each section alternates left/right.
+
+const CANVAS_W = 1600;
+const SPINE_COL = '#c03030';
+
+// Node visual sizes
+const S = { active:48, ultimate:56, passive:30, upgrade:22, key:58 };
+
+// Colors per section
+const SC = {
+  basic:'#c8a96e', core:'#e8c97a', aura:'#ffb347',
+  valor:'#7dd87d', justice:'#da70d6', ultimate:'#ff7070', 'key-passives':'#ff4444'
+};
 
 // ── STATE ────────────────────────────────────────────────────────────────
-let data, flat = [];
-let mode = 'guide';
-let gRanks = {}, pRanks = {};
-let scale = 0.65, panX = 100, panY = 40;
-let panning = false, lastM = {x:0,y:0};
-let hovered = null;
-let clickNode = null, clickStart = null;
+let data, flat=[];
+let mode='guide', gR={}, pR={};
+let scale=0.55, px=180, py=30;
+let panning=false, lm={x:0,y:0};
+let hov=null, cn=null, cs=null;
 
-// ── LOAD ─────────────────────────────────────────────────────────────────
-async function load() {
+// ── LOAD & BUILD LAYOUT ───────────────────────────────────────────────────
+async function init() {
   const res = await fetch('data/skills/paladin.json');
   data = await res.json();
-  buildFlat();
-  const maxX = Math.max(...flat.map(n=>n.x)) + 160;
-  const maxY = Math.max(...flat.map(n=>n.y)) + 160;
+
+  // Build flat node list with final computed positions
+  flat = [];
+  buildLayout();
+
+  const maxX = Math.max(...flat.map(n=>n.fx))+120;
+  const maxY = Math.max(...flat.map(n=>n.fy))+120;
   const cv = document.getElementById('c');
-  cv.width = maxX; cv.height = maxY;
-  loadState();
+  cv.width=maxX; cv.height=maxY;
+
+  loadSt();
   draw();
 }
 
-function buildFlat() {
-  flat = [];
+function buildLayout() {
+  // Spine hub positions (zigzag, left/right alternating)
+  // x alternates: right=900, left=300
+  // y increases by ~440 per section
+  const hubs = {
+    'hub-basic':    {x:700,  y:80},
+    'hub-core':     {x:300,  y:500},
+    'hub-aura':     {x:900,  y:940},
+    'hub-valor':    {x:300,  y:1380},
+    'hub-justice':  {x:900,  y:1820},
+    'hub-ultimate': {x:300,  y:2260},
+    'hub-keys':     {x:900,  y:2700}
+  };
+
   for (const sec of data.sections) {
-    for (const p of (sec.passives||[])) flat.push({...p, sec:sec.id, secCol:sec.color, parentId:null});
-    for (const n of (sec.nodes||[])) flattenNode(n, sec, null);
+    const hub = hubs[sec.hubId];
+    if (!hub) continue;
+
+    // Determine which side skills go (left hub → skills spread left, right hub → skills spread right)
+    const isRight = hub.x > 600;
+
+    // Passives: stack vertically near hub center
+    let pi = 0;
+    for (const p of (sec.passives||[])) {
+      const fx = hub.x + (isRight ? -200 : 200);
+      const fy = hub.y - 60 + pi*60;
+      flat.push({...p, sec:sec.id, secCol:SC[sec.id], parentId:null, hubId:sec.hubId, fx, fy, upgrades:undefined});
+      pi++;
+    }
+
+    // Active/ultimate nodes: spread out from hub
+    // Layout depends on section
+    layoutSection(sec, hub, isRight);
   }
 }
 
-function flattenNode(n, sec, parentId) {
-  flat.push({...n, sec:sec.id, secCol:sec.color, parentId, upgrades:undefined});
-  for (const u of (n.upgrades||[])) flattenNode(u, sec, n.id);
+function layoutSection(sec, hub, isRight) {
+  const nodes = sec.nodes || [];
+  if (!nodes.length) return;
+
+  // Each section has a different cross layout based on the screenshots
+  // We place actives in a cross around the hub, upgrades chain outward
+
+  const dir = isRight ? 1 : -1; // +1 = right side, -1 = left side
+
+  // Base offsets for each node from hub, depending on section
+  const layouts = {
+    basic: [
+      // 4 basic skills spread above the hub in a row
+      {dx:-300, dy:-160}, {dx:-100, dy:-200}, {dx:100,  dy:-200}, {dx:300,  dy:-160}
+    ],
+    core: [
+      // 5 core skills: left column stacked
+      {dx:-340, dy:-160}, {dx:-340, dy:-40},  {dx:-340, dy:80},
+      {dx:-340, dy:200},  {dx:-340, dy:320}
+    ],
+    aura: [
+      // 3 aura skills: right column
+      {dx:340, dy:-120}, {dx:340, dy:20}, {dx:340, dy:160}
+    ],
+    valor: [
+      // 4 valor skills: left column
+      {dx:-340, dy:-160}, {dx:-340, dy:-40}, {dx:-340, dy:80}, {dx:-340, dy:200}
+    ],
+    justice: [
+      // 4 justice skills: right column
+      {dx:340, dy:-160}, {dx:340, dy:-40}, {dx:340, dy:80}, {dx:340, dy:200}
+    ],
+    ultimate: [
+      // 4 ultimates: left column
+      {dx:-340, dy:-160}, {dx:-340, dy:-20}, {dx:-340, dy:120}, {dx:-340, dy:260}
+    ],
+    'key-passives': [
+      // 4 key passives in a row
+      {dx:-270, dy:0}, {dx:-90, dy:0}, {dx:90, dy:0}, {dx:270, dy:0}
+    ]
+  };
+
+  const offsets = layouts[sec.id] || [{dx:0,dy:0}];
+
+  nodes.forEach((node, i) => {
+    const off = offsets[i] || {dx: dir*(200 + i*120), dy: i*80 - (nodes.length-1)*40};
+    const fx = hub.x + off.dx;
+    const fy = hub.y + off.dy;
+    flattenSectionNode(node, sec, null, fx, fy, hub, off.dx, off.dy);
+  });
 }
 
-// ── DRAW ─────────────────────────────────────────────────────────────────
+function flattenSectionNode(node, sec, parentId, fx, fy, hub, baseDx, baseDy) {
+  flat.push({
+    ...node, sec:sec.id, secCol:SC[sec.id],
+    parentId, hubId:sec.hubId,
+    fx, fy, upgrades:undefined
+  });
+
+  // Lay out upgrades fanning outward from parent
+  const upgrades = node.upgrades || [];
+  if (!upgrades.length) return;
+
+  // Direction: away from hub
+  const awayX = fx - hub.x;
+  const awayY = fy - hub.y;
+  const len   = Math.sqrt(awayX*awayX + awayY*awayY) || 1;
+  const ux    = awayX/len;
+  const uy    = awayY/len;
+
+  if (upgrades.length === 1) {
+    const uf = upgrades[0];
+    flattenSectionNode(uf, sec, node.id, fx + ux*80, fy + uy*80, hub, baseDx, baseDy);
+  } else if (upgrades.length === 2) {
+    // Enhanced goes straight out, two choices fan left/right
+    const enh = upgrades[0];
+    const efx = fx + ux*80;
+    const efy = fy + uy*80;
+    flattenSectionNode(enh, sec, node.id, efx, efy, hub, baseDx, baseDy);
+
+    const eChildren = enh.upgrades || [];
+    if (eChildren.length >= 2) {
+      // Perpendicular spread
+      const px2 = -uy, py2 = ux; // perpendicular
+      flattenSectionNode(eChildren[0], sec, enh.id, efx + px2*70, efy + py2*70, hub, baseDx, baseDy);
+      flattenSectionNode(eChildren[1], sec, enh.id, efx - px2*70, efy - py2*70, hub, baseDx, baseDy);
+    }
+
+    // Second upgrade branches differently
+    if (upgrades[1]) {
+      const uf2 = upgrades[1];
+      const p2x = -uy, p2y = ux;
+      flattenSectionNode(uf2, sec, node.id, fx + p2x*80, fy + p2y*80, hub, baseDx, baseDy);
+    }
+  }
+}
+
+// ── DRAW ──────────────────────────────────────────────────────────────────
 function draw() {
-  const cv = document.getElementById('c');
-  const ctx = cv.getContext('2d');
+  const cv=document.getElementById('c');
+  const ctx=cv.getContext('2d');
   ctx.clearRect(0,0,cv.width,cv.height);
+
   drawSpine(ctx);
   drawConnections(ctx);
-  for (const n of flat) drawNode(ctx, n);
-  updatePts();
+  for (const n of flat) drawNode(ctx,n);
+  updPts();
 }
 
 function drawSpine(ctx) {
-  if (!data.spine || data.spine.length < 2) return;
-  ctx.strokeStyle = SPINE_COLOR;
-  ctx.lineWidth   = SPINE_W;
-  ctx.lineCap     = 'round';
+  if (!data.spine||data.spine.length<2) return;
+
+  // Thick spine line
+  ctx.strokeStyle='rgba(180,40,40,0.7)';
+  ctx.lineWidth=8;
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
   ctx.beginPath();
   ctx.moveTo(data.spine[0].x, data.spine[0].y);
-  for (let i = 1; i < data.spine.length; i++) {
-    ctx.lineTo(data.spine[i].x, data.spine[i].y);
-  }
+  for (let i=1;i<data.spine.length;i++) ctx.lineTo(data.spine[i].x, data.spine[i].y);
   ctx.stroke();
 
-  // Hub diamonds
+  // Glow pass
+  ctx.strokeStyle='rgba(220,80,80,0.25)';
+  ctx.lineWidth=16;
+  ctx.beginPath();
+  ctx.moveTo(data.spine[0].x, data.spine[0].y);
+  for (let i=1;i<data.spine.length;i++) ctx.lineTo(data.spine[i].x, data.spine[i].y);
+  ctx.stroke();
+
+  // Hub diamonds on spine
   for (const hub of data.spine) {
-    const sec = data.sections.find(s => s.hubId === hub.id);
-    const col = sec ? sec.color : '#888';
+    const sec = data.sections.find(s=>s.hubId===hub.id);
+    const col = sec ? SC[sec.id]||'#888' : '#888';
+    const sz = 22;
+
     ctx.save();
     ctx.translate(hub.x, hub.y);
     ctx.rotate(Math.PI/4);
-    ctx.fillStyle   = '#111118';
-    ctx.strokeStyle = col;
-    ctx.lineWidth   = 2;
-    ctx.fillRect(-14,-14,28,28);
-    ctx.strokeRect(-14,-14,28,28);
+    // Shadow/glow
+    ctx.shadowColor=col;
+    ctx.shadowBlur=12;
+    ctx.fillStyle='#1a1510';
+    ctx.fillRect(-sz/2,-sz/2,sz,sz);
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=col;
+    ctx.lineWidth=2.5;
+    ctx.strokeRect(-sz/2,-sz/2,sz,sz);
     ctx.restore();
-    // Inner dot
-    ctx.beginPath();
-    ctx.arc(hub.x, hub.y, 4, 0, Math.PI*2);
-    ctx.fillStyle = col;
-    ctx.fill();
   }
 }
 
 function drawConnections(ctx) {
   for (const n of flat) {
-    const par = flat.find(x => x.id === n.parentId);
-    if (!par) {
-      // Connect first-level nodes to their section hub
-      const sec = data.sections.find(s => s.id === n.sec);
-      if (sec) {
-        const hub = data.spine.find(h => h.id === sec.hubId);
-        if (hub) {
-          const gr = gRanks[n.id]||0, pgr = gRanks[hub.id]||0;
-          const pr = pRanks[n.id]||0;
-          drawLine(ctx, hub.x, hub.y, n.x, n.y, false,
-            mode==='guide'    ? (gr>0 ? true : false) : (pr>0 ? true : false),
-            sec.color
-          );
-        }
-      }
-      continue;
+    let px2, py2;
+    if (n.parentId) {
+      const par = flat.find(x=>x.id===n.parentId);
+      if (!par) continue;
+      px2=par.fx; py2=par.fy;
+    } else {
+      // Connect to hub
+      const hub = data.spine.find(h=>h.id===n.hubId);
+      if (!hub) continue;
+      px2=hub.x; py2=hub.y;
     }
-    const gr = gRanks[n.id]||0, pr = pRanks[n.id]||0;
-    const pgr = gRanks[par.id]||0, ppr = pRanks[par.id]||0;
-    const lit = mode==='guide' ? (gr>0&&pgr>0) : (pr>0&&ppr>0);
-    drawLine(ctx, par.x, par.y, n.x, n.y, false, lit, n.secCol);
-  }
-}
 
-function drawLine(ctx, x1, y1, x2, y2, dashed, lit, col) {
-  ctx.beginPath();
-  ctx.moveTo(x1,y1);
-  ctx.lineTo(x2,y2);
-  if (lit) {
-    ctx.strokeStyle = mode==='guide' ? (col||'rgba(201,168,76,.8)') : 'rgba(46,204,113,.8)';
-    ctx.lineWidth   = 2;
+    const gr=gR[n.id]||0, pr=pR[n.id]||0;
+    const pgr=n.parentId?(gR[n.parentId]||0):1;
+    const ppr=n.parentId?(pR[n.parentId]||0):1;
+    const lit = mode==='guide'?(gr>0&&pgr>0):(pr>0&&ppr>0);
+
+    ctx.beginPath();
+    ctx.moveTo(px2,py2);
+    ctx.lineTo(n.fx,n.fy);
+
+    if (lit) {
+      ctx.strokeStyle = mode==='guide'
+        ? (n.secCol||'rgba(201,168,76,.9)')
+        : 'rgba(62,220,129,.9)';
+      ctx.lineWidth=2.5;
+      ctx.setLineDash([]);
+      ctx.globalAlpha=0.9;
+    } else {
+      ctx.strokeStyle='rgba(120,100,70,.4)';
+      ctx.lineWidth=1;
+      ctx.setLineDash([4,4]);
+      ctx.globalAlpha=0.6;
+    }
+    ctx.stroke();
     ctx.setLineDash([]);
-  } else {
-    ctx.strokeStyle = 'rgba(90,80,60,.35)';
-    ctx.lineWidth   = 1;
-    ctx.setLineDash([3,3]);
+    ctx.globalAlpha=1;
   }
-  ctx.stroke();
-  ctx.setLineDash([]);
 }
 
 function drawNode(ctx, n) {
-  const {x,y,type,name,maxRank,secCol} = n;
-  const gr = gRanks[n.id]||0;
-  const pr = pRanks[n.id]||0;
-  const rank = mode==='guide' ? gr : pr;
-  const has  = rank > 0;
-  const hov  = hovered && hovered.id===n.id;
+  const {fx:x,fy:y,type,name,maxRank,secCol} = n;
+  const gr=gR[n.id]||0, pr=pR[n.id]||0;
+  const rank=mode==='guide'?gr:pr;
+  const has=rank>0;
+  const ishov=hov&&hov.id===n.id;
 
   ctx.save();
 
-  if (type==='active'||type==='ultimate') {
-    drawSquare(ctx, n, gr, pr, has, hov, secCol);
-  } else if (type==='key-passive') {
-    drawKeyPassive(ctx, n, gr, pr, has, hov);
-  } else if (type==='passive') {
-    drawDiamond(ctx, n, gr, pr, has, hov, SZ.passive, secCol);
-  } else {
-    drawDiamond(ctx, n, gr, pr, has, hov, SZ.upgrade, secCol);
-  }
+  if (type==='active'||type==='ultimate') drawSq(ctx,n,gr,pr,has,ishov,secCol);
+  else if (type==='key-passive') drawKey(ctx,n,gr,pr,has,ishov);
+  else if (type==='passive') drawDia(ctx,n,gr,pr,has,ishov,S.passive,secCol);
+  else drawDia(ctx,n,gr,pr,has,ishov,S.upgrade,secCol);
 
   ctx.restore();
 }
 
-function drawSquare(ctx, n, gr, pr, has, hov, col) {
-  const {x,y,type,name,maxRank} = n;
-  const sz = type==='ultimate' ? SZ.ultimate : SZ.active;
-  const h  = sz/2;
+function drawSq(ctx,n,gr,pr,has,ishov,col) {
+  const {fx:x,fy:y,type,name,maxRank}=n;
+  const sz=type==='ultimate'?S.ultimate:S.active;
+  const h=sz/2;
+  const rank=mode==='guide'?gr:pr;
 
-  if (has||hov) {
-    ctx.shadowColor = has ? (mode==='guide' ? 'rgba(201,168,76,.55)' : 'rgba(46,204,113,.55)') : 'rgba(201,168,76,.25)';
-    ctx.shadowBlur  = has ? 12 : 6;
+  // Glow
+  if (has) {
+    ctx.shadowColor=mode==='guide'?col||'#c9a84c':'#3edc81';
+    ctx.shadowBlur=18;
+  } else if (ishov) {
+    ctx.shadowColor='rgba(201,168,76,.5)';
+    ctx.shadowBlur=10;
   }
 
-  ctx.fillStyle = has
-    ? (mode==='guide' ? 'rgba(38,28,8,.95)' : 'rgba(8,30,15,.95)')
-    : '#141008';
-  rr(ctx, x-h, y-h, sz, sz, 4);
+  // Fill
+  ctx.fillStyle=has
+    ?(mode==='guide'?'#2a2010':'#0c2018')
+    :(ishov?'#201c12':'#16120a');
+  rr(ctx,x-h,y-h,sz,sz,5);
   ctx.fill();
 
-  ctx.shadowBlur  = 0;
-  ctx.strokeStyle = has
-    ? (mode==='guide' ? col||'#c9a84c' : '#2ecc71')
-    : (hov ? 'rgba(201,168,76,.5)' : 'rgba(80,65,35,.6)');
-  ctx.lineWidth   = has ? 2 : 1;
-  rr(ctx, x-h, y-h, sz, sz, 4);
+  ctx.shadowBlur=0;
+
+  // Border
+  ctx.strokeStyle=has
+    ?(mode==='guide'?col||'#c9a84c':'#3edc81')
+    :(ishov?'rgba(201,168,76,.7)':'rgba(150,120,60,.5)');
+  ctx.lineWidth=has?2.5:(ishov?2:1);
+  rr(ctx,x-h,y-h,sz,sz,5);
   ctx.stroke();
 
-  // Progress bar overlay
-  if (mode==='progress' && gr>0) {
-    const frac = Math.min((pRanks[n.id]||0)/n.maxRank, 1);
-    ctx.fillStyle = 'rgba(46,204,113,.22)';
-    ctx.fillRect(x-h+2, y+h-7, (sz-4)*frac, 4);
-    ctx.strokeStyle = 'rgba(46,204,113,.3)';
-    ctx.lineWidth   = .5;
-    ctx.strokeRect(x-h+2, y+h-7, sz-4, 4);
+  // Inner corner accents for active nodes
+  if (!has && !ishov) {
+    ctx.strokeStyle='rgba(150,120,60,.3)';
+    ctx.lineWidth=1;
+    const a=8;
+    // top-left
+    ctx.beginPath(); ctx.moveTo(x-h+2,y-h+a); ctx.lineTo(x-h+2,y-h+2); ctx.lineTo(x-h+a,y-h+2); ctx.stroke();
+    // top-right
+    ctx.beginPath(); ctx.moveTo(x+h-2,y-h+a); ctx.lineTo(x+h-2,y-h+2); ctx.lineTo(x+h-a,y-h+2); ctx.stroke();
+    // bottom-left
+    ctx.beginPath(); ctx.moveTo(x-h+2,y+h-a); ctx.lineTo(x-h+2,y+h-2); ctx.lineTo(x-h+a,y+h-2); ctx.stroke();
+    // bottom-right
+    ctx.beginPath(); ctx.moveTo(x+h-2,y+h-a); ctx.lineTo(x+h-2,y+h-2); ctx.lineTo(x+h-a,y+h-2); ctx.stroke();
   }
 
-  const rank = mode==='guide' ? gr : (pRanks[n.id]||0);
+  // Progress bar
+  if (mode==='progress'&&gr>0) {
+    const frac=Math.min((pR[n.id]||0)/maxRank,1);
+    ctx.fillStyle='rgba(62,220,129,.25)';
+    ctx.fillRect(x-h+3,y+h-7,(sz-6)*frac,4);
+    ctx.strokeStyle='rgba(62,220,129,.4)'; ctx.lineWidth=.5;
+    ctx.strokeRect(x-h+3,y+h-7,sz-6,4);
+  }
+
+  // Rank badge
   if (maxRank>1) {
-    ctx.font         = 'bold 9px Rajdhani,sans-serif';
-    ctx.fillStyle    = has ? (mode==='guide' ? '#e8c97a' : '#2ecc71') : '#3a3028';
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(`${rank}/${maxRank}`, x, y+h-1);
+    ctx.font='bold 11px Rajdhani,sans-serif';
+    ctx.fillStyle=has?(mode==='guide'?'#f0d88a':'#5eec99'):'#5a4a2a';
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText(`${rank}/${maxRank}`,x,y+h-1);
   }
 
-  ctx.font         = '500 9px Rajdhani,sans-serif';
-  ctx.fillStyle    = has ? '#c8c0b0' : '#3a3028';
-  ctx.textAlign    = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(trunc(name,11), x, y + (maxRank>1 ? -5 : 0));
+  // Name
+  const lines=wrapText(name,sz-8,11);
+  ctx.font='600 11px Rajdhani,sans-serif';
+  ctx.fillStyle=has?'#e0d8c8':(ishov?'#b0a888':'#7a6a4a');
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  const lh=13, startY=y-(lines.length-1)*lh/2+(maxRank>1?-6:0);
+  lines.forEach((l,i)=>ctx.fillText(l,x,startY+i*lh));
 }
 
-function drawDiamond(ctx, n, gr, pr, has, hov, sz, col) {
-  const {x,y,name,maxRank,type} = n;
-  const h = sz/2;
-  const rank = mode==='guide' ? gr : pr;
+function drawDia(ctx,n,gr,pr,has,ishov,sz,col) {
+  const {fx:x,fy:y,name,maxRank,type}=n;
+  const h=sz/2;
+  const rank=mode==='guide'?gr:pr;
 
-  if (has||hov) {
-    ctx.shadowColor = has ? (mode==='guide' ? 'rgba(201,168,76,.45)' : 'rgba(46,204,113,.45)') : 'rgba(201,168,76,.2)';
-    ctx.shadowBlur  = has ? 8 : 4;
+  if (has) {
+    ctx.shadowColor=mode==='guide'?col||'#c9a84c':'#3edc81';
+    ctx.shadowBlur=10;
   }
 
   ctx.save();
-  ctx.translate(x,y);
-  ctx.rotate(Math.PI/4);
-  ctx.fillStyle = has
-    ? (mode==='guide' ? 'rgba(38,28,8,.95)' : 'rgba(8,28,15,.95)')
-    : (type==='passive' ? '#0d1218' : '#100c08');
+  ctx.translate(x,y); ctx.rotate(Math.PI/4);
+  ctx.fillStyle=has?(mode==='guide'?'#2a2010':'#0c2018'):(ishov?'#1c1810':'#130e08');
   ctx.fillRect(-h,-h,sz,sz);
-  ctx.shadowBlur  = 0;
-  ctx.strokeStyle = has
-    ? (mode==='guide' ? col||'#c9a84c' : '#2ecc71')
-    : (hov ? 'rgba(201,168,76,.4)' : type==='passive' ? 'rgba(40,70,100,.5)' : 'rgba(70,55,30,.5)');
-  ctx.lineWidth   = has ? 1.5 : 0.75;
+  ctx.shadowBlur=0;
+  ctx.strokeStyle=has?(mode==='guide'?col||'#c9a84c':'#3edc81')
+    :(ishov?'rgba(201,168,76,.6)':type==='passive'?'rgba(80,120,160,.6)':'rgba(120,95,50,.5)');
+  ctx.lineWidth=has?2:(ishov?1.5:1);
   ctx.strokeRect(-h,-h,sz,sz);
   ctx.restore();
 
-  if (maxRank>1 && sz>=24) {
-    ctx.font         = 'bold 8px Rajdhani,sans-serif';
-    ctx.fillStyle    = has ? (mode==='guide' ? '#e8c97a' : '#2ecc71') : '#2a2018';
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${rank}/${maxRank}`, x, y);
-  } else if (sz < 24) {
-    ctx.beginPath();
-    ctx.arc(x, y, has ? 3 : 2, 0, Math.PI*2);
-    ctx.fillStyle = has ? (mode==='guide' ? '#c9a84c' : '#2ecc71') : '#2a2018';
+  if (maxRank>1&&sz>=28) {
+    ctx.font='bold 10px Rajdhani,sans-serif';
+    ctx.fillStyle=has?(mode==='guide'?'#f0d88a':'#5eec99'):'#3a3020';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(`${rank}/${maxRank}`,x,y);
+  } else if (sz<28) {
+    // Small dot center
+    ctx.beginPath(); ctx.arc(x,y,has?3.5:2.5,0,Math.PI*2);
+    ctx.fillStyle=has?(mode==='guide'?col||'#c9a84c':'#3edc81'):'#3a3020';
     ctx.fill();
   }
 
-  // Passive name label (only if big enough)
-  if (type==='passive' && sz>=24) {
-    ctx.font         = '500 8px Rajdhani,sans-serif';
-    ctx.fillStyle    = has ? '#a09080' : '#2a2018';
-    ctx.textAlign    = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(trunc(name,14), x+sz/2+4, y);
+  // Name label next to passive diamonds
+  if (type==='passive'&&sz>=28) {
+    ctx.font='500 10px Rajdhani,sans-serif';
+    ctx.fillStyle=has?'#c8b890':(ishov?'#7a6a4a':'#4a4030');
+    ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillText(trunc(name,16),x+h+5,y);
   }
 }
 
-function drawKeyPassive(ctx, n, gr, pr, has, hov) {
-  const {x,y,name,maxRank} = n;
-  const r = SZ.key/2;
-  const rank = mode==='guide' ? gr : pr;
+function drawKey(ctx,n,gr,pr,has,ishov) {
+  const {fx:x,fy:y,name}=n;
+  const r=S.key/2;
+  const rank=mode==='guide'?gr:pr;
 
-  if (has||hov) {
-    ctx.shadowColor = has ? (mode==='guide' ? 'rgba(255,100,100,.7)' : 'rgba(46,204,113,.7)') : 'rgba(255,100,100,.3)';
-    ctx.shadowBlur  = has ? 18 : 8;
+  if (has) {
+    ctx.shadowColor=mode==='guide'?'#ff8080':'#3edc81';
+    ctx.shadowBlur=22;
+  } else if (ishov) {
+    ctx.shadowColor='rgba(255,100,100,.4)'; ctx.shadowBlur=10;
   }
 
-  // Star shape
-  star(ctx, x, y, r+5, r-2, 8);
-  ctx.fillStyle   = has ? (mode==='guide' ? 'rgba(60,10,10,.95)' : 'rgba(10,40,20,.95)') : '#130808';
+  starPath(ctx,x,y,r+6,r-2,8);
+  ctx.fillStyle=has?(mode==='guide'?'#300c0c':'#0c2818'):'#1a0808';
   ctx.fill();
-  ctx.shadowBlur  = 0;
-  ctx.strokeStyle = has ? (mode==='guide' ? '#ff6b6b' : '#2ecc71') : (hov ? 'rgba(255,100,100,.5)' : '#4a1010');
-  ctx.lineWidth   = has ? 2 : 1;
+  ctx.shadowBlur=0;
+  ctx.strokeStyle=has?(mode==='guide'?'#ff7070':'#3edc81'):(ishov?'rgba(255,100,100,.6)':'#5a1010');
+  ctx.lineWidth=has?2.5:1.5;
+  starPath(ctx,x,y,r+6,r-2,8);
   ctx.stroke();
 
-  // Inner circle
-  ctx.beginPath();
-  ctx.arc(x,y,r-6,0,Math.PI*2);
-  ctx.fillStyle   = has ? (mode==='guide' ? '#3a0e0e' : '#0a2818') : '#1a0808';
+  ctx.beginPath(); ctx.arc(x,y,r-5,0,Math.PI*2);
+  ctx.fillStyle=has?(mode==='guide'?'#4a1010':'#103020'):'#220c0c';
   ctx.fill();
-  ctx.strokeStyle = has ? (mode==='guide' ? '#ff6b6b' : '#2ecc71') : '#3a0808';
-  ctx.lineWidth   = 1;
-  ctx.stroke();
+  ctx.strokeStyle=has?(mode==='guide'?'#ff8888':'#5eec99'):'#4a1414';
+  ctx.lineWidth=1; ctx.stroke();
 
-  ctx.font         = '600 9px Rajdhani,sans-serif';
-  ctx.fillStyle    = has ? (mode==='guide' ? '#ffaaaa' : '#88ffbb') : '#4a1818';
-  ctx.textAlign    = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(trunc(name,10), x, y);
+  ctx.font='600 10px Rajdhani,sans-serif';
+  ctx.fillStyle=has?(mode==='guide'?'#ffb0b0':'#90ffcc'):'#6a2020';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(trunc(name,11),x,y);
 }
 
-// ── HIT TEST ─────────────────────────────────────────────────────────────
+// ── HIT TEST ────────────────────────────────────────────────────────────
 function nodeAt(cx,cy) {
   for (const n of [...flat].reverse()) {
-    const dx=cx-n.x, dy=cy-n.y;
-    const r = hitR(n.type);
-    if (Math.abs(dx)<=r && Math.abs(dy)<=r) return n;
+    const r=hitR(n.type);
+    if (Math.abs(cx-n.fx)<=r&&Math.abs(cy-n.fy)<=r) return n;
   }
   return null;
 }
 function hitR(t) {
-  if (t==='key-passive') return SZ.key/2+6;
-  if (t==='active'||t==='ultimate') return (t==='ultimate'?SZ.ultimate:SZ.active)/2+3;
-  if (t==='passive') return SZ.passive/2+3;
-  return SZ.upgrade/2+3;
+  if (t==='key-passive') return S.key/2+8;
+  if (t==='active'||t==='ultimate') return S[t]/2+4;
+  if (t==='passive') return S.passive/2+4;
+  return S.upgrade/2+4;
 }
 function s2c(sx,sy) {
   const r=document.getElementById('wrap').getBoundingClientRect();
-  return { x:(sx-r.left-panX)/scale, y:(sy-r.top-panY)/scale };
+  return {x:(sx-r.left-px)/scale, y:(sy-r.top-py)/scale};
 }
 
-// ── RANK OPS ─────────────────────────────────────────────────────────────
-function inc(n) {
-  const d = mode==='guide' ? gRanks : pRanks;
-  d[n.id] = Math.min((d[n.id]||0)+1, n.maxRank||1);
-  saveState(); draw();
+// ── INTERACTIONS ────────────────────────────────────────────────────────
+function inc(n){const d=mode==='guide'?gR:pR;d[n.id]=Math.min((d[n.id]||0)+1,n.maxRank||1);saveSt();draw();}
+function dec(n){const d=mode==='guide'?gR:pR;d[n.id]=Math.max((d[n.id]||0)-1,0);if(!d[n.id])delete d[n.id];saveSt();draw();}
+function updPts(){
+  document.getElementById('gP').textContent=Object.values(gR).reduce((s,v)=>s+v,0);
+  document.getElementById('pP').textContent=Object.values(pR).reduce((s,v)=>s+v,0);
 }
-function dec(n) {
-  const d = mode==='guide' ? gRanks : pRanks;
-  d[n.id] = Math.max((d[n.id]||0)-1, 0);
-  if (!d[n.id]) delete d[n.id];
-  saveState(); draw();
-}
-function updatePts() {
-  document.getElementById('gPts').textContent = Object.values(gRanks).reduce((s,v)=>s+v,0);
-  document.getElementById('pPts').textContent = Object.values(pRanks).reduce((s,v)=>s+v,0);
-}
-
-// ── MODE ──────────────────────────────────────────────────────────────────
-function setMode(m) {
+function setMode(m){
   mode=m;
-  document.getElementById('btnG').className='mbtn'+(m==='guide'?' mg':'');
-  document.getElementById('btnP').className='mbtn'+(m==='progress'?' mp':'');
+  document.getElementById('bG').className='mbtn'+(m==='guide'?' mg':'');
+  document.getElementById('bP').className='mbtn'+(m==='progress'?' mp':'');
   draw();
 }
-
-// ── ZOOM/PAN ─────────────────────────────────────────────────────────────
-function doZoom(f, cx, cy) {
+function dz(f,cx,cy){
   const w=document.getElementById('wrap');
   cx=cx??w.clientWidth/2; cy=cy??w.clientHeight/2;
-  const ns=Math.min(Math.max(scale*f,.15),3);
-  panX=cx-(cx-panX)*(ns/scale);
-  panY=cy-(cy-panY)*(ns/scale);
-  scale=ns;
-  applyXform();
+  const ns=Math.min(Math.max(scale*f,.1),3);
+  px=cx-(cx-px)*(ns/scale); py=cy-(cy-py)*(ns/scale);
+  scale=ns; ax();
 }
-function resetView() { scale=.65; panX=100; panY=40; applyXform(); }
-function applyXform() {
-  document.getElementById('c').style.transform=`translate(${panX}px,${panY}px) scale(${scale})`;
-  document.getElementById('zlbl').textContent=Math.round(scale*100)+'%';
+function rv(){scale=.55;px=180;py=30;ax();}
+function ax(){
+  document.getElementById('c').style.transform=`translate(${px}px,${py}px) scale(${scale})`;
+  document.getElementById('zl').textContent=Math.round(scale*100)+'%';
 }
 
-const wrap = document.getElementById('wrap');
-wrap.addEventListener('wheel', e=>{
+const wrap=document.getElementById('wrap');
+wrap.addEventListener('wheel',e=>{
   e.preventDefault();
   const r=wrap.getBoundingClientRect();
-  doZoom(e.deltaY<0?1.1:.9, e.clientX-r.left, e.clientY-r.top);
+  dz(e.deltaY<0?1.1:.9,e.clientX-r.left,e.clientY-r.top);
 },{passive:false});
 
-wrap.addEventListener('mousedown', e=>{
-  panning=true;
-  lastM={x:e.clientX,y:e.clientY};
-  wrap.classList.add('grabbing');
-  if (e.button===0) {
-    const p=s2c(e.clientX,e.clientY);
-    const n=nodeAt(p.x,p.y);
-    if (n) { clickNode=n; clickStart={x:e.clientX,y:e.clientY}; }
-  }
+wrap.addEventListener('mousedown',e=>{
+  panning=true; lm={x:e.clientX,y:e.clientY};
+  wrap.classList.add('g');
+  if (e.button===0){const p=s2c(e.clientX,e.clientY);const n=nodeAt(p.x,p.y);if(n){cn=n;cs={x:e.clientX,y:e.clientY};}}
 });
-
-wrap.addEventListener('mousemove', e=>{
-  if (panning) {
-    panX+=e.clientX-lastM.x; panY+=e.clientY-lastM.y;
-    lastM={x:e.clientX,y:e.clientY};
-    applyXform();
-    if (clickStart && (Math.abs(e.clientX-clickStart.x)+Math.abs(e.clientY-clickStart.y))>4) clickNode=null;
-  }
-  const p=s2c(e.clientX,e.clientY);
-  const n=nodeAt(p.x,p.y);
-  if (n!==hovered){ hovered=n; draw(); }
-  if (n) showTip(n,e.clientX,e.clientY); else hideTip();
+wrap.addEventListener('mousemove',e=>{
+  if(panning){px+=e.clientX-lm.x;py+=e.clientY-lm.y;lm={x:e.clientX,y:e.clientY};ax();
+    if(cs&&(Math.abs(e.clientX-cs.x)+Math.abs(e.clientY-cs.y))>5)cn=null;}
+  const p=s2c(e.clientX,e.clientY);const n=nodeAt(p.x,p.y);
+  if(n!==hov){hov=n;draw();}
+  if(n)showTip(n,e.clientX,e.clientY);else hideTip();
 });
-
-wrap.addEventListener('mouseup', e=>{
-  panning=false; wrap.classList.remove('grabbing');
-  if (clickNode && e.button===0) { inc(clickNode); clickNode=null; clickStart=null; }
+wrap.addEventListener('mouseup',e=>{
+  panning=false;wrap.classList.remove('g');
+  if(cn&&e.button===0){inc(cn);cn=null;cs=null;}
 });
-
-wrap.addEventListener('contextmenu', e=>{
-  e.preventDefault();
-  const p=s2c(e.clientX,e.clientY);
-  const n=nodeAt(p.x,p.y);
-  if (n) dec(n);
+wrap.addEventListener('contextmenu',e=>{
+  e.preventDefault();const p=s2c(e.clientX,e.clientY);const n=nodeAt(p.x,p.y);if(n)dec(n);
 });
+wrap.addEventListener('mouseleave',()=>{panning=false;wrap.classList.remove('g');hideTip();hov=null;draw();});
 
-wrap.addEventListener('mouseleave', ()=>{ panning=false; wrap.classList.remove('grabbing'); hideTip(); hovered=null; draw(); });
-
-// ── TOOLTIP ───────────────────────────────────────────────────────────────
-function showTip(n,mx,my) {
-  const gr=gRanks[n.id]||0, pr=pRanks[n.id]||0;
+// ── TOOLTIP ────────────────────────────────────────────────────────────
+function showTip(n,mx,my){
+  const gr=gR[n.id]||0,pr=pR[n.id]||0;
   document.getElementById('tN').textContent=n.name;
-  const te=document.getElementById('tT'); te.innerHTML='';
-  for (const t of (n.tags||[])) { const s=document.createElement('span'); s.className='ttag'; s.textContent=t; te.appendChild(s); }
+  const te=document.getElementById('tT');te.innerHTML='';
+  (n.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='ttg';s.textContent=t;te.appendChild(s);});
   document.getElementById('tR').textContent=`Guide: ${gr}/${n.maxRank}  ·  Progress: ${pr}/${n.maxRank}`;
   document.getElementById('tD').textContent=n.desc||'';
-  const cd=n.cooldown?`Cooldown: ${n.cooldown}s`:n.charges?`${n.charges} Charges (${n.chargeCooldown}s)`:'';
-  document.getElementById('tC').textContent=cd;
-  document.getElementById('tH').textContent=mode==='guide'?'Left click to add rank · Right click to remove':'Left click to mark progress · Right click to remove';
-  const tip=document.getElementById('tip');
-  let tx=mx+14, ty=my-20;
-  if (tx+268>window.innerWidth)  tx=mx-278;
-  if (ty+170>window.innerHeight) ty=my-170;
-  tip.style.left=tx+'px'; tip.style.top=ty+'px'; tip.style.display='block';
+  document.getElementById('tC').textContent=n.cooldown?`Cooldown: ${n.cooldown}s`:n.charges?`${n.charges} Charges (${n.chargeCooldown}s)`:'';
+  document.getElementById('tH').textContent=mode==='guide'?'Left click +rank · Right click −rank':'Left click mark progress · Right click remove';
+  const t=document.getElementById('tip');
+  let tx=mx+16,ty=my-16;
+  if(tx+290>window.innerWidth)tx=mx-306;
+  if(ty+180>window.innerHeight)ty=my-180;
+  t.style.left=tx+'px';t.style.top=ty+'px';t.style.display='block';
 }
-function hideTip(){ document.getElementById('tip').style.display='none'; }
+function hideTip(){document.getElementById('tip').style.display='none';}
 
-// ── PERSIST ───────────────────────────────────────────────────────────────
-function saveState() {
-  localStorage.setItem('d4v_pal_g', JSON.stringify(gRanks));
-  localStorage.setItem('d4v_pal_p', JSON.stringify(pRanks));
-}
-function loadState() {
-  try { gRanks=JSON.parse(localStorage.getItem('d4v_pal_g')||'{}'); } catch(e){ gRanks={}; }
-  try { pRanks=JSON.parse(localStorage.getItem('d4v_pal_p')||'{}'); } catch(e){ pRanks={}; }
-}
+// ── PERSIST ────────────────────────────────────────────────────────────
+function saveSt(){localStorage.setItem('d4v_pal_g',JSON.stringify(gR));localStorage.setItem('d4v_pal_p',JSON.stringify(pR));}
+function loadSt(){try{gR=JSON.parse(localStorage.getItem('d4v_pal_g')||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem('d4v_pal_p')||'{}');}catch(e){pR={};}}
 
-// ── HELPERS ───────────────────────────────────────────────────────────────
+// ── HELPERS ────────────────────────────────────────────────────────────
 function rr(ctx,x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
   ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
   ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
-  ctx.closePath();
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
 }
-function star(ctx,cx,cy,or,ir,pts){
+function starPath(ctx,cx,cy,or,ir,pts){
   ctx.beginPath();
-  for(let i=0;i<pts*2;i++){
-    const r=i%2===0?or:ir, a=(i*Math.PI)/pts-Math.PI/2;
-    if(i===0) ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-    else ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-  }
+  for(let i=0;i<pts*2;i++){const r=i%2===0?or:ir,a=i*Math.PI/pts-Math.PI/2;
+    if(i===0)ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    else ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
   ctx.closePath();
 }
-function trunc(s,l){ return s.length>l?s.slice(0,l-1)+'…':s; }
+function wrapText(text,maxW,fontSize){
+  // Approximate character width
+  const cw=fontSize*0.6;
+  const maxC=Math.floor(maxW/cw);
+  if(text.length<=maxC)return[text];
+  const words=text.split(' ');
+  const lines=[];let cur='';
+  for(const w of words){
+    if((cur+' '+w).trim().length>maxC){if(cur)lines.push(cur);cur=w;}
+    else cur=(cur+' '+w).trim();
+  }
+  if(cur)lines.push(cur);
+  return lines.slice(0,2);
+}
+function trunc(s,l){return s.length>l?s.slice(0,l-1)+'…':s;}
 
-// ── INIT ──────────────────────────────────────────────────────────────────
-resetView();
-load();
+rv();init();
 </script>
 </body>
 </html>
