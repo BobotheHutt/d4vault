@@ -914,3 +914,83 @@ body {
 
 /* ── SCROLLBARS ─────────────────────────────────── */
 * { scrollbar-width: thin; scrollbar-color: rgba(180,140,80,0.2) transparent; }
+
+/* ── Skill Tree Panels ───────────────────────────────────────── */
+.skill-progress-panel,
+.skill-guide-panel {
+  margin-bottom: 12px;
+  border: 1px solid rgba(120,110,200,.2);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #12122a;
+}
+
+.spp-label {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,.7);
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(120,110,200,.15);
+  background: rgba(26,26,56,.8);
+}
+
+.skill-tree-frame {
+  display: block;
+  width: 100%;
+  border: none;
+  background: #12122a;
+}
+
+.skill-tree-frame--progress {
+  height: 500px;
+  min-height: 500px;
+}
+
+.skill-tree-frame--guide {
+  height: calc(100vh - 160px);
+  min-height: 850px;
+}
+
+.skill-progress-panel,
+.skill-guide-panel {
+  position: relative;
+}
+
+/* ── Two-column section layout ───────────────────────────────── */
+.two-col-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.detail-tabs-row {
+  grid-column: 1 / -1; /* spans both columns */
+  border-bottom: 1px solid rgba(120,110,200,.2);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.two-col-left,
+.two-col-right {
+  border: 1px solid rgba(120,110,200,.2);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #12122a;
+}
+
+.gear-preview-area {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gear-preview-empty {
+  color: rgba(150,140,200,.4);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  letter-spacing: .06em;
+}
