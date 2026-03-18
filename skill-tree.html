@@ -8,859 +8,539 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #0a0a0f;
-  --bg2:      #111118;
-  --bg3:      #18181f;
-  --border:   rgba(180,140,80,0.18);
-  --border2:  rgba(180,140,80,0.4);
-  --gold:     #c9a84c;
-  --gold2:    #e8c97a;
-  --text:     #d4cfc0;
-  --text2:    #8a8070;
-  --text3:    #5a5040;
-  --green:    #2ecc71;
-  --red:      #e74c3c;
-  --blue:     #5dade2;
-  --purple:   #9b59b6;
-  --font-head:'Cinzel', serif;
-  --font-body:'Rajdhani', sans-serif;
+  --bg:#0a0a0f; --bg2:#111118; --bg3:#18181f;
+  --border:rgba(180,140,80,.18); --border2:rgba(180,140,80,.4);
+  --gold:#c9a84c; --gold2:#e8c97a;
+  --text:#d4cfc0; --text2:#8a8070; --text3:#5a5040;
+  --green:#2ecc71; --red:#e74c3c; --blue:#5dade2;
+  --font-head:'Cinzel',serif; --font-body:'Rajdhani',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);display:flex;flex-direction:column;}
 
-  /* node type colors */
-  --node-active:    #1a1510;
-  --node-passive:   #0f1520;
-  --node-ultimate:  #1a0f0f;
-  --node-key:       #180a0a;
+#toolbar{
+  height:52px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:10;
+}
+.t-title{font-family:var(--font-head);font-size:14px;color:var(--gold2);letter-spacing:.1em;margin-right:6px;}
+.t-sep{width:1px;height:24px;background:var(--border);}
+.mbtn{
+  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:6px 14px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;
+}
+.mbtn:hover{border-color:var(--border2);color:var(--text2);}
+.mbtn.mg{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2);}
+.mbtn.mp{background:rgba(46,204,113,.12);border-color:rgba(46,204,113,.5);color:var(--green);}
+.pts{display:flex;gap:14px;font-size:12px;}
+.pi{display:flex;align-items:center;gap:5px;}
+.pd{width:8px;height:8px;border-radius:50%;}
+.pl{color:var(--text3);}
+.pv{color:var(--text);font-weight:600;}
+.zbtn{
+  width:28px;height:28px;font-size:16px;line-height:1;border:1px solid var(--border);
+  border-radius:3px;background:transparent;color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.zbtn:hover{border-color:var(--border2);color:var(--text);}
+.zlbl{font-size:12px;color:var(--text3);}
+.ml-auto{margin-left:auto;}
 
-  /* section colors */
-  --basic-col:   #c8a96e;
-  --core-col:    #e8c97a;
-  --aura-col:    #ffb347;
-  --valor-col:   #90ee90;
-  --justice-col: #da70d6;
-  --ultimate-col:#ff6b6b;
-  --key-col:     #ff4444;
-}
+#wrap{flex:1;overflow:hidden;position:relative;cursor:grab;}
+#wrap.grabbing{cursor:grabbing;}
+#c{position:absolute;top:0;left:0;transform-origin:0 0;}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  display: flex;
-  flex-direction: column;
+#tip{
+  position:fixed;background:var(--bg2);border:1px solid var(--border2);
+  border-radius:4px;padding:10px 14px;max-width:260px;pointer-events:none;
+  z-index:1000;display:none;font-size:13px;
 }
-
-/* ── TOOLBAR ─────────────────────────────────── */
-#toolbar {
-  height: 52px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 12px;
-  flex-shrink: 0;
-  z-index: 10;
-}
-.toolbar-title {
-  font-family: var(--font-head);
-  font-size: 14px;
-  color: var(--gold2);
-  letter-spacing: 0.1em;
-  margin-right: 8px;
-}
-.toolbar-sep { width: 1px; height: 24px; background: var(--border); }
-.mode-btn {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  border-radius: 3px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text3);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.mode-btn:hover { border-color: var(--border2); color: var(--text2); }
-.mode-btn.active-guide {
-  background: rgba(201,168,76,0.15);
-  border-color: var(--gold);
-  color: var(--gold2);
-}
-.mode-btn.active-progress {
-  background: rgba(46,204,113,0.12);
-  border-color: rgba(46,204,113,0.5);
-  color: var(--green);
-}
-.toolbar-info {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--text3);
-  letter-spacing: 0.04em;
-}
-.zoom-btns { display: flex; gap: 4px; }
-.zoom-btn {
-  width: 28px; height: 28px;
-  font-size: 16px;
-  line-height: 1;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: transparent;
-  color: var(--text2);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s;
-}
-.zoom-btn:hover { border-color: var(--border2); color: var(--text); }
-.expand-btn {
-  margin-left: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: transparent;
-  color: var(--text3);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.expand-btn:hover { border-color: var(--border2); color: var(--text2); }
-
-/* point counters */
-.point-display {
-  display: flex;
-  gap: 14px;
-  font-size: 12px;
-}
-.point-item { display: flex; align-items: center; gap: 5px; }
-.point-dot { width: 8px; height: 8px; border-radius: 50%; }
-.point-label { color: var(--text3); }
-.point-val { color: var(--text); font-weight: 600; }
-
-/* ── CANVAS AREA ─────────────────────────────── */
-#treeWrap {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  cursor: grab;
-}
-#treeWrap.grabbing { cursor: grabbing; }
-#treeCanvas {
-  position: absolute;
-  top: 0; left: 0;
-  transform-origin: 0 0;
-}
-
-/* ── SECTION LABEL OVERLAYS ──────────────────── */
-.section-label {
-  position: absolute;
-  font-family: var(--font-head);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/* ── TOOLTIP ─────────────────────────────────── */
-#tooltip {
-  position: fixed;
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  border-radius: 4px;
-  padding: 10px 14px;
-  max-width: 260px;
-  pointer-events: none;
-  z-index: 1000;
-  display: none;
-  font-size: 13px;
-}
-#tooltip .tt-name {
-  font-family: var(--font-head);
-  font-size: 13px;
-  color: var(--gold2);
-  margin-bottom: 4px;
-  letter-spacing: 0.05em;
-}
-#tooltip .tt-tags {
-  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 6px;
-}
-#tooltip .tt-tag {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; padding: 1px 6px; border-radius: 2px;
-  background: rgba(201,168,76,0.12);
-  border: 1px solid rgba(201,168,76,0.3);
-  color: var(--gold);
-}
-#tooltip .tt-rank { font-size: 11px; color: var(--gold); margin-bottom: 5px; font-weight: 600; }
-#tooltip .tt-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
-#tooltip .tt-cd   { font-size: 11px; color: var(--blue); margin-top: 5px; }
-#tooltip .tt-hint { font-size: 10px; color: var(--text3); margin-top: 6px; font-style: italic; }
+.tn{font-family:var(--font-head);font-size:13px;color:var(--gold2);margin-bottom:4px;letter-spacing:.05em;}
+.ttags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
+.ttag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:1px 6px;border-radius:2px;background:rgba(201,168,76,.12);
+  border:1px solid rgba(201,168,76,.3);color:var(--gold);}
+.tr{font-size:11px;color:var(--gold);margin-bottom:4px;font-weight:600;}
+.td{font-size:12px;color:var(--text2);line-height:1.5;}
+.tc{font-size:11px;color:var(--blue);margin-top:4px;}
+.th{font-size:10px;color:var(--text3);margin-top:5px;font-style:italic;}
 </style>
 </head>
 <body>
-
 <div id="toolbar">
-  <span class="toolbar-title">Paladin — Skill Tree</span>
-  <div class="toolbar-sep"></div>
-  <button class="mode-btn active-guide" id="btnGuide"   onclick="setMode('guide')">Guide Mode</button>
-  <button class="mode-btn"              id="btnProgress" onclick="setMode('progress')">Progress Mode</button>
-  <div class="toolbar-sep"></div>
-  <div class="point-display">
-    <div class="point-item">
-      <div class="point-dot" style="background:var(--gold)"></div>
-      <span class="point-label">Guide</span>
-      <span class="point-val" id="guidePoints">0</span>
-    </div>
-    <div class="point-item">
-      <div class="point-dot" style="background:var(--green)"></div>
-      <span class="point-label">Progress</span>
-      <span class="point-val" id="progressPoints">0</span>
-    </div>
+  <span class="t-title">Paladin — Skill Tree</span>
+  <div class="t-sep"></div>
+  <button class="mbtn mg" id="btnG" onclick="setMode('guide')">Guide Mode</button>
+  <button class="mbtn"    id="btnP" onclick="setMode('progress')">Progress Mode</button>
+  <div class="t-sep"></div>
+  <div class="pts">
+    <div class="pi"><div class="pd" style="background:var(--gold)"></div><span class="pl">Guide</span><span class="pv" id="gPts">0</span></div>
+    <div class="pi"><div class="pd" style="background:var(--green)"></div><span class="pl">Progress</span><span class="pv" id="pPts">0</span></div>
   </div>
-  <div class="toolbar-sep"></div>
-  <div class="zoom-btns">
-    <button class="zoom-btn" onclick="zoom(1.2)">+</button>
-    <button class="zoom-btn" onclick="zoom(0.8)">−</button>
-    <button class="zoom-btn" onclick="resetView()" title="Reset view">⌂</button>
+  <div class="t-sep"></div>
+  <div style="display:flex;gap:4px">
+    <button class="zbtn" onclick="doZoom(1.2)">+</button>
+    <button class="zbtn" onclick="doZoom(0.8)">−</button>
+    <button class="zbtn" onclick="resetView()" title="Reset">⌂</button>
   </div>
-  <div class="toolbar-info" id="zoomLabel">100%</div>
+  <span class="zlbl ml-auto" id="zlbl">65%</span>
 </div>
 
-<div id="treeWrap">
-  <canvas id="treeCanvas"></canvas>
+<div id="wrap">
+  <canvas id="c"></canvas>
 </div>
 
-<div id="tooltip">
-  <div class="tt-name" id="ttName"></div>
-  <div class="tt-tags" id="ttTags"></div>
-  <div class="tt-rank" id="ttRank"></div>
-  <div class="tt-desc" id="ttDesc"></div>
-  <div class="tt-cd"   id="ttCd"></div>
-  <div class="tt-hint" id="ttHint"></div>
+<div id="tip">
+  <div class="tn" id="tN"></div>
+  <div class="ttags" id="tT"></div>
+  <div class="tr" id="tR"></div>
+  <div class="td" id="tD"></div>
+  <div class="tc" id="tC"></div>
+  <div class="th" id="tH"></div>
 </div>
 
 <script>
-// ── CONSTANTS ──────────────────────────────────────────────────────────────
-const NODE_SIZE   = 40;   // active/ultimate square size
-const PASSIVE_SIZE= 28;   // passive diamond size
-const KEY_SIZE    = 52;   // key passive size
-const UPGRADE_SIZE= 22;   // small upgrade diamond
-const LINE_COLOR  = 'rgba(120,100,60,0.4)';
-const LINE_ACTIVE = 'rgba(201,168,76,0.7)';
-const LINE_PROGRESS='rgba(46,204,113,0.7)';
+// ── CONFIG ──────────────────────────────────────────────────────────────
+const SZ = { active:42, ultimate:50, passive:26, upgrade:20, key:54 };
+const SPINE_COLOR = 'rgba(180,50,50,0.55)';
+const SPINE_W     = 6;
 
-const TYPE_COLORS = {
-  active:      { fill:'#1e1a12', stroke:'#6a5830', textFill:'#c9a84c' },
-  passive:     { fill:'#0e1318', stroke:'#2a4060', textFill:'#5dade2' },
-  upgrade:     { fill:'#14100c', stroke:'#4a3820', textFill:'#8a7050' },
-  ultimate:    { fill:'#1a0e0e', stroke:'#6a2020', textFill:'#e74c3c' },
-  'key-passive':{ fill:'#1a0808', stroke:'#8a1010', textFill:'#ff6b6b' }
-};
+// ── STATE ────────────────────────────────────────────────────────────────
+let data, flat = [];
+let mode = 'guide';
+let gRanks = {}, pRanks = {};
+let scale = 0.65, panX = 100, panY = 40;
+let panning = false, lastM = {x:0,y:0};
+let hovered = null;
+let clickNode = null, clickStart = null;
 
-const SECTION_COLORS = {
-  basic:       '#c8a96e',
-  core:        '#e8c97a',
-  aura:        '#ffb347',
-  valor:       '#90ee90',
-  justice:     '#da70d6',
-  ultimate:    '#ff6b6b',
-  'key-passives':'#ff4444'
-};
+// ── LOAD ─────────────────────────────────────────────────────────────────
+async function load() {
+  const res = await fetch('data/skills/paladin.json');
+  data = await res.json();
+  buildFlat();
+  const maxX = Math.max(...flat.map(n=>n.x)) + 160;
+  const maxY = Math.max(...flat.map(n=>n.y)) + 160;
+  const cv = document.getElementById('c');
+  cv.width = maxX; cv.height = maxY;
+  loadState();
+  draw();
+}
 
-// ── STATE ──────────────────────────────────────────────────────────────────
-let treeData   = null;
-let allNodes   = [];   // flat list of all nodes with computed screen positions
-let mode       = 'guide';  // 'guide' | 'progress'
-let guideRanks = {};   // nodeId → rank (guide mode)
-let progRanks  = {};   // nodeId → rank (progress mode)
-
-// Pan/zoom
-let scale  = 0.7;
-let panX   = 40;
-let panY   = 20;
-let isPanning = false;
-let lastMouse = { x:0, y:0 };
-
-// Hover
-let hoveredNode = null;
-
-// ── LOAD DATA ──────────────────────────────────────────────────────────────
-async function loadTree() {
-  try {
-    const res = await fetch('data/skills/paladin.json');
-    treeData = await res.json();
-    flattenNodes();
-    initCanvas();
-    draw();
-  } catch(e) {
-    console.error('Failed to load paladin.json:', e);
-    document.getElementById('treeWrap').innerHTML =
-      '<div style="padding:40px;color:#8a8070;font-family:Rajdhani,sans-serif">Could not load paladin.json — make sure the file is in data/skills/</div>';
+function buildFlat() {
+  flat = [];
+  for (const sec of data.sections) {
+    for (const p of (sec.passives||[])) flat.push({...p, sec:sec.id, secCol:sec.color, parentId:null});
+    for (const n of (sec.nodes||[])) flattenNode(n, sec, null);
   }
 }
 
-// Flatten all nodes into a single array with computed x/y
-function flattenNodes() {
-  allNodes = [];
-  if (!treeData) return;
-  for (const section of treeData.sections) {
-    // Passives
-    for (const p of (section.passives || [])) {
-      allNodes.push({ ...p, section: section.id, sectionColor: SECTION_COLORS[section.id] });
-    }
-    // Main nodes + upgrades recursively
-    for (const n of (section.nodes || [])) {
-      flattenNode(n, section);
-    }
-  }
+function flattenNode(n, sec, parentId) {
+  flat.push({...n, sec:sec.id, secCol:sec.color, parentId, upgrades:undefined});
+  for (const u of (n.upgrades||[])) flattenNode(u, sec, n.id);
 }
 
-function flattenNode(node, section, parentId = null) {
-  allNodes.push({ ...node, section: section.id, sectionColor: SECTION_COLORS[section.id], parentId, upgrades: undefined });
-  for (const u of (node.upgrades || [])) {
-    flattenNode(u, section, node.id);
-  }
-}
-
-// ── CANVAS SETUP ──────────────────────────────────────────────────────────
-const wrap   = document.getElementById('treeWrap');
-const canvas = document.getElementById('treeCanvas');
-const ctx    = canvas.getContext('2d');
-
-function initCanvas() {
-  // Set canvas to match the tree data extents
-  const maxX = Math.max(...allNodes.map(n => n.x)) + 120;
-  const maxY = Math.max(...allNodes.map(n => n.y)) + 120;
-  canvas.width  = maxX;
-  canvas.height = maxY;
-  applyTransform();
-}
-
-function applyTransform() {
-  canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-  document.getElementById('zoomLabel').textContent = Math.round(scale * 100) + '%';
-}
-
-function resetView() {
-  scale = 0.7;
-  panX  = 40;
-  panY  = 20;
-  applyTransform();
-}
-
-// ── DRAW ──────────────────────────────────────────────────────────────────
+// ── DRAW ─────────────────────────────────────────────────────────────────
 function draw() {
-  if (!treeData) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw section bg bands
-  drawSectionBands();
-
-  // Draw connections first (under nodes)
-  drawConnections();
-
-  // Draw nodes
-  for (const node of allNodes) {
-    drawNode(node);
-  }
-
-  updatePointCounters();
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  drawSpine(ctx);
+  drawConnections(ctx);
+  for (const n of flat) drawNode(ctx, n);
+  updatePts();
 }
 
-function drawSectionBands() {
-  for (const section of treeData.sections) {
-    const nodesInSection = allNodes.filter(n => n.section === section.id);
-    if (!nodesInSection.length) continue;
-    const minY = Math.min(...nodesInSection.map(n => n.y)) - 50;
-    const maxY = Math.max(...nodesInSection.map(n => n.y)) + 80;
-    const col  = SECTION_COLORS[section.id] || '#888';
-
-    // Subtle band
-    ctx.fillStyle = hexToRgba(col, 0.03);
-    ctx.fillRect(0, minY, canvas.width, maxY - minY);
-
-    // Section label on left
-    ctx.font = 'bold 11px Cinzel, serif';
-    ctx.fillStyle = hexToRgba(col, 0.35);
-    ctx.letterSpacing = '3px';
-    ctx.fillText(section.name.toUpperCase(), 12, minY + 28);
-    ctx.letterSpacing = '0px';
-
-    // Thin top border line
-    ctx.strokeStyle = hexToRgba(col, 0.15);
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, minY); ctx.lineTo(canvas.width, minY);
-    ctx.stroke();
+function drawSpine(ctx) {
+  if (!data.spine || data.spine.length < 2) return;
+  ctx.strokeStyle = SPINE_COLOR;
+  ctx.lineWidth   = SPINE_W;
+  ctx.lineCap     = 'round';
+  ctx.beginPath();
+  ctx.moveTo(data.spine[0].x, data.spine[0].y);
+  for (let i = 1; i < data.spine.length; i++) {
+    ctx.lineTo(data.spine[i].x, data.spine[i].y);
   }
-}
-
-function drawConnections() {
-  for (const node of allNodes) {
-    const parent = allNodes.find(n => n.id === node.parentId);
-    if (!parent) continue;
-
-    const gr = getGuideRank(node.id);
-    const pr = getProgressRank(node.id);
-    const pgr = getGuideRank(parent.id);
-    const ppr = getProgressRank(parent.id);
-
-    let color = LINE_COLOR;
-    if (mode === 'guide'    && gr > 0 && pgr > 0)  color = LINE_ACTIVE;
-    if (mode === 'progress' && pr > 0 && ppr > 0)  color = LINE_PROGRESS;
-
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = mode === 'guide' ? (gr > 0 && pgr > 0 ? 2 : 1) : (pr > 0 && ppr > 0 ? 2 : 1);
-    ctx.setLineDash(color === LINE_COLOR ? [3,3] : []);
-    ctx.beginPath();
-    ctx.moveTo(parent.x, parent.y);
-    ctx.lineTo(node.x, node.y);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-}
-
-function drawNode(node) {
-  const { x, y, type, name, maxRank, sectionColor } = node;
-  const gr = getGuideRank(node.id);
-  const pr = getProgressRank(node.id);
-  const isHovered = hoveredNode && hoveredNode.id === node.id;
-
-  const rank = mode === 'guide' ? gr : pr;
-  const hasPoints = rank > 0;
-
-  ctx.save();
-
-  // Determine node style
-  if (type === 'active' || type === 'ultimate') {
-    drawSquareNode(node, gr, pr, isHovered, sectionColor);
-  } else if (type === 'key-passive') {
-    drawKeyNode(node, gr, pr, isHovered);
-  } else if (type === 'passive') {
-    drawDiamondNode(node, gr, pr, isHovered, PASSIVE_SIZE, sectionColor);
-  } else {
-    // upgrade
-    drawDiamondNode(node, gr, pr, isHovered, UPGRADE_SIZE, sectionColor);
-  }
-
-  ctx.restore();
-}
-
-function drawSquareNode(node, gr, pr, isHovered, sectionColor) {
-  const { x, y, type, name, maxRank } = node;
-  const size = type === 'ultimate' ? NODE_SIZE + 6 : NODE_SIZE;
-  const half = size / 2;
-  const rank = mode === 'guide' ? gr : pr;
-  const hasPoints = rank > 0;
-  const col = TYPE_COLORS[type] || TYPE_COLORS.active;
-
-  // Outer glow if active
-  if (hasPoints) {
-    ctx.shadowColor = mode === 'guide' ? 'rgba(201,168,76,0.6)' : 'rgba(46,204,113,0.6)';
-    ctx.shadowBlur  = isHovered ? 16 : 10;
-  } else if (isHovered) {
-    ctx.shadowColor = 'rgba(201,168,76,0.3)';
-    ctx.shadowBlur  = 8;
-  }
-
-  // Background
-  ctx.fillStyle = hasPoints
-    ? (mode === 'guide' ? 'rgba(40,30,10,0.95)' : 'rgba(10,30,15,0.95)')
-    : col.fill;
-  roundRect(ctx, x - half, y - half, size, size, 4);
-  ctx.fill();
-
-  // Border
-  ctx.shadowBlur = 0;
-  ctx.strokeStyle = hasPoints
-    ? (mode === 'guide' ? sectionColor || col.stroke : '#2ecc71')
-    : (isHovered ? 'rgba(201,168,76,0.6)' : col.stroke);
-  ctx.lineWidth = hasPoints ? 2 : 1;
-  roundRect(ctx, x - half, y - half, size, size, 4);
   ctx.stroke();
 
-  // Progress overlay strip at bottom
-  if (mode === 'progress' && gr > 0) {
-    const frac = Math.min(pr / maxRank, 1);
-    ctx.fillStyle = 'rgba(46,204,113,0.25)';
-    ctx.fillRect(x - half + 2, y + half - 8, (size - 4) * frac, 5);
-    // guide outline
-    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(x - half + 2, y + half - 8, size - 4, 5);
-  }
-
-  // Rank text
-  if (maxRank > 1) {
-    ctx.font = `bold 10px Rajdhani, sans-serif`;
-    ctx.fillStyle = hasPoints
-      ? (mode === 'guide' ? '#e8c97a' : '#2ecc71')
-      : '#5a5040';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(`${rank}/${maxRank}`, x, y + half - 2);
-  }
-
-  // Name (truncated)
-  ctx.font = `500 9px Rajdhani, sans-serif`;
-  ctx.fillStyle = hasPoints ? '#d4cfc0' : '#4a4035';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const shortName = truncate(name, 12);
-  ctx.fillText(shortName, x, y + (maxRank > 1 ? -5 : 0));
-}
-
-function drawDiamondNode(node, gr, pr, isHovered, size, sectionColor) {
-  const { x, y, name, maxRank, type } = node;
-  const half = size / 2;
-  const rank = mode === 'guide' ? gr : pr;
-  const hasPoints = rank > 0;
-  const col = TYPE_COLORS[type] || TYPE_COLORS.upgrade;
-
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(Math.PI / 4);
-
-  if (hasPoints) {
-    ctx.shadowColor = mode === 'guide' ? 'rgba(201,168,76,0.5)' : 'rgba(46,204,113,0.5)';
-    ctx.shadowBlur  = isHovered ? 12 : 7;
-  }
-
-  ctx.fillStyle = hasPoints
-    ? (mode === 'guide' ? 'rgba(35,28,10,0.95)' : 'rgba(8,28,15,0.95)')
-    : col.fill;
-  ctx.fillRect(-half, -half, size, size);
-
-  ctx.shadowBlur = 0;
-  ctx.strokeStyle = hasPoints
-    ? (mode === 'guide' ? sectionColor || '#c9a84c' : '#2ecc71')
-    : (isHovered ? 'rgba(201,168,76,0.5)' : col.stroke);
-  ctx.lineWidth = hasPoints ? 1.5 : 0.75;
-  ctx.strokeRect(-half, -half, size, size);
-
-  ctx.restore();
-
-  // Rank in center
-  if (maxRank > 1 && size >= 26) {
-    ctx.font = `bold 9px Rajdhani, sans-serif`;
-    ctx.fillStyle = hasPoints ? (mode === 'guide' ? '#e8c97a' : '#2ecc71') : '#3a3028';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${rank}/${maxRank}`, x, y);
-  } else if (size < 26) {
-    // tiny dot for smallest nodes
+  // Hub diamonds
+  for (const hub of data.spine) {
+    const sec = data.sections.find(s => s.hubId === hub.id);
+    const col = sec ? sec.color : '#888';
+    ctx.save();
+    ctx.translate(hub.x, hub.y);
+    ctx.rotate(Math.PI/4);
+    ctx.fillStyle   = '#111118';
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 2;
+    ctx.fillRect(-14,-14,28,28);
+    ctx.strokeRect(-14,-14,28,28);
+    ctx.restore();
+    // Inner dot
     ctx.beginPath();
-    ctx.arc(x, y, hasPoints ? 3 : 2, 0, Math.PI * 2);
-    ctx.fillStyle = hasPoints ? (mode === 'guide' ? '#c9a84c' : '#2ecc71') : '#3a3028';
+    ctx.arc(hub.x, hub.y, 4, 0, Math.PI*2);
+    ctx.fillStyle = col;
     ctx.fill();
   }
 }
 
-function drawKeyNode(node, gr, pr, isHovered) {
-  const { x, y, name, maxRank } = node;
-  const r = KEY_SIZE / 2;
-  const rank = mode === 'guide' ? gr : pr;
-  const hasPoints = rank > 0;
+function drawConnections(ctx) {
+  for (const n of flat) {
+    const par = flat.find(x => x.id === n.parentId);
+    if (!par) {
+      // Connect first-level nodes to their section hub
+      const sec = data.sections.find(s => s.id === n.sec);
+      if (sec) {
+        const hub = data.spine.find(h => h.id === sec.hubId);
+        if (hub) {
+          const gr = gRanks[n.id]||0, pgr = gRanks[hub.id]||0;
+          const pr = pRanks[n.id]||0;
+          drawLine(ctx, hub.x, hub.y, n.x, n.y, false,
+            mode==='guide'    ? (gr>0 ? true : false) : (pr>0 ? true : false),
+            sec.color
+          );
+        }
+      }
+      continue;
+    }
+    const gr = gRanks[n.id]||0, pr = pRanks[n.id]||0;
+    const pgr = gRanks[par.id]||0, ppr = pRanks[par.id]||0;
+    const lit = mode==='guide' ? (gr>0&&pgr>0) : (pr>0&&ppr>0);
+    drawLine(ctx, par.x, par.y, n.x, n.y, false, lit, n.secCol);
+  }
+}
 
-  // Star/burst shape using polygon
-  if (hasPoints) {
-    ctx.shadowColor = mode === 'guide' ? 'rgba(255,100,100,0.7)' : 'rgba(46,204,113,0.7)';
-    ctx.shadowBlur  = isHovered ? 20 : 14;
+function drawLine(ctx, x1, y1, x2, y2, dashed, lit, col) {
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x2,y2);
+  if (lit) {
+    ctx.strokeStyle = mode==='guide' ? (col||'rgba(201,168,76,.8)') : 'rgba(46,204,113,.8)';
+    ctx.lineWidth   = 2;
+    ctx.setLineDash([]);
+  } else {
+    ctx.strokeStyle = 'rgba(90,80,60,.35)';
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([3,3]);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawNode(ctx, n) {
+  const {x,y,type,name,maxRank,secCol} = n;
+  const gr = gRanks[n.id]||0;
+  const pr = pRanks[n.id]||0;
+  const rank = mode==='guide' ? gr : pr;
+  const has  = rank > 0;
+  const hov  = hovered && hovered.id===n.id;
+
+  ctx.save();
+
+  if (type==='active'||type==='ultimate') {
+    drawSquare(ctx, n, gr, pr, has, hov, secCol);
+  } else if (type==='key-passive') {
+    drawKeyPassive(ctx, n, gr, pr, has, hov);
+  } else if (type==='passive') {
+    drawDiamond(ctx, n, gr, pr, has, hov, SZ.passive, secCol);
+  } else {
+    drawDiamond(ctx, n, gr, pr, has, hov, SZ.upgrade, secCol);
   }
 
-  // Outer star ring
-  drawStar(ctx, x, y, r + 6, r, 8);
-  ctx.fillStyle = hasPoints
-    ? (mode === 'guide' ? 'rgba(60,10,10,0.9)' : 'rgba(10,40,20,0.9)')
-    : '#120808';
+  ctx.restore();
+}
+
+function drawSquare(ctx, n, gr, pr, has, hov, col) {
+  const {x,y,type,name,maxRank} = n;
+  const sz = type==='ultimate' ? SZ.ultimate : SZ.active;
+  const h  = sz/2;
+
+  if (has||hov) {
+    ctx.shadowColor = has ? (mode==='guide' ? 'rgba(201,168,76,.55)' : 'rgba(46,204,113,.55)') : 'rgba(201,168,76,.25)';
+    ctx.shadowBlur  = has ? 12 : 6;
+  }
+
+  ctx.fillStyle = has
+    ? (mode==='guide' ? 'rgba(38,28,8,.95)' : 'rgba(8,30,15,.95)')
+    : '#141008';
+  rr(ctx, x-h, y-h, sz, sz, 4);
   ctx.fill();
-  ctx.strokeStyle = hasPoints
-    ? (mode === 'guide' ? '#ff6b6b' : '#2ecc71')
-    : '#4a1010';
-  ctx.lineWidth = hasPoints ? 2 : 1;
+
+  ctx.shadowBlur  = 0;
+  ctx.strokeStyle = has
+    ? (mode==='guide' ? col||'#c9a84c' : '#2ecc71')
+    : (hov ? 'rgba(201,168,76,.5)' : 'rgba(80,65,35,.6)');
+  ctx.lineWidth   = has ? 2 : 1;
+  rr(ctx, x-h, y-h, sz, sz, 4);
   ctx.stroke();
-  ctx.shadowBlur = 0;
+
+  // Progress bar overlay
+  if (mode==='progress' && gr>0) {
+    const frac = Math.min((pRanks[n.id]||0)/n.maxRank, 1);
+    ctx.fillStyle = 'rgba(46,204,113,.22)';
+    ctx.fillRect(x-h+2, y+h-7, (sz-4)*frac, 4);
+    ctx.strokeStyle = 'rgba(46,204,113,.3)';
+    ctx.lineWidth   = .5;
+    ctx.strokeRect(x-h+2, y+h-7, sz-4, 4);
+  }
+
+  const rank = mode==='guide' ? gr : (pRanks[n.id]||0);
+  if (maxRank>1) {
+    ctx.font         = 'bold 9px Rajdhani,sans-serif';
+    ctx.fillStyle    = has ? (mode==='guide' ? '#e8c97a' : '#2ecc71') : '#3a3028';
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(`${rank}/${maxRank}`, x, y+h-1);
+  }
+
+  ctx.font         = '500 9px Rajdhani,sans-serif';
+  ctx.fillStyle    = has ? '#c8c0b0' : '#3a3028';
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(trunc(name,11), x, y + (maxRank>1 ? -5 : 0));
+}
+
+function drawDiamond(ctx, n, gr, pr, has, hov, sz, col) {
+  const {x,y,name,maxRank,type} = n;
+  const h = sz/2;
+  const rank = mode==='guide' ? gr : pr;
+
+  if (has||hov) {
+    ctx.shadowColor = has ? (mode==='guide' ? 'rgba(201,168,76,.45)' : 'rgba(46,204,113,.45)') : 'rgba(201,168,76,.2)';
+    ctx.shadowBlur  = has ? 8 : 4;
+  }
+
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(Math.PI/4);
+  ctx.fillStyle = has
+    ? (mode==='guide' ? 'rgba(38,28,8,.95)' : 'rgba(8,28,15,.95)')
+    : (type==='passive' ? '#0d1218' : '#100c08');
+  ctx.fillRect(-h,-h,sz,sz);
+  ctx.shadowBlur  = 0;
+  ctx.strokeStyle = has
+    ? (mode==='guide' ? col||'#c9a84c' : '#2ecc71')
+    : (hov ? 'rgba(201,168,76,.4)' : type==='passive' ? 'rgba(40,70,100,.5)' : 'rgba(70,55,30,.5)');
+  ctx.lineWidth   = has ? 1.5 : 0.75;
+  ctx.strokeRect(-h,-h,sz,sz);
+  ctx.restore();
+
+  if (maxRank>1 && sz>=24) {
+    ctx.font         = 'bold 8px Rajdhani,sans-serif';
+    ctx.fillStyle    = has ? (mode==='guide' ? '#e8c97a' : '#2ecc71') : '#2a2018';
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${rank}/${maxRank}`, x, y);
+  } else if (sz < 24) {
+    ctx.beginPath();
+    ctx.arc(x, y, has ? 3 : 2, 0, Math.PI*2);
+    ctx.fillStyle = has ? (mode==='guide' ? '#c9a84c' : '#2ecc71') : '#2a2018';
+    ctx.fill();
+  }
+
+  // Passive name label (only if big enough)
+  if (type==='passive' && sz>=24) {
+    ctx.font         = '500 8px Rajdhani,sans-serif';
+    ctx.fillStyle    = has ? '#a09080' : '#2a2018';
+    ctx.textAlign    = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(trunc(name,14), x+sz/2+4, y);
+  }
+}
+
+function drawKeyPassive(ctx, n, gr, pr, has, hov) {
+  const {x,y,name,maxRank} = n;
+  const r = SZ.key/2;
+  const rank = mode==='guide' ? gr : pr;
+
+  if (has||hov) {
+    ctx.shadowColor = has ? (mode==='guide' ? 'rgba(255,100,100,.7)' : 'rgba(46,204,113,.7)') : 'rgba(255,100,100,.3)';
+    ctx.shadowBlur  = has ? 18 : 8;
+  }
+
+  // Star shape
+  star(ctx, x, y, r+5, r-2, 8);
+  ctx.fillStyle   = has ? (mode==='guide' ? 'rgba(60,10,10,.95)' : 'rgba(10,40,20,.95)') : '#130808';
+  ctx.fill();
+  ctx.shadowBlur  = 0;
+  ctx.strokeStyle = has ? (mode==='guide' ? '#ff6b6b' : '#2ecc71') : (hov ? 'rgba(255,100,100,.5)' : '#4a1010');
+  ctx.lineWidth   = has ? 2 : 1;
+  ctx.stroke();
 
   // Inner circle
   ctx.beginPath();
-  ctx.arc(x, y, r - 4, 0, Math.PI * 2);
-  ctx.fillStyle = hasPoints
-    ? (mode === 'guide' ? 'rgba(80,15,15,0.95)' : 'rgba(15,60,30,0.95)')
-    : '#1a0808';
+  ctx.arc(x,y,r-6,0,Math.PI*2);
+  ctx.fillStyle   = has ? (mode==='guide' ? '#3a0e0e' : '#0a2818') : '#1a0808';
   ctx.fill();
-  ctx.strokeStyle = hasPoints ? '#ff6b6b' : '#3a0808';
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = has ? (mode==='guide' ? '#ff6b6b' : '#2ecc71') : '#3a0808';
+  ctx.lineWidth   = 1;
   ctx.stroke();
 
-  // Name
-  ctx.font = `600 9px Rajdhani, sans-serif`;
-  ctx.fillStyle = hasPoints ? '#ff9999' : '#5a2020';
-  ctx.textAlign = 'center';
+  ctx.font         = '600 9px Rajdhani,sans-serif';
+  ctx.fillStyle    = has ? (mode==='guide' ? '#ffaaaa' : '#88ffbb') : '#4a1818';
+  ctx.textAlign    = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(truncate(name, 10), x, y);
+  ctx.fillText(trunc(name,10), x, y);
 }
 
-// ── HIT TESTING ───────────────────────────────────────────────────────────
-function getNodeAt(canvasX, canvasY) {
-  for (const node of [...allNodes].reverse()) {
-    const dx = canvasX - node.x;
-    const dy = canvasY - node.y;
-    const size = getNodeHitSize(node.type);
-    if (Math.abs(dx) <= size && Math.abs(dy) <= size) return node;
+// ── HIT TEST ─────────────────────────────────────────────────────────────
+function nodeAt(cx,cy) {
+  for (const n of [...flat].reverse()) {
+    const dx=cx-n.x, dy=cy-n.y;
+    const r = hitR(n.type);
+    if (Math.abs(dx)<=r && Math.abs(dy)<=r) return n;
   }
   return null;
 }
-
-function getNodeHitSize(type) {
-  if (type === 'key-passive') return KEY_SIZE / 2 + 6;
-  if (type === 'active' || type === 'ultimate') return NODE_SIZE / 2 + 2;
-  if (type === 'passive') return PASSIVE_SIZE / 2 + 2;
-  return UPGRADE_SIZE / 2 + 2;
+function hitR(t) {
+  if (t==='key-passive') return SZ.key/2+6;
+  if (t==='active'||t==='ultimate') return (t==='ultimate'?SZ.ultimate:SZ.active)/2+3;
+  if (t==='passive') return SZ.passive/2+3;
+  return SZ.upgrade/2+3;
+}
+function s2c(sx,sy) {
+  const r=document.getElementById('wrap').getBoundingClientRect();
+  return { x:(sx-r.left-panX)/scale, y:(sy-r.top-panY)/scale };
 }
 
-function screenToCanvas(sx, sy) {
-  const rect = wrap.getBoundingClientRect();
-  return {
-    x: (sx - rect.left - panX) / scale,
-    y: (sy - rect.top  - panY) / scale
-  };
+// ── RANK OPS ─────────────────────────────────────────────────────────────
+function inc(n) {
+  const d = mode==='guide' ? gRanks : pRanks;
+  d[n.id] = Math.min((d[n.id]||0)+1, n.maxRank||1);
+  saveState(); draw();
 }
-
-// ── RANK MANAGEMENT ───────────────────────────────────────────────────────
-function getGuideRank(id)    { return guideRanks[id]  || 0; }
-function getProgressRank(id) { return progRanks[id]   || 0; }
-
-function incrementRank(node) {
-  const maxR = node.maxRank || 1;
-  if (mode === 'guide') {
-    guideRanks[node.id] = Math.min((guideRanks[node.id] || 0) + 1, maxR);
-  } else {
-    progRanks[node.id] = Math.min((progRanks[node.id] || 0) + 1, maxR);
-  }
-  saveState();
-  draw();
+function dec(n) {
+  const d = mode==='guide' ? gRanks : pRanks;
+  d[n.id] = Math.max((d[n.id]||0)-1, 0);
+  if (!d[n.id]) delete d[n.id];
+  saveState(); draw();
 }
-
-function decrementRank(node) {
-  if (mode === 'guide') {
-    guideRanks[node.id] = Math.max((guideRanks[node.id] || 0) - 1, 0);
-    if (!guideRanks[node.id]) delete guideRanks[node.id];
-  } else {
-    progRanks[node.id] = Math.max((progRanks[node.id] || 0) - 1, 0);
-    if (!progRanks[node.id]) delete progRanks[node.id];
-  }
-  saveState();
-  draw();
-}
-
-function updatePointCounters() {
-  const gTotal = Object.values(guideRanks).reduce((s, v) => s + v, 0);
-  const pTotal = Object.values(progRanks).reduce((s, v) => s + v, 0);
-  document.getElementById('guidePoints').textContent    = gTotal;
-  document.getElementById('progressPoints').textContent = pTotal;
+function updatePts() {
+  document.getElementById('gPts').textContent = Object.values(gRanks).reduce((s,v)=>s+v,0);
+  document.getElementById('pPts').textContent = Object.values(pRanks).reduce((s,v)=>s+v,0);
 }
 
 // ── MODE ──────────────────────────────────────────────────────────────────
 function setMode(m) {
-  mode = m;
-  document.getElementById('btnGuide').className    = 'mode-btn' + (m === 'guide'    ? ' active-guide'    : '');
-  document.getElementById('btnProgress').className = 'mode-btn' + (m === 'progress' ? ' active-progress' : '');
+  mode=m;
+  document.getElementById('btnG').className='mbtn'+(m==='guide'?' mg':'');
+  document.getElementById('btnP').className='mbtn'+(m==='progress'?' mp':'');
   draw();
 }
 
-// ── ZOOM / PAN ────────────────────────────────────────────────────────────
-function zoom(factor, cx, cy) {
-  cx = cx ?? wrap.clientWidth  / 2;
-  cy = cy ?? wrap.clientHeight / 2;
-  const newScale = Math.min(Math.max(scale * factor, 0.2), 3);
-  panX = cx - (cx - panX) * (newScale / scale);
-  panY = cy - (cy - panY) * (newScale / scale);
-  scale = newScale;
-  applyTransform();
+// ── ZOOM/PAN ─────────────────────────────────────────────────────────────
+function doZoom(f, cx, cy) {
+  const w=document.getElementById('wrap');
+  cx=cx??w.clientWidth/2; cy=cy??w.clientHeight/2;
+  const ns=Math.min(Math.max(scale*f,.15),3);
+  panX=cx-(cx-panX)*(ns/scale);
+  panY=cy-(cy-panY)*(ns/scale);
+  scale=ns;
+  applyXform();
+}
+function resetView() { scale=.65; panX=100; panY=40; applyXform(); }
+function applyXform() {
+  document.getElementById('c').style.transform=`translate(${panX}px,${panY}px) scale(${scale})`;
+  document.getElementById('zlbl').textContent=Math.round(scale*100)+'%';
 }
 
-function resetView() {
-  scale = 0.65;
-  panX  = 60;
-  panY  = 30;
-  applyTransform();
-}
-
-// Mouse events
-wrap.addEventListener('wheel', e => {
+const wrap = document.getElementById('wrap');
+wrap.addEventListener('wheel', e=>{
   e.preventDefault();
-  const rect = wrap.getBoundingClientRect();
-  zoom(e.deltaY < 0 ? 1.1 : 0.9, e.clientX - rect.left, e.clientY - rect.top);
-}, { passive: false });
+  const r=wrap.getBoundingClientRect();
+  doZoom(e.deltaY<0?1.1:.9, e.clientX-r.left, e.clientY-r.top);
+},{passive:false});
 
-wrap.addEventListener('mousedown', e => {
-  if (e.button === 1 || e.button === 0) {
-    const pos = screenToCanvas(e.clientX, e.clientY);
-    const node = getNodeAt(pos.x, pos.y);
-    if (node && e.button === 0) {
-      // Click on node — handled on mouseup to distinguish from drag
-      wrap._clickNode  = node;
-      wrap._clickStart = { x: e.clientX, y: e.clientY };
-    }
-    isPanning = true;
-    lastMouse = { x: e.clientX, y: e.clientY };
-    wrap.classList.add('grabbing');
+wrap.addEventListener('mousedown', e=>{
+  panning=true;
+  lastM={x:e.clientX,y:e.clientY};
+  wrap.classList.add('grabbing');
+  if (e.button===0) {
+    const p=s2c(e.clientX,e.clientY);
+    const n=nodeAt(p.x,p.y);
+    if (n) { clickNode=n; clickStart={x:e.clientX,y:e.clientY}; }
   }
 });
 
-wrap.addEventListener('mousemove', e => {
-  if (isPanning) {
-    const dx = e.clientX - lastMouse.x;
-    const dy = e.clientY - lastMouse.y;
-    panX += dx; panY += dy;
-    lastMouse = { x: e.clientX, y: e.clientY };
-    applyTransform();
-    // If moved more than 4px, cancel click intent
-    if (wrap._clickStart) {
-      const moved = Math.abs(e.clientX - wrap._clickStart.x) + Math.abs(e.clientY - wrap._clickStart.y);
-      if (moved > 4) wrap._clickNode = null;
-    }
+wrap.addEventListener('mousemove', e=>{
+  if (panning) {
+    panX+=e.clientX-lastM.x; panY+=e.clientY-lastM.y;
+    lastM={x:e.clientX,y:e.clientY};
+    applyXform();
+    if (clickStart && (Math.abs(e.clientX-clickStart.x)+Math.abs(e.clientY-clickStart.y))>4) clickNode=null;
   }
-
-  // Hover
-  const pos = screenToCanvas(e.clientX, e.clientY);
-  const node = getNodeAt(pos.x, pos.y);
-  if (node !== hoveredNode) {
-    hoveredNode = node;
-    draw();
-  }
-  if (node) showTooltip(node, e.clientX, e.clientY);
-  else hideTooltip();
+  const p=s2c(e.clientX,e.clientY);
+  const n=nodeAt(p.x,p.y);
+  if (n!==hovered){ hovered=n; draw(); }
+  if (n) showTip(n,e.clientX,e.clientY); else hideTip();
 });
 
-wrap.addEventListener('mouseup', e => {
-  isPanning = false;
-  wrap.classList.remove('grabbing');
-
-  if (wrap._clickNode) {
-    if (e.button === 0) incrementRank(wrap._clickNode);
-    wrap._clickNode = null;
-  }
+wrap.addEventListener('mouseup', e=>{
+  panning=false; wrap.classList.remove('grabbing');
+  if (clickNode && e.button===0) { inc(clickNode); clickNode=null; clickStart=null; }
 });
 
-wrap.addEventListener('contextmenu', e => {
+wrap.addEventListener('contextmenu', e=>{
   e.preventDefault();
-  const pos = screenToCanvas(e.clientX, e.clientY);
-  const node = getNodeAt(pos.x, pos.y);
-  if (node) decrementRank(node);
+  const p=s2c(e.clientX,e.clientY);
+  const n=nodeAt(p.x,p.y);
+  if (n) dec(n);
 });
 
-wrap.addEventListener('mouseleave', () => {
-  isPanning = false;
-  wrap.classList.remove('grabbing');
-  hideTooltip();
-  hoveredNode = null;
-  draw();
-});
+wrap.addEventListener('mouseleave', ()=>{ panning=false; wrap.classList.remove('grabbing'); hideTip(); hovered=null; draw(); });
 
 // ── TOOLTIP ───────────────────────────────────────────────────────────────
-function showTooltip(node, mx, my) {
-  const tt = document.getElementById('tooltip');
-  const gr = getGuideRank(node.id);
-  const pr = getProgressRank(node.id);
-
-  document.getElementById('ttName').textContent = node.name;
-
-  const tagsEl = document.getElementById('ttTags');
-  tagsEl.innerHTML = '';
-  for (const tag of (node.tags || [])) {
-    const span = document.createElement('span');
-    span.className = 'tt-tag';
-    span.textContent = tag;
-    tagsEl.appendChild(span);
-  }
-
-  document.getElementById('ttRank').textContent =
-    `Guide: ${gr}/${node.maxRank}  ·  Progress: ${pr}/${node.maxRank}`;
-
-  document.getElementById('ttDesc').textContent = node.desc || '';
-
-  const cd = node.cooldown ? `Cooldown: ${node.cooldown}s` : node.charges ? `${node.charges} Charges (${node.chargeCooldown}s)` : '';
-  document.getElementById('ttCd').textContent = cd;
-
-  document.getElementById('ttHint').textContent =
-    mode === 'guide'
-      ? 'Left click to add rank · Right click to remove'
-      : 'Left click to mark progress · Right click to remove';
-
-  // Position tooltip
-  const tw = 268, th = 160;
-  let tx = mx + 14, ty = my - 20;
-  if (tx + tw > window.innerWidth)  tx = mx - tw - 10;
-  if (ty + th > window.innerHeight) ty = my - th;
-  tt.style.left    = tx + 'px';
-  tt.style.top     = ty + 'px';
-  tt.style.display = 'block';
+function showTip(n,mx,my) {
+  const gr=gRanks[n.id]||0, pr=pRanks[n.id]||0;
+  document.getElementById('tN').textContent=n.name;
+  const te=document.getElementById('tT'); te.innerHTML='';
+  for (const t of (n.tags||[])) { const s=document.createElement('span'); s.className='ttag'; s.textContent=t; te.appendChild(s); }
+  document.getElementById('tR').textContent=`Guide: ${gr}/${n.maxRank}  ·  Progress: ${pr}/${n.maxRank}`;
+  document.getElementById('tD').textContent=n.desc||'';
+  const cd=n.cooldown?`Cooldown: ${n.cooldown}s`:n.charges?`${n.charges} Charges (${n.chargeCooldown}s)`:'';
+  document.getElementById('tC').textContent=cd;
+  document.getElementById('tH').textContent=mode==='guide'?'Left click to add rank · Right click to remove':'Left click to mark progress · Right click to remove';
+  const tip=document.getElementById('tip');
+  let tx=mx+14, ty=my-20;
+  if (tx+268>window.innerWidth)  tx=mx-278;
+  if (ty+170>window.innerHeight) ty=my-170;
+  tip.style.left=tx+'px'; tip.style.top=ty+'px'; tip.style.display='block';
 }
+function hideTip(){ document.getElementById('tip').style.display='none'; }
 
-function hideTooltip() {
-  document.getElementById('tooltip').style.display = 'none';
-}
-
-// ── PERSISTENCE ───────────────────────────────────────────────────────────
+// ── PERSIST ───────────────────────────────────────────────────────────────
 function saveState() {
-  localStorage.setItem('d4vault_pal_guide', JSON.stringify(guideRanks));
-  localStorage.setItem('d4vault_pal_prog',  JSON.stringify(progRanks));
+  localStorage.setItem('d4v_pal_g', JSON.stringify(gRanks));
+  localStorage.setItem('d4v_pal_p', JSON.stringify(pRanks));
 }
-
 function loadState() {
-  try { guideRanks = JSON.parse(localStorage.getItem('d4vault_pal_guide') || '{}'); } catch(e) { guideRanks = {}; }
-  try { progRanks  = JSON.parse(localStorage.getItem('d4vault_pal_prog')  || '{}'); } catch(e) { progRanks  = {}; }
+  try { gRanks=JSON.parse(localStorage.getItem('d4v_pal_g')||'{}'); } catch(e){ gRanks={}; }
+  try { pRanks=JSON.parse(localStorage.getItem('d4v_pal_p')||'{}'); } catch(e){ pRanks={}; }
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
-function roundRect(ctx, x, y, w, h, r) {
+function rr(ctx,x,y,w,h,r){
   ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
   ctx.closePath();
 }
-
-function drawStar(ctx, cx, cy, outerR, innerR, points) {
+function star(ctx,cx,cy,or,ir,pts){
   ctx.beginPath();
-  for (let i = 0; i < points * 2; i++) {
-    const r     = i % 2 === 0 ? outerR : innerR;
-    const angle = (i * Math.PI) / points - Math.PI / 2;
-    if (i === 0) ctx.moveTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
-    else          ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+  for(let i=0;i<pts*2;i++){
+    const r=i%2===0?or:ir, a=(i*Math.PI)/pts-Math.PI/2;
+    if(i===0) ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    else ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
   }
   ctx.closePath();
 }
-
-function hexToRgba(hex, alpha) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
-function truncate(str, len) {
-  return str.length > len ? str.slice(0, len - 1) + '…' : str;
-}
+function trunc(s,l){ return s.length>l?s.slice(0,l-1)+'…':s; }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-loadState();
 resetView();
-loadTree();
+load();
 </script>
 </body>
 </html>
