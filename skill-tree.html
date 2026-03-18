@@ -1003,12 +1003,28 @@ function getKeys(){
 function SV(){const k=getKeys();console.log('[skill-tree] SAVE',k.g);localStorage.setItem(k.g,JSON.stringify(gR));localStorage.setItem(k.p,JSON.stringify(pR));}
 function LV(){const k=getKeys();console.log('[skill-tree] LOAD',k.g);try{gR=JSON.parse(localStorage.getItem(k.g)||'{}');}catch(e){gR={};}try{pR=JSON.parse(localStorage.getItem(k.p)||'{}');}catch(e){pR={};}}
 
-// Allow parent page to switch variant
+// Allow parent page to switch variant or theme
 window.addEventListener('message',e=>{
   if(e.data?.type==='variantChange'){
     _buildId=String(e.data.buildId||'default');
     _variantIdx=String(e.data.variantIdx||'0');
     LV();draw();
+  }
+  if(e.data?.type==='themeChange'){
+    // Apply panel bg to body and canvas
+    if(e.data.panelBg){
+      document.body.style.background=e.data.panelBg;
+      window._bgColor=e.data.panelBg;
+    }
+    // Apply accent color to CSS vars
+    if(e.data.accent){
+      document.documentElement.style.setProperty('--accent', e.data.accent);
+      // Parse rgb from hex
+      const hex=e.data.accent.replace('#','');
+      const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+      document.documentElement.style.setProperty('--accent-rgb',`${r},${g},${b}`);
+    }
+    draw();
   }
 });
 function RR(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
